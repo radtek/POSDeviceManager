@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{04E2E55B-EACE-4965-AE70-1709868EB4CC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ERPService.SharedLibs.PropertyGrid</RootNamespace>
+    <AssemblyName>ERPService.SharedLibs.PropertyGrid</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>ERPService.SharedLibs.PropertyGrid.pfx</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Bin\Debug\ERPService.SharedLibs.PropertyGrid.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Bin\Release\ERPService.SharedLibs.PropertyGrid.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Converters\BaudConverter.cs" />
+    <Compile Include="Converters\DayOfWeekConverter.cs" />
+    <Compile Include="Converters\HideValueConverter.cs" />
+    <Compile Include="Converters\ParityConverter.cs" />
+    <Compile Include="Converters\RusBooleanConverter.cs" />
+    <Compile Include="Converters\RussianBooleanConverter.cs" />
+    <Compile Include="CustomDropdownEditor.cs" />
+    <Compile Include="CustomEditor.cs" />
+    <Compile Include="CustomEnumConverter.cs" />
+    <Compile Include="CustomFileNameEditor.cs" />
+    <Compile Include="CustomModalEditor.cs" />
+    <Compile Include="CustomOptionsEditor.cs" />
+    <Compile Include="CustomStandardValuesConverter.cs" />
+    <Compile Include="EditableOption.cs" />
+    <Compile Include="Editors\BaudEditor.cs" />
+    <Compile Include="Editors\BooleanEditor.cs" />
+    <Compile Include="Editors\BrowseForFolderEditor.cs" />
+    <Compile Include="Editors\ComplexPropertyEditor.cs" />
+    <Compile Include="Editors\ConnectionStringEditor.cs" />
+    <Compile Include="Editors\DayOfWeekEditor.cs" />
+    <Compile Include="Editors\FirebirdDatabaseFileEditor.cs" />
+    <Compile Include="Editors\ParityEditor.cs" />
+    <Compile Include="Editors\PasswordEditor.cs" />
+    <Compile Include="Editors\TextEditor.cs" />
+    <Compile Include="FileType.cs" />
+    <Compile Include="Forms\FormComplexPropertyEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormComplexPropertyEditor.Designer.cs">
+      <DependentUpon>FormComplexPropertyEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormConnectionStringEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormConnectionStringEditor.Designer.cs">
+      <DependentUpon>FormConnectionStringEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormPasswordEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormPasswordEditor.Designer.cs">
+      <DependentUpon>FormPasswordEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormTextEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormTextEditor.Designer.cs">
+      <DependentUpon>FormTextEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormOptionsEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormOptionsEditor.Designer.cs">
+      <DependentUpon>FormOptionsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormModalEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormModalEditor.designer.cs">
+      <DependentUpon>FormModalEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IModalEditor.cs" />
+    <Compile Include="IOptionsProvider.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ERPService.SharedLibs.Helpers\ERPService.SharedLibs.Helpers.csproj">
+      <Project>{5E459A85-669C-408D-85F1-D99427D34C6B}</Project>
+      <Name>ERPService.SharedLibs.Helpers</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Forms\FormComplexPropertyEditor.resx">
+      <DependentUpon>FormComplexPropertyEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormConnectionStringEditor.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormConnectionStringEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormModalEditor.resx">
+      <DependentUpon>FormModalEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormOptionsEditor.resx">
+      <DependentUpon>FormOptionsEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormPasswordEditor.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormPasswordEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormTextEditor.resx">
+      <DependentUpon>FormTextEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ERPService.SharedLibs.PropertyGrid.pfx" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

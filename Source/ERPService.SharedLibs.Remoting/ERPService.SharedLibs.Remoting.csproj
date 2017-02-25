@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{570FE212-8E83-4D1B-AEA9-06BDE6F34773}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ERPService.SharedLibs.Remoting</RootNamespace>
+    <AssemblyName>ERPService.SharedLibs.Remoting</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>ERPService.SharedLibs.Remoting.pfx</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Bin\Debug\ERPService.SharedLibs.Remoting.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Bin\Release\ERPService.SharedLibs.Remoting.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Channels\IpFixChannelHelper.cs" />
+    <Compile Include="Channels\IpFixHttpClientChannel.cs" />
+    <Compile Include="Connectors\ConnectorHelper.cs" />
+    <Compile Include="Connectors\CustomConnector.cs" />
+    <Compile Include="Connectors\CustomHttpConnector.cs" />
+    <Compile Include="Connectors\CustomTcpConnector.cs" />
+    <Compile Include="Connectors\HttpBinaryConnector.cs" />
+    <Compile Include="Connectors\HttpSoapConnector.cs" />
+    <Compile Include="Channels\IpFixTcpClientChannel.cs" />
+    <Compile Include="Connectors\TcpBinaryConnector.cs" />
+    <Compile Include="Connectors\TcpSoapConnector.cs" />
+    <Compile Include="EternalHostingTarget.cs" />
+    <Compile Include="Hosts\CustomHost.cs" />
+    <Compile Include="HostingTarget.cs" />
+    <Compile Include="Hosts\CustomHttpHost.cs" />
+    <Compile Include="Hosts\CustomTcpHost.cs" />
+    <Compile Include="Hosts\HttpBinaryHost.cs" />
+    <Compile Include="Hosts\HttpSoapHost.cs" />
+    <Compile Include="Hosts\TcpBinaryHost.cs" />
+    <Compile Include="Hosts\TcpSoapHost.cs" />
+    <Compile Include="IpFixTrackingHandler.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemotingBase.cs" />
+    <Compile Include="Sinks\IpFixClientChannelSink.cs" />
+    <Compile Include="Sinks\IpFixClientChannelSinkProvider.cs" />
+    <Compile Include="Sinks\IpFixServerChannelSink.cs" />
+    <Compile Include="Sinks\IpFixServerChannelSinkProvider.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ERPService.SharedLibs.Remoting.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ERPService.SharedLibs.Eventlog\ERPService.SharedLibs.Eventlog.csproj">
+      <Project>{F3EE037C-8D18-477B-A39A-4DE71F46F992}</Project>
+      <Name>ERPService.SharedLibs.Eventlog</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

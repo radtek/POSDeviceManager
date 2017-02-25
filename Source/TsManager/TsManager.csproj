@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0201B6C7-C39E-42E7-92BD-8F1E79E6DE51}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TsManager</RootNamespace>
+    <AssemblyName>TsManager</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>TsManager.pfx</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Bin\Debug\TsManager.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Bin\Release\TsManager.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ERPService.SharedLibs.Eventlog, Version=1.0.0.30618, Culture=neutral, PublicKeyToken=081cb29e9151b772, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SharedLibs\trunk\Release\ERPService.SharedLibs.Eventlog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ERPService.SharedLibs.Helpers, Version=1.0.0.30607, Culture=neutral, PublicKeyToken=b0fa05ad2b4b08b5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SharedLibs\trunk\Release\ERPService.SharedLibs.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="ERPService.SharedLibs.PropertyGrid, Version=1.0.0.30618, Culture=neutral, PublicKeyToken=781b7a2d593b63a5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SharedLibs\trunk\Release\ERPService.SharedLibs.PropertyGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="ERPService.SharedLibs.Remoting, Version=1.0.0.30313, Culture=neutral, PublicKeyToken=6729cec654b05004, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SharedLibs\trunk\Release\ERPService.SharedLibs.Remoting.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AMCSLogicAttrubute.cs" />
+    <Compile Include="AMCSLogicEditor.cs" />
+    <Compile Include="AMCSLogicLoader.cs" />
+    <Compile Include="FormAMCSLogicEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAMCSLogicEditor.Designer.cs">
+      <DependentUpon>FormAMCSLogicEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IAMCSLogic.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AMCSLogicSettings.cs" />
+    <Compile Include="TsGlobalConst.cs" />
+    <Compile Include="TsManager.cs" />
+    <Compile Include="TsManagerSettings.cs" />
+    <Compile Include="TsUnitSettings.cs" />
+    <Compile Include="TsWorker.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DevicesCommon\DevicesCommon.csproj">
+      <Project>{3C778F01-918F-49B0-8C34-91D78BF5A054}</Project>
+      <Name>DevicesCommon</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TsManager.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FormAMCSLogicEditor.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormAMCSLogicEditor.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

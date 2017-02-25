@@ -1,0 +1,80 @@
+*******************************************************************************
+*	—труктура XML-файла дл€ весов с печатью этикетки						  *
+*******************************************************************************
+
+1. ¬ыгрузка данных
+
+<scale>
+	[upload tags [upload attributes]]
+</scale>
+
+[upload tags]:
+
+	1.1. “овары
+		
+		<articles>
+			...
+			<article [article attributes]>[article name]</article>
+			...
+		<articles>
+		
+		article name	-	наименование товара
+		[article attributes]:
+		
+		code		-	код товара, об€зательный атрибут
+		plu			-	номер PLU в весах, об€зательный атрибут
+		price		-	цена единицы веса в ћƒ≈, значение по умолчанию - 0
+		units		-	количество грамм в единице веса, значение по 
+						умолчанию - 1000
+		box			-	вес тары в граммах, значение по умолчанию - 0
+		shelfLife	-	срок годности, значение по умолчанию - 0
+		message		-	номер доп. сообщени€, св€занного с товаром, значение 
+						по умолчанию - 0
+		
+	1.2. —ообщени€ (экстра-текст)
+	
+		<messages>
+			...
+			<message [message attributes]>[message text]</message>
+			...
+		</messages>
+		
+		message text	-	текст сообщени€
+		[message attributes]:
+		
+		number		-	номер сообщени€, значение по умолчанию - 1
+		
+	1.3. Ќазвание магазина (рекламна€ информаци€)
+	
+		<advertisings>
+			...
+			<advertising [advertising attributes]>[advertising data]</advertising>
+			...
+		<advertisings>
+		
+		[advertising data]	-	содержание рекламной информации
+		[advertising attributes]:
+		
+		type		-	тип рекламной информации. «начени€:
+			"shopName"		-	наименование магазина (значение по умолчанию)
+			"creepingLine"	-	бегуща€ строка.
+			
+[upload attributes]:
+
+	startIndex	-	индекс записи, начина€ с которой производить выгрузку данных.
+					«начение по умолчанию - 1.
+	
+2. «агрузка данных
+
+<scale>
+	[download tags]
+</scale>
+
+[download tags]:
+
+	2.1. “екущие показани€ веса
+	
+	<weight>[current weight value]</weight>
+	
+	current weight value	-	показани€ веса.
+		

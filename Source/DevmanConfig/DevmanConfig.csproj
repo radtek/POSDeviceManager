@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F6527744-5E6E-4968-805B-5E0DBEB02AD1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DevmanConfig</RootNamespace>
+    <AssemblyName>DevmanConfig</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>DevmanConfig.pfx</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Bin\Debug\DevmanConfig.XML</DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Bin\Release\DevmanConfig.XML</DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ERPService.SharedLibs.Helpers, Version=1.0.0.30607, Culture=neutral, PublicKeyToken=b0fa05ad2b4b08b5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SharedLibs\trunk\Release\ERPService.SharedLibs.Helpers.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ERPService.SharedLibs.PropertyGrid, Version=1.0.0.30618, Culture=neutral, PublicKeyToken=781b7a2d593b63a5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SharedLibs\trunk\Release\ERPService.SharedLibs.PropertyGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="ERPService.SharedLibs.Remoting, Version=1.0.0.30313, Culture=neutral, PublicKeyToken=6729cec654b05004, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SharedLibs\trunk\Release\ERPService.SharedLibs.Remoting.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ConfigHelpers.cs" />
+    <Compile Include="DeviceTester.cs" />
+    <Compile Include="DevmanConfig.cs" />
+    <Compile Include="DisplayTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DisplayTestForm.Designer.cs">
+      <DependentUpon>DisplayTestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeyValueEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeyValueEditorForm.Designer.cs">
+      <DependentUpon>KeyValueEditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KeyValueItemForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KeyValueItemForm.Designer.cs">
+      <DependentUpon>KeyValueItemForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReaderTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReaderTestForm.Designer.cs">
+      <DependentUpon>ReaderTestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ScalesConnectionEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScalesConnectionEditorForm.Designer.cs">
+      <DependentUpon>ScalesConnectionEditorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ScalesTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScalesTestForm.Designer.cs">
+      <DependentUpon>ScalesTestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SMSClientTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SMSClientTestForm.Designer.cs">
+      <DependentUpon>SMSClientTestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TestBilliardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestBilliardForm.Designer.cs">
+      <DependentUpon>TestBilliardForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TestPrintForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestPrintForm.Designer.cs">
+      <DependentUpon>TestPrintForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TurnstileTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TurnstileTestForm.Designer.cs">
+      <DependentUpon>TurnstileTestForm.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DisplayTestForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>DisplayTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeyValueEditorForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>KeyValueEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KeyValueItemForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>KeyValueItemForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReaderTestForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ReaderTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScalesConnectionEditorForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ScalesConnectionEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScalesTestForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ScalesTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SMSClientTestForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SMSClientTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestBilliardForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TestBilliardForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestPrintForm.resx">
+      <DependentUpon>TestPrintForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TurnstileTestForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TurnstileTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DevmanConfig.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DevicesCommon\DevicesCommon.csproj">
+      <Project>{3c778f01-918f-49b0-8c34-91d78bf5a054}</Project>
+      <Name>DevicesCommon</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
