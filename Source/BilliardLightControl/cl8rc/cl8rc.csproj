@@ -50,11 +50,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ERPService.SharedLibs.Helpers, Version=1.0.0.30607, Culture=neutral, PublicKeyToken=b0fa05ad2b4b08b5, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\SharedLibs\trunk\Release\ERPService.SharedLibs.Helpers.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -76,6 +71,10 @@
       <Project>{3C778F01-918F-49B0-8C34-91D78BF5A054}</Project>
       <Name>DevicesCommon</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ERPService.SharedLibs.Helpers\ERPService.SharedLibs.Helpers.csproj">
+      <Project>{5e459a85-669c-408d-85f1-d99427d34c6b}</Project>
+      <Name>ERPService.SharedLibs.Helpers</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
