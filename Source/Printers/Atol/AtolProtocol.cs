@@ -800,17 +800,6 @@ namespace Atol
         {
             if (HasNonzeroRegistrations)
             {
-                // сначала выравниваем сумм чека (борьба с округлением);
-                // для этого посчитаем разницу между суммой оплат и суммой документа по данным ФР
-                var amountDelta = (long)Status.DocumentAmount - _docAmount;
-                if (amountDelta > 0 && amountDelta < 100)
-                {
-                    // сумма чека в ФР больше, чем сумма платежей по чеку, и разница не превышает 1 рубль;
-                    // считаем это ошибкой округления и делаем скидку
-                    TrimEcrDocumentAmount(amountDelta);
-                }
-
-                // закрываем чек
                 ExecuteDriverCommand(() =>
                 {
                     _atolProtocol.CreateCommand(0x4A);
@@ -828,31 +817,6 @@ namespace Atol
                     _atolProtocol.ExecuteCommand(0x73);
                 });
             }
-        }
-
-        private void TrimEcrDocumentAmount(long amountDelta)
-        {
-            ExecuteDriverCommand(() =>
-            {
-                _atolProtocol.CreateCommand(0x43);
-
-                // флаги по умолчанию (выполнить операцию)
-                _atolProtocol.AddByte(0);
-
-                // область применения (на весь чек)
-                _atolProtocol.AddByte(0);
-
-                // тип (суммовая скидка)
-                _atolProtocol.AddByte(1);
-
-                // знак (скидка)
-                _atolProtocol.AddByte(0);
-
-                // размер скидки
-                _atolProtocol.AddBCD(amountDelta, 5);
-
-                _atolProtocol.Execute();
-            });
         }
 
         private void SetCustomerPhoneOrEmail(string customerPhoneOrEmail)
@@ -1191,6 +1155,38 @@ namespace Atol
 
                 _atolProtocol.Execute();
             });
+        }
+
+        protected override void OnTrimDocumentAmount(uint registrationsAmount)
+        {
+            // посчитаем разницу между суммой регистраций и суммой документа по данным ФР
+            var amountDelta = (long)Status.DocumentAmount - registrationsAmount;
+            if (amountDelta > 0 && amountDelta < 100)
+            {
+                // сумма чека в ФР больше, чем сумма платежей по чеку, и разница не превышает 1 рубль;
+                // считаем это ошибкой округления и делаем скидку
+                ExecuteDriverCommand(() =>
+                {
+                    _atolProtocol.CreateCommand(0x43);
+
+                    // флаги по умолчанию (выполнить операцию)
+                    _atolProtocol.AddByte(0);
+
+                    // область применения (на весь чек)
+                    _atolProtocol.AddByte(0);
+
+                    // тип (суммовая скидка)
+                    _atolProtocol.AddByte(1);
+
+                    // знак (скидка)
+                    _atolProtocol.AddByte(0);
+
+                    // размер скидки
+                    _atolProtocol.AddBCD(amountDelta, 5);
+
+                    _atolProtocol.Execute();
+                });
+            }
         }
 
         protected override void OnPayment(uint amount, FiscalPaymentType paymentType)

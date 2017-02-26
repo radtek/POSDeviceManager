@@ -281,6 +281,20 @@ namespace DevicesBase
         }
 
         /// <summary>
+        /// Вызывается перед приемом первого платежа по чеку.
+        /// </summary>
+        /// <param name="registrationsAmount">
+        /// Сумма регистраций в чеке.
+        /// </param>
+        /// <remarks>
+        /// Метод для поддержки 54-ФЗ.
+        /// Нужен для борьбы с округлением чека.
+        /// </remarks>
+        protected virtual void OnTrimDocumentAmount(uint registrationsAmount)
+        {
+        }
+
+        /// <summary>
         /// Вызывается при оплате документа
         /// </summary>
         /// <param name="amount">Сумма оплаты</param>
@@ -1020,6 +1034,10 @@ namespace DevicesBase
             if (!PrintTopMargin())
                 return false;
 
+            var wasNewRegistrations = false;
+            var trimDocumentAmountWasCalled = false;
+            uint newRegistrationsAmount = 0;
+
             // идем по всем строкам документа
             foreach(XmlElement lineEntry in docEntry)
             {
@@ -1056,11 +1074,17 @@ namespace DevicesBase
                         // попытаемся понять, какой способ регистрации нам нужен - старый либо по 54-ФЗ
                         if (MustUseNewRegistrationMethod(docType, lineEntry))
                         {
+                            wasNewRegistrations = true;
+
+                            var amount = IntFromXml(lineEntry, "amount", 0);
+
+                            newRegistrationsAmount += amount;
+
                             OnRegistration(
                                 lineData,
                                 IntFromXml(lineEntry, "quantity", 1000),
                                 IntFromXml(lineEntry, "price", 0),
-                                IntFromXml(lineEntry, "amount", 0),
+                                amount,
                                 SectionFromXml(lineEntry.GetAttribute("section")),
                                 (byte)IntFromXml(lineEntry, "vatRateId", 1));
                         }
@@ -1075,8 +1099,15 @@ namespace DevicesBase
 
                     case "payment":
                         // оплата
-                        OnPayment(IntFromXml(lineEntry, "amount", 0),
-                            PaymentTypeFromXml(lineEntry.GetAttribute("paymentType")));
+                        if (wasNewRegistrations && !trimDocumentAmountWasCalled)
+                        {
+                            // идет формирование фискального документа по 54-ФЗ, нужно проверить,
+                            // не требуется ли выравнивание суммы чека
+                            OnTrimDocumentAmount(newRegistrationsAmount);
+                            trimDocumentAmountWasCalled = true;
+                        }
+
+                        OnPayment(IntFromXml(lineEntry, "amount", 0), PaymentTypeFromXml(lineEntry.GetAttribute("paymentType")));
                         break;
 
                     case "cash":
