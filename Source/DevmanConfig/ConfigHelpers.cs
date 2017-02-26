@@ -1,24 +1,20 @@
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.Text;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
-using System.Reflection;
-using System.Windows.Forms.ComponentModel;
 using System.Drawing.Design;
-using System.Windows.Forms.Design;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
-using DevicesCommon.Helpers;
+using System.Windows.Forms.Design;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using System.Linq;
 using DevicesCommon;
-using ERPService.SharedLibs.PropertyGrid;
-using ERPService.SharedLibs.PropertyGrid.Converters;
-using ERPService.SharedLibs.PropertyGrid.Editors;
+using DevicesCommon.Helpers;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
+using ERPService.SharedLibs.PropertyGrid;
 
 namespace DevmanConfig
 {
@@ -160,12 +156,12 @@ namespace DevmanConfig
             get { return new string[] { "Вход", "Выход" }; }
         }
 
-        protected override Int32 ObjectToIndex(Object value)
+        protected override int ObjectToIndex(Object value)
         {
-            return (Int32)value;
+            return (int)value;
         }
 
-        protected override Object IndexToObject(Int32 selectedIndex)
+        protected override Object IndexToObject(int selectedIndex)
         {
             return (TurnstileDirection)selectedIndex;
         }
@@ -181,12 +177,12 @@ namespace DevmanConfig
             get { return new string[] { "на чековой ленте", "на подкладном документе", "комбинированный" }; }
         }
 
-        protected override Int32 ObjectToIndex(Object value)
+        protected override int ObjectToIndex(Object value)
         {
-            return (Int32)value;
+            return (int)value;
         }
 
-        protected override Object IndexToObject(Int32 selectedIndex)
+        protected override Object IndexToObject(int selectedIndex)
         {
             return (PrinterKind)selectedIndex;
         }
@@ -204,9 +200,9 @@ namespace DevmanConfig
         public override Object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, Object value,
                   Type destinationType)
         {
-            if (destinationType == typeof(String))
+            if (destinationType == typeof(string))
             {
-                return new EntryTypeEditor().Values[(Int32)value];
+                return new EntryTypeEditor().Values[(int)value];
             }
             else
                 return base.ConvertTo(context, culture, value, destinationType);
@@ -221,8 +217,8 @@ namespace DevmanConfig
         public override Object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, Object value,
                   Type destinationType)
         {
-            if (destinationType == typeof(String))
-                return new PrinterKindEditor().Values[(Int32)value];
+            if (destinationType == typeof(string))
+                return new PrinterKindEditor().Values[(int)value];
             else
                 return base.ConvertTo(context, culture, value, destinationType);
         }

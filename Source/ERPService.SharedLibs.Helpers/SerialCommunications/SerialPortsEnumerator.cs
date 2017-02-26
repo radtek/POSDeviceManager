@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.Win32;
 
 namespace ERPService.SharedLibs.Helpers.SerialCommunications
@@ -10,24 +8,24 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
     /// </summary>
     public static class SerialPortsEnumerator
     {
-        private static String[] Enumerate(String registryKeyName, String portNamePattern)
+        private static string[] Enumerate(string registryKeyName, string portNamePattern)
         {
-            List<String> values = new List<String>();
+            List<string> values = new List<string>();
 
             RegistryKey key = Registry.LocalMachine.OpenSubKey(registryKeyName);
             if (key != null)
             {
                 try
                 {
-                    foreach (String valueName in key.GetValueNames())
+                    foreach (string valueName in key.GetValueNames())
                     {
-                        String value = key.GetValue(valueName).ToString();
+                        string value = key.GetValue(valueName).ToString();
 
-                        if (String.IsNullOrEmpty(portNamePattern))
+                        if (string.IsNullOrEmpty(portNamePattern))
                             values.Add(value);
                         else
                         {
-                            Int32 index = value.IndexOf(portNamePattern);
+                            int index = value.IndexOf(portNamePattern);
                             if (index != -1)
                                 values.Add(value.Substring(index));
                         }
@@ -46,15 +44,15 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <summary>
         /// ¬озвращает список доступных COM-портов
         /// </summary>
-        public static String[] Enumerate()
+        public static string[] Enumerate()
         {
-            return Enumerate(@"HARDWARE\DEVICEMAP\SERIALCOMM", String.Empty);
+            return Enumerate(@"HARDWARE\DEVICEMAP\SERIALCOMM", string.Empty);
         }
 
         /// <summary>
         /// ¬озвращает список доступных LPT-портов
         /// </summary>
-        public static String[] EnumerateLPT()
+        public static string[] EnumerateLPT()
         {
             return Enumerate(@"HARDWARE\DEVICEMAP\PARALLEL PORTS", "LPT");
         }

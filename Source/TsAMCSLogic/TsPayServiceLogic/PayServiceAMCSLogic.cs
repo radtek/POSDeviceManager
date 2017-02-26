@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
-using System.Net;
 using System.IO;
-using TsManager;
+using System.Net;
+using System.Xml;
 using DevicesCommon;
+using TsManager;
 
 namespace TsPayServiceLogic
 {
@@ -24,7 +22,7 @@ namespace TsPayServiceLogic
         /// <summary>
         /// Формирует запрос к ПДС
         /// </summary>
-        private void GetRequest(String idData, Stream requestStream)
+        private void GetRequest(string idData, Stream requestStream)
         {
             XmlDocument xmlDoc = new XmlDocument();
 
@@ -52,7 +50,7 @@ namespace TsPayServiceLogic
         /// <param name="responseStream">Поток ответа на запрос</param>
         /// <param name="idData">Идентификационные данные</param>
         /// <returns>Баланс карточного счета</returns>
-        private Int32 GetBalance(Stream responseStream, String idData)
+        private int GetBalance(Stream responseStream, string idData)
         {
             // создаем документ
             XmlDocument xmlDoc = new XmlDocument();
@@ -60,22 +58,22 @@ namespace TsPayServiceLogic
 
             // проверяем статусные атрибуты
             // код ошибки
-            String attribValue = xmlDoc.DocumentElement.GetAttribute("errorCode");
-            String errorMessage = xmlDoc.DocumentElement["errorMessage"].InnerText;
-            if (String.Compare(attribValue, "0") != 0)
-                throw new InvalidOperationException(String.Format(
+            string attribValue = xmlDoc.DocumentElement.GetAttribute("errorCode");
+            string errorMessage = xmlDoc.DocumentElement["errorMessage"].InnerText;
+            if (string.Compare(attribValue, "0") != 0)
+                throw new InvalidOperationException(string.Format(
                     "Запрос не выполнен. Ошибка: \"{0}\" [{1}]", attribValue, errorMessage));
 
             // код статуса
             attribValue = xmlDoc.DocumentElement.GetAttribute("statusCode");
             errorMessage = xmlDoc.DocumentElement["statusMessage"].InnerText;
-            if (String.Compare(attribValue, "0") != 0)
-                throw new InvalidOperationException(String.Format(
+            if (string.Compare(attribValue, "0") != 0)
+                throw new InvalidOperationException(string.Format(
                     "Запрос выполнен. Ошибка: \"{0}\" [{1}]", attribValue, errorMessage));
 
             // флаг запрета для карты
-            if (String.Compare(xmlDoc.DocumentElement["forbidden"].InnerText, "0") != 0)
-                throw new InvalidOperationException(String.Format(
+            if (string.Compare(xmlDoc.DocumentElement["forbidden"].InnerText, "0") != 0)
+                throw new InvalidOperationException(string.Format(
                     "Карта [{0}] запрещена к использованию", idData));
 
             // баланс карты
@@ -92,14 +90,14 @@ namespace TsPayServiceLogic
             set { _settings = (PayServiceAMCSLogicSettings)value; }
         }
 
-        public Boolean IsAccessGranted(TurnstileDirection direction, String idData,
-            out String reason)
+        public bool IsAccessGranted(TurnstileDirection direction, string idData,
+            out string reason)
         {
             // причина отказа
             reason = "Доступ разрешен";
 
             // формируем HTTP-запрос к ПДС
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(String.Format(
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(string.Format(
                 "http://{0}:{1}/", _settings.HostOrIp, _settings.Port));
             request.Method = "POST";
             using (Stream requestStream = request.GetRequestStream())
@@ -115,10 +113,10 @@ namespace TsPayServiceLogic
                     using (Stream responseStream = response.GetResponseStream())
                     {
                         // читаем ответ
-                        Int32 balance = GetBalance(responseStream, idData);
+                        int balance = GetBalance(responseStream, idData);
 
                         // пропускаем на выход только с неотрицательным балансом
-                        Boolean accessGranted = (direction == TurnstileDirection.Entry) ||
+                        bool accessGranted = (direction == TurnstileDirection.Entry) ||
                             (direction == TurnstileDirection.Exit && balance >= 0);
                         if (!accessGranted)
                             reason = "Отрицательный баланс счета";
@@ -139,7 +137,7 @@ namespace TsPayServiceLogic
             }
         }
 
-        public void OnAccessOccured(TurnstileDirection direction, String idData)
+        public void OnAccessOccured(TurnstileDirection direction, string idData)
         {
         }
 

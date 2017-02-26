@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace DevicesCommon
 {
     /// <summary>
@@ -35,19 +31,19 @@ namespace DevicesCommon
         /// <summary>
         /// Таймаут открытия турникета
         /// </summary>
-        Int32 Timeout { get; set; }
+        int Timeout { get; set; }
 
         /// <summary>
         /// Открыть турникет
         /// </summary>
         /// <returns>true, если в течение таймаута через турникет совершен проход</returns>
-        Boolean Open();
+        bool Open();
 
         /// <summary>
         /// Закрыть турникет
         /// </summary>
         /// <param name="accessDenied">Доступ запрещен</param>
-        void Close(Boolean accessDenied);
+        void Close(bool accessDenied);
 
         #endregion
 
@@ -56,7 +52,7 @@ namespace DevicesCommon
         /// <summary>
         /// Очередной блок идентификационных данных от устройства
         /// </summary>
-        String IdentificationData { get; }
+        string IdentificationData { get; }
 
         #endregion
     }

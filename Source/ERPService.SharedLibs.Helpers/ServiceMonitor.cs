@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
 using System.ServiceProcess;
 using System.Windows.Forms;
-using System.Reflection;
 
 namespace ERPService.SharedLibs.Helpers
 {
@@ -12,13 +11,13 @@ namespace ERPService.SharedLibs.Helpers
         private PropertyInfo _pInfo;
         private Object _statusObj;
 
-        public StatusObjectHelper(Object statusObj, String propertyName)
+        public StatusObjectHelper(Object statusObj, string propertyName)
         {
             _statusObj = statusObj;
             _pInfo = _statusObj.GetType().GetProperty(propertyName);
         }
 
-        public void SetStatus(String status)
+        public void SetStatus(string status)
         {
             _pInfo.SetValue(_statusObj, status, null);
         }
@@ -37,14 +36,14 @@ namespace ERPService.SharedLibs.Helpers
         private List<ToolStripItem> _enabledWhenStoppedItems;
         private List<StatusObjectHelper> _statusObjects;
         private Timer _timer;
-        private Boolean _mustRaiseServiceStarted;
-        private Boolean _mustRaiseServiceStopped;
+        private bool _mustRaiseServiceStarted;
+        private bool _mustRaiseServiceStopped;
 
         #endregion
 
         #region Закрытые свойства и методы
 
-        private void EnableItems(List<ToolStripItem> items, Boolean enabled)
+        private void EnableItems(List<ToolStripItem> items, bool enabled)
         {
             foreach (ToolStripItem item in items)
             {
@@ -73,7 +72,7 @@ namespace ERPService.SharedLibs.Helpers
             EnableItems(_enabledWhenStoppedItems, false);
         }
 
-        private Boolean RaiseServiceStarted
+        private bool RaiseServiceStarted
         {
             get
             {
@@ -88,7 +87,7 @@ namespace ERPService.SharedLibs.Helpers
             }
         }
 
-        private Boolean RaiseServiceStopped
+        private bool RaiseServiceStopped
         {
             get
             {
@@ -112,7 +111,7 @@ namespace ERPService.SharedLibs.Helpers
                 _svcCtrl.Refresh();
 
                 // управляем доступностью элементов управления
-                String statusString = String.Empty;
+                string statusString = string.Empty;
                 switch (_svcCtrl.Status)
                 {
                     case ServiceControllerStatus.Running:
@@ -199,11 +198,11 @@ namespace ERPService.SharedLibs.Helpers
         /// <param name="serviceName">Имя сервиса</param>
         /// <param name="machineName">Имя компьютера</param>
         /// <param name="updatePeriod">Период обновления статуса элементов управления</param>
-        public ServiceMonitor(String serviceName, String machineName, Int32 updatePeriod)
+        public ServiceMonitor(string serviceName, string machineName, int updatePeriod)
         {
-            if (String.IsNullOrEmpty(serviceName))
+            if (string.IsNullOrEmpty(serviceName))
                 throw new ArgumentNullException("serviceName");
-            if (String.IsNullOrEmpty(machineName))
+            if (string.IsNullOrEmpty(machineName))
                 throw new ArgumentNullException("machineName");
 
             _svcCtrl = new ServiceController(serviceName, machineName);
@@ -223,7 +222,7 @@ namespace ERPService.SharedLibs.Helpers
         /// </summary>
         /// <param name="serviceName">Имя сервиса</param>
         /// <param name="updatePeriod">Период обновления статуса элементов управления</param>
-        public ServiceMonitor(String serviceName, Int32 updatePeriod)
+        public ServiceMonitor(string serviceName, int updatePeriod)
             : this(serviceName, ".", updatePeriod)
         {
         }
@@ -232,7 +231,7 @@ namespace ERPService.SharedLibs.Helpers
         /// Создает экземпляр класса
         /// </summary>
         /// <param name="serviceName">Имя сервиса</param>
-        public ServiceMonitor(String serviceName)
+        public ServiceMonitor(string serviceName)
             : this(serviceName, 1000)
         {
         }
@@ -311,7 +310,7 @@ namespace ERPService.SharedLibs.Helpers
         /// </summary>
         /// <param name="item">Элемент панели инструментов</param>
         /// <param name="isRestart">Элемент отвечает за перезапуск сервсиа</param>
-        public void AppendEnabledWhenStarted(ToolStripItem item, Boolean isRestart)
+        public void AppendEnabledWhenStarted(ToolStripItem item, bool isRestart)
         {
             if (item == null)
                 throw new ArgumentNullException("ctrl");
@@ -352,11 +351,11 @@ namespace ERPService.SharedLibs.Helpers
         /// </summary>
         /// <param name="statusObj">Объект, отображающий статус</param>
         /// <param name="propertyName">Имя свойства, которое будет инициализировано статусом сервиса</param>
-        public void AppendStatus(Object statusObj, String propertyName)
+        public void AppendStatus(Object statusObj, string propertyName)
         {
             if (statusObj == null)
                 throw new ArgumentNullException("statusObj");
-            if (String.IsNullOrEmpty(propertyName))
+            if (string.IsNullOrEmpty(propertyName))
                 throw new ArgumentNullException("propertyName");
 
             _statusObjects.Add(new StatusObjectHelper(statusObj, propertyName));
@@ -376,11 +375,11 @@ namespace ERPService.SharedLibs.Helpers
         /// </summary>
         /// <param name="serviceName">Имя сервиса</param>
         /// <param name="computerName">Имя компьютера</param>
-        public static Boolean ServiceExists(String serviceName, String computerName)
+        public static bool ServiceExists(string serviceName, string computerName)
         {
             foreach (ServiceController svcCtrl in ServiceController.GetServices())
             {
-                if (String.Compare(svcCtrl.ServiceName, serviceName, true) == 0)
+                if (string.Compare(svcCtrl.ServiceName, serviceName, true) == 0)
                     return true;
             }
             return false;
@@ -390,7 +389,7 @@ namespace ERPService.SharedLibs.Helpers
         /// Проверка существования сервиса
         /// </summary>
         /// <param name="serviceName">Имя сервиса</param>
-        public static Boolean ServiceExists(String serviceName)
+        public static bool ServiceExists(string serviceName)
         {
             return ServiceExists(serviceName, ".");
         }

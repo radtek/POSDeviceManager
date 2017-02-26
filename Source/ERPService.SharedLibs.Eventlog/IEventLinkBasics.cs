@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ERPService.SharedLibs.Eventlog
 {
@@ -17,7 +15,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// <param name="sourceFilter">Фильтр по источнику событий</param>
         /// <param name="eventFilter">Фильтр по типам событий</param>
         EventRecord[] GetLog(DateTime fromDate, DateTime toDate,
-            String[] sourceFilter, EventType[] eventFilter);
+            string[] sourceFilter, EventType[] eventFilter);
 
         /// <summary>
         /// Загрузка журнала
@@ -28,7 +26,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// <param name="eventFilter">Фильтр по типам событий</param>
         /// <param name="maxEvents">Максимальное количество событий</param>
         EventRecord[] GetLog(DateTime fromDate, DateTime toDate,
-            String[] sourceFilter, EventType[] eventFilter, Int32 maxEvents);
+            string[] sourceFilter, EventType[] eventFilter, int maxEvents);
 
         /// <summary>
         /// Принудительная очистка журнала
@@ -52,8 +50,8 @@ namespace ERPService.SharedLibs.Eventlog
         /// метода IEventLinkBasics.GetLog
         /// </param>
         /// <returns>Идентификатор итератора</returns>
-        String BeginGetLog(DateTime fromDate, DateTime toDate, String[] sourceFilter, 
-            EventType[] eventFilter, Int32 maxEvents, Int32 eventPerIteration);
+        string BeginGetLog(DateTime fromDate, DateTime toDate, string[] sourceFilter, 
+            EventType[] eventFilter, int maxEvents, int eventPerIteration);
 
         /// <summary>
         /// Загрузить очередной блок событий из журнала
@@ -62,13 +60,13 @@ namespace ERPService.SharedLibs.Eventlog
         /// <returns>
         /// Очередной блок событий из журнала или null, если достигнут конец журнала
         /// </returns>
-        EventRecord[] GetLog(String iteratorId);
+        EventRecord[] GetLog(string iteratorId);
 
         /// <summary>
         /// Завершить последовательный доступ к событиям 
         /// </summary>
         /// <param name="iteratorId">Идентификатор итератора</param>
-        void EndGetLog(String iteratorId);
+        void EndGetLog(string iteratorId);
 
         #endregion
     }

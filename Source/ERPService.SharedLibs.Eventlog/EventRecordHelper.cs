@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
+using System.Text;
 
 namespace ERPService.SharedLibs.Eventlog
 {
@@ -13,11 +12,11 @@ namespace ERPService.SharedLibs.Eventlog
         #region Константы
 
         // тире
-        private const String Dash = "-";
+        private const string Dash = "-";
         // табуляция
         private const Char Tab = '\t';
         // число полей в записи
-        private const Int32 FieldsCount = 6;
+        private const int FieldsCount = 6;
 
         #endregion
 
@@ -28,10 +27,10 @@ namespace ERPService.SharedLibs.Eventlog
         /// </summary>
         /// <param name="date">Строковое представление даты</param>
         /// <param name="time">Строковое представление времени</param>
-        private static DateTime TimestampFromStorage(String date, String time)
+        private static DateTime TimestampFromStorage(string date, string time)
         {
-            Int32[] dateParts = StringToInt32Array(date);
-            Int32[] timeParts = StringToInt32Array(time);
+            int[] dateParts = StringToInt32Array(date);
+            int[] timeParts = StringToInt32Array(time);
 
             return new DateTime(dateParts[2], dateParts[1], dateParts[0],
                 timeParts[0], timeParts[1], timeParts[2]);
@@ -41,11 +40,11 @@ namespace ERPService.SharedLibs.Eventlog
         /// Преобразует строку в массив Int32
         /// </summary>
         /// <param name="source">Исходная строка</param>
-        private static Int32[] StringToInt32Array(String source)
+        private static int[] StringToInt32Array(string source)
         {
-            String[] values = source.Split('.');
-            Int32[] result = new Int32[values.Length];
-            for (Int32 i = 0; i < values.Length; i++)
+            string[] values = source.Split('.');
+            int[] result = new int[values.Length];
+            for (int i = 0; i < values.Length; i++)
             {
                 result[i] = Convert.ToInt32(values[i]);
             }
@@ -59,7 +58,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// </summary>
         /// <param name="storageEntry">Считанная строка лога</param>
         /// <returns>Считанная строка лога, разбитая на поля</returns>
-        internal static String[] GetRawEntry(String storageEntry)
+        internal static string[] GetRawEntry(string storageEntry)
         {
             return storageEntry.Split(EventRecordHelper.Tab);
         }
@@ -68,7 +67,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// Проверяет валидность записи по количеству полей
         /// </summary>
         /// <param name="rawEntry">Считанная строка лога, разбитая на поля</param>
-        internal static Boolean IsValidEntry(String[] rawEntry)
+        internal static bool IsValidEntry(string[] rawEntry)
         {
             return rawEntry.Length == EventRecordHelper.FieldsCount;
         }
@@ -78,7 +77,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// </summary>
         /// <param name="storageEntry">Запись лога</param>
         /// <returns>Новое событие</returns>
-        internal static EventRecord CreateFromStorageEntry(String[] storageEntry)
+        internal static EventRecord CreateFromStorageEntry(string[] storageEntry)
         {
             // создаем запись
             EventRecord record = new EventRecord(
@@ -86,7 +85,7 @@ namespace ERPService.SharedLibs.Eventlog
                 TimestampFromStorage(storageEntry[1], storageEntry[2]),
                 storageEntry[3],
                 EventTypeConvertor.ConvertTo(storageEntry[4]),
-                new String[] { storageEntry[5] });
+                new string[] { storageEntry[5] });
 
             // возвращаем ее
             return record;
@@ -106,7 +105,7 @@ namespace ERPService.SharedLibs.Eventlog
                 var logLine = new StringBuilder();
 
                 // идентификатор
-                logLine.Append(record.Id.Replace(Dash, String.Empty));
+                logLine.Append(record.Id.Replace(Dash, string.Empty));
                 // табуляция
                 logLine.Append(Tab);
                 // дата

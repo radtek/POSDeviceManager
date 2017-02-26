@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace DevmanConfig
@@ -22,7 +16,7 @@ namespace DevmanConfig
         {
             using (KeyValueItemForm dlgForm = new KeyValueItemForm())
             {
-                dlgForm.Text = String.Format("{0}: {1}", key, value);
+                dlgForm.Text = string.Format("{0}: {1}", key, value);
                 dlgForm.tbKey.Text = key;
                 dlgForm.tbValue.Text = value;
                 if (dlgForm.ShowDialog(owner) == DialogResult.OK)

@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 using DevicesCommon;
 using ERPService.SharedLibs.Helpers;
 
@@ -13,7 +11,7 @@ namespace DevicesBase
     {
         #region Поля
 
-        private IDictionary<String, String> _connectivityParams;
+        private IDictionary<string, string> _connectivityParams;
 
         #endregion
 
@@ -23,13 +21,13 @@ namespace DevicesBase
         protected CustomSMSClient()
             : base()
         {
-            _connectivityParams = new Dictionary<String, String>();
+            _connectivityParams = new Dictionary<string, string>();
         }
 
         /// <summary>
         /// Параметры для подключения, использующиеся для отправки SMS
         /// </summary>
-        protected IDictionary<String, String> ConnectivityParams
+        protected IDictionary<string, string> ConnectivityParams
         {
             get { return _connectivityParams; }
         }
@@ -41,7 +39,7 @@ namespace DevicesBase
         /// </summary>
         /// <param name="recipientNumber">Номер телефона получаетля сообщения</param>
         /// <param name="messageText">Текст сообщения</param>
-        public void Send(String recipientNumber, String messageText)
+        public void Send(string recipientNumber, string messageText)
         {
             // кодируем сообщения и/или разбиваем на части
             EncodedMessage[] messages = OnEncode(messageText, 
@@ -56,7 +54,7 @@ namespace DevicesBase
         /// </summary>
         /// <param name="paramName">Имя параметра</param>
         /// <param name="paramValue">Значение параметра</param>
-        public void SetConnectivityParam(String paramName, String paramValue)
+        public void SetConnectivityParam(string paramName, string paramValue)
         {
             if (_connectivityParams.ContainsKey(paramName))
                 _connectivityParams[paramName] = paramValue;
@@ -74,7 +72,7 @@ namespace DevicesBase
         /// <param name="messageText">Текст сообщения</param>
         /// <param name="recipient">Номер телефона отправителя</param>
         /// <returns>Закодированные части сообщения</returns>
-        protected abstract EncodedMessage[] OnEncode(String messageText, 
+        protected abstract EncodedMessage[] OnEncode(string messageText, 
             PhoneNumber recipient);
 
         /// <summary>

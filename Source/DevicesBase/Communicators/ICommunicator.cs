@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DevicesBase.Communicators
 {
@@ -12,12 +10,12 @@ namespace DevicesBase.Communicators
         /// <summary>
         /// Таймаут чтения
         /// </summary>
-        Int32 ReadTimeout { get; set; }
-        
+        int ReadTimeout { get; set; }
+
         /// <summary>
         /// Таймаут записи
         /// </summary>
-        Int32 WriteTimeout { get; set; }
+        int WriteTimeout { get; set; }
 
         /// <summary>
         /// Установка соединения с устройством
@@ -35,7 +33,7 @@ namespace DevicesBase.Communicators
         /// <param name="buffer">Буфер данных</param>
         /// <param name="offset">Смещение от начала буфера</param>
         /// <param name="size">Размер принимаемых данных</param>
-        Int32 Read(Byte[] buffer, Int32 offset, Int32 size);
+        int Read(byte[] buffer, int offset, int size);
 
         /// <summary>
         /// Запись данных в коммуникатор
@@ -43,17 +41,17 @@ namespace DevicesBase.Communicators
         /// <param name="buffer">Буфер данных</param>
         /// <param name="offset">Смещение от начала буфера</param>
         /// <param name="size">Размер записываемых данных</param>
-        Int32 Write(Byte[] buffer, Int32 offset, Int32 size);
+        int Write(byte[] buffer, int offset, int size);
 
         /// <summary>
         /// Чтение байта из коммуникатора
         /// </summary>
-        Byte ReadByte();
+        byte ReadByte();
 
         /// <summary>
         /// Запись байта в коммуникатор
         /// </summary>
         /// <param name="b">Байт для записи</param>
-        void WriteByte(Byte b);
+        void WriteByte(byte b);
     }
 }

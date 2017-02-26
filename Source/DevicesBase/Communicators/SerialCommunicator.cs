@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
 using DevicesCommon.Helpers;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
@@ -20,7 +18,7 @@ namespace DevicesBase.Communicators
         /// </summary>
         /// <param name="portName">Имя порта</param>
         /// <param name="baudRate">Скорость обмена</param>
-        public SerialCommunicator(String portName, Int32 baudRate)
+        public SerialCommunicator(string portName, int baudRate)
             : base()
         {
             _port = new EasyCommunicationPort();
@@ -31,7 +29,7 @@ namespace DevicesBase.Communicators
         /// <summary>
         /// Таймаут чтения
         /// </summary>
-        public override Int32 ReadTimeout
+        public override int ReadTimeout
         {
             get { return _port.ReadTimeout; }
             set { _port.ReadTimeout = value; }
@@ -40,7 +38,7 @@ namespace DevicesBase.Communicators
         /// <summary>
         /// Таймаут записи
         /// </summary>
-        public override Int32 WriteTimeout
+        public override int WriteTimeout
         {
             get { return _port.WriteTimeout; }
             set { _port.WriteTimeout = value; }
@@ -59,7 +57,7 @@ namespace DevicesBase.Communicators
             catch (Win32Exception e)
             {
                 throw new CommunicationException(
-                    String.Format("Не удалось открыть порт {0}", _port.PortName), e);
+                    string.Format("Не удалось открыть порт {0}", _port.PortName), e);
             }
         }
 
@@ -75,7 +73,7 @@ namespace DevicesBase.Communicators
             catch (Win32Exception e)
             {
                 throw new CommunicationException(
-                    String.Format("Не удалось закрыть порт {0}", _port.PortName), e);
+                    string.Format("Не удалось закрыть порт {0}", _port.PortName), e);
             }
         }
 
@@ -85,7 +83,7 @@ namespace DevicesBase.Communicators
         /// <param name="buffer">Буфер данных</param>
         /// <param name="offset">Смещение от начала буфера</param>
         /// <param name="size">Размер принимаемых данных</param>
-        public override Int32 Read(Byte[] buffer, Int32 offset, Int32 size)
+        public override int Read(byte[] buffer, int offset, int size)
         {
             try
             {
@@ -98,7 +96,7 @@ namespace DevicesBase.Communicators
             catch (Win32Exception e)
             {
                 throw new CommunicationException(
-                    String.Format("Ошибка чтения из порта {0}", _port.PortName), e);
+                    string.Format("Ошибка чтения из порта {0}", _port.PortName), e);
             }
         }
 
@@ -108,7 +106,7 @@ namespace DevicesBase.Communicators
         /// <param name="buffer">Буфер данных</param>
         /// <param name="offset">Смещение от начала буфера</param>
         /// <param name="size">Размер записываемых данных</param>
-        public override Int32 Write(Byte[] buffer, Int32 offset, Int32 size)
+        public override int Write(byte[] buffer, int offset, int size)
         {
             try
             {
@@ -121,7 +119,7 @@ namespace DevicesBase.Communicators
             catch (Win32Exception e)
             {
                 throw new CommunicationException(
-                    String.Format("Ошибка чтения из порта {0}", _port.PortName), e);
+                    string.Format("Ошибка чтения из порта {0}", _port.PortName), e);
             }
         }
     }

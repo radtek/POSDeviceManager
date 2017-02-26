@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
 using DevicesCommon;
-using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace DevicesBase
 {
@@ -14,7 +9,7 @@ namespace DevicesBase
     {
         #region Поля
 
-        private Int32 _address;
+        private int _address;
 
         #endregion
 
@@ -36,7 +31,7 @@ namespace DevicesBase
         /// <summary>
         /// Адрес устройства
         /// </summary>
-        public Int32 Address
+        public int Address
         {
             get { return _address; }
             set { _address = value; }

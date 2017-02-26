@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 using ERPService.SharedLibs.Eventlog;
 using TsManager;
@@ -32,7 +30,7 @@ namespace TsManagerConfigurator
 
         public void ReloadProgress(int eventsLoaded)
         {
-            _tsslUpdateState.Text = String.Format("Событий загружено: {0}", eventsLoaded);
+            _tsslUpdateState.Text = string.Format("Событий загружено: {0}", eventsLoaded);
         }
 
         public IEventLinkBasics Source

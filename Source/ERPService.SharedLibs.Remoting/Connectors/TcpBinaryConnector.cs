@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting;
 
 namespace ERPService.SharedLibs.Remoting.Connectors
 {
@@ -35,7 +31,7 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// <param name="serverNameOrIp">Имя или IP-адрес сервера</param>
         /// <param name="port">Порт сервера</param>
         /// <param name="objectName">Имя объекта</param>
-        public TcpBinaryConnector(String serverNameOrIp, Int32 port, String objectName)
+        public TcpBinaryConnector(string serverNameOrIp, int port, string objectName)
             : base(serverNameOrIp, port, objectName)
         {
         }
@@ -45,7 +41,7 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// </summary>
         /// <param name="port">Порт сервера</param>
         /// <param name="objectName">Имя объекта</param>
-        public TcpBinaryConnector(Int32 port, String objectName)
+        public TcpBinaryConnector(int port, string objectName)
             : this(CustomConnector<T>.Localhost, port, objectName)
         {
         }

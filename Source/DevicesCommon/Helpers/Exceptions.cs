@@ -1,13 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Runtime.Serialization;
-using System.Security;
 using System.Security.Permissions;
 
 namespace DevicesCommon.Helpers
 {
-	#region Исключения диспетчера устройств
+    #region Исключения диспетчера устройств
 
     /// <summary>
     /// Исключение коммуникатора
@@ -15,16 +12,16 @@ namespace DevicesCommon.Helpers
     [Serializable]
     public class CommunicationException : Exception, ISerializable
     {
-        private const String _commException = "Ошибка связи с устройством: {0}.";
-        private String _reason;
+        private const string _commException = "Ошибка связи с устройством: {0}.";
+        private string _reason;
 
         /// <summary>
         /// Создает экземпляр класса
         /// </summary>
         /// <param name="reason">Причина возникновения ошибки</param>
         /// <param name="innerException">Внутреннее исключение</param>
-        public CommunicationException(String reason, Exception innerException)
-            : base(String.Format(_commException, reason), innerException)
+        public CommunicationException(string reason, Exception innerException)
+            : base(string.Format(_commException, reason), innerException)
         {
             _reason = reason;
         }
@@ -33,7 +30,7 @@ namespace DevicesCommon.Helpers
         /// Создает экземпляр класса
         /// </summary>
         /// <param name="reason">Причина возникновения ошибки</param>
-        public CommunicationException(String reason)
+        public CommunicationException(string reason)
             : this(reason, null)
         {
         }
@@ -52,7 +49,7 @@ namespace DevicesCommon.Helpers
         /// <summary>
         /// Причина возникновения исключения
         /// </summary>
-        public String Reason
+        public string Reason
         {
             get { return _reason; }
         }
@@ -81,18 +78,18 @@ namespace DevicesCommon.Helpers
 	[Serializable]
 	public class DeviceNoFoundException: System.Exception, ISerializable
 	{
-		private const String deviceNotFound = "Устройство с идентификатором {0} не найдено на сервере {1}";
-		private const String deviceNotFound2 = "Устройство с идентификатором {0} не найдено";
-		private String deviceId;
-		private String serverName;
+		private const string deviceNotFound = "Устройство с идентификатором {0} не найдено на сервере {1}";
+		private const string deviceNotFound2 = "Устройство с идентификатором {0} не найдено";
+		private string deviceId;
+		private string serverName;
 
 		/// <summary>
 		/// Конструктор
 		/// </summary>
 		/// <param name="deviceId">Идентификатор устройства</param>
 		/// <param name="serverName">Имя сервера</param>
-		public DeviceNoFoundException(String deviceId, String serverName): 
-			base(String.Format(deviceNotFound, deviceId, serverName))
+		public DeviceNoFoundException(string deviceId, string serverName): 
+			base(string.Format(deviceNotFound, deviceId, serverName))
 		{
 			this.deviceId = deviceId;
 			this.serverName = serverName;
@@ -102,11 +99,11 @@ namespace DevicesCommon.Helpers
 		/// Конструктор
 		/// </summary>
 		/// <param name="deviceId">Идентификатор устройства</param>
-		public DeviceNoFoundException(String deviceId):
-			base(String.Format(deviceNotFound2, deviceId))
+		public DeviceNoFoundException(string deviceId):
+			base(string.Format(deviceNotFound2, deviceId))
 		{
 			this.deviceId = deviceId;
-			this.serverName = String.Empty;
+			this.serverName = string.Empty;
 		}
 
 		/// <summary>
@@ -124,7 +121,7 @@ namespace DevicesCommon.Helpers
 		/// <summary>
 		/// Идентификатор устройства
 		/// </summary>
-		public String DeviceId
+		public string DeviceId
 		{
 			get
 			{
@@ -135,7 +132,7 @@ namespace DevicesCommon.Helpers
 		/// <summary>
 		/// Имя сервера
 		/// </summary>
-		public String ServerName
+		public string ServerName
 		{
 			get
 			{
@@ -192,7 +189,7 @@ namespace DevicesCommon.Helpers
 		/// Конструктор
 		/// </summary>
 		/// <param name="message">Текст сообщения об ошибке</param>
-		public DeviceManagerConfigException(String message) : base(message)
+		public DeviceManagerConfigException(string message) : base(message)
 		{
 		}
 
@@ -217,7 +214,7 @@ namespace DevicesCommon.Helpers
 		/// Конструктор
 		/// </summary>
 		/// <param name="message">Текст сообщения об ошибке</param>
-		public DeviceManagerException(String message): base(message)
+		public DeviceManagerException(string message): base(message)
 		{
 		}
 

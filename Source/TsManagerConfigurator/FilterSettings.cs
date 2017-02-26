@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ERPService.SharedLibs.Eventlog;
+﻿using ERPService.SharedLibs.Eventlog;
 using TsManager;
 
 namespace TsManagerConfigurator
@@ -17,7 +14,7 @@ namespace TsManagerConfigurator
 
         public override string[] GetAvailableEventSources()
         {
-            return new String[] { TsGlobalConst.EventSource };
+            return new string[] { TsGlobalConst.EventSource };
         }
     }
 }

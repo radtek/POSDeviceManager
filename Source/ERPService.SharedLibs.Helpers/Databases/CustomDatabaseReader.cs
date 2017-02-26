@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Data;
 
 namespace ERPService.SharedLibs.Helpers.Databases
@@ -10,8 +9,8 @@ namespace ERPService.SharedLibs.Helpers.Databases
     /// </summary>
     public abstract class CustomDatabaseReader : CustomDatabaseHelper
     {
-        private String _text;
-        private List<KeyValuePair<String, Object>> _parameters;
+        private string _text;
+        private List<KeyValuePair<string, Object>> _parameters;
         private IDbConnection _connection;
         private IDbCommand _command;
 
@@ -21,13 +20,13 @@ namespace ERPService.SharedLibs.Helpers.Databases
         protected CustomDatabaseReader()
             : base()
         {
-            _text = String.Empty;
-            _parameters = new List<KeyValuePair<String, Object>>();
+            _text = string.Empty;
+            _parameters = new List<KeyValuePair<string, Object>>();
         }
 
         private void StartRead()
         {
-            if (String.IsNullOrEmpty(_text))
+            if (string.IsNullOrEmpty(_text))
                 throw new ArgumentNullException("Text");
 
             // если чтение запущено повторно, освобождаем команду и соединение
@@ -41,7 +40,7 @@ namespace ERPService.SharedLibs.Helpers.Databases
             _command = _connection.CreateCommand();
             _command.Transaction = _connection.BeginTransaction(IsolationLevel.ReadCommitted);
             _command.CommandText = _text;
-            foreach (KeyValuePair<String, Object> kvp in _parameters)
+            foreach (KeyValuePair<string, Object> kvp in _parameters)
             {
                 NewParameter(_command, kvp.Key, kvp.Value);
             }
@@ -75,7 +74,7 @@ namespace ERPService.SharedLibs.Helpers.Databases
         /// <summary>
         /// “екст команды чтени€ данных
         /// </summary>
-        public String Text
+        public string Text
         {
             get { return _text; }
             set { _text = value; }
@@ -86,9 +85,9 @@ namespace ERPService.SharedLibs.Helpers.Databases
         /// </summary>
         /// <param name="parameterName">»м€ параметра</param>
         /// <param name="parameterValue">«начение параметра</param>
-        public void NewParameter(String parameterName, Object parameterValue)
+        public void NewParameter(string parameterName, Object parameterValue)
         {
-            _parameters.Add(new KeyValuePair<String, Object>(
+            _parameters.Add(new KeyValuePair<string, Object>(
                 parameterName, parameterValue));
         }
 

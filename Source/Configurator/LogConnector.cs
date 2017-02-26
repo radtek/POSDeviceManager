@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
-using ERPService.SharedLibs.Eventlog;
 using DevicesBase;
+using ERPService.SharedLibs.Eventlog;
 
 namespace DevmanConfig
 {
@@ -32,7 +30,7 @@ namespace DevmanConfig
 
         public void ReloadProgress(int eventsLoaded)
         {
-            _tsslReloadProgress.Text = String.Format("Событий загружено: {0}", eventsLoaded);
+            _tsslReloadProgress.Text = string.Format("Событий загружено: {0}", eventsLoaded);
         }
 
         public IEventLinkBasics Source

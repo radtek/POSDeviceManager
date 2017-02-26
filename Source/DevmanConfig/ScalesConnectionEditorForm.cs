@@ -1,11 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace DevmanConfig
@@ -87,10 +82,10 @@ namespace DevmanConfig
 
         public string ConnectionString
         {
-            get { return String.Format("{0}://{1}:{2}", Protocol, Param1, Param2); }
+            get { return string.Format("{0}://{1}:{2}", Protocol, Param1, Param2); }
             set
             {
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                     return;
 
                 Regex connectionString = new Regex(@"(?<Protocol>\w+):\/\/(?<Param1>[\w.]+\/?):(?<Param2>\d+)",

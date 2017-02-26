@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
-using DevicesCommon;
-using DevicesCommon.Helpers;
 using DevicesBase;
 using DevicesBase.Helpers;
+using DevicesCommon.Helpers;
 
 namespace Firich
 {
@@ -24,7 +22,7 @@ namespace Firich
 
             try
             {
-                byte[] nCmd = Encoding.Default.GetBytes(new String(' ', 44));
+                byte[] nCmd = Encoding.Default.GetBytes(new string(' ', 44));
                 nCmd[0] = 0x0C;
 
                 byte[] nLine = Encoding.GetEncoding(866).GetBytes(DisplayLines[0]);
@@ -65,7 +63,7 @@ namespace Firich
 
                 try
                 {
-                    byte[] nCmd = Encoding.Default.GetBytes(new String(' ', 24));
+                    byte[] nCmd = Encoding.Default.GetBytes(new string(' ', 24));
                     DisplayLines[lineNumber] = value;
 
                     nCmd[0] = 0x1B;

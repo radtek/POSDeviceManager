@@ -1,9 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace ERPService.SharedLibs.PropertyGrid.Forms
@@ -32,15 +27,15 @@ namespace ERPService.SharedLibs.PropertyGrid.Forms
             }
             set
             {
-                tbPassword.Text = value == null ? String.Empty : value.ToString();
+                tbPassword.Text = value == null ? string.Empty : value.ToString();
                 tbConfirm.Text = tbPassword.Text;
             }
         }
 
         private void FormPasswordEditor_FormClosing(object sender, FormClosingEventArgs e)
         {
-            e.Cancel = (DialogResult == DialogResult.OK && 
-                String.Compare(tbPassword.Text, tbConfirm.Text, false) != 0);
+            e.Cancel = (DialogResult == DialogResult.OK &&
+                string.Compare(tbPassword.Text, tbConfirm.Text, false) != 0);
             if (e.Cancel)
             {
                 MessageBox.Show("Введенное значение пароля не совпадает с подтверждением",

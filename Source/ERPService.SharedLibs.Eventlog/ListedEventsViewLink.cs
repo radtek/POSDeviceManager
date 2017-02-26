@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows.Forms;
 using System.Threading;
-using System.Linq;
+using System.Windows.Forms;
 using ERPService.SharedLibs.Eventlog.Properties;
 
 namespace ERPService.SharedLibs.Eventlog
@@ -52,9 +51,9 @@ namespace ERPService.SharedLibs.Eventlog
         private ImageList _lvImages;
         private ListedEventsViewSettings _viewSettings;
         private SynchronizationContext _guiSyncContext;
-        private Boolean _notifyOnReloadProgress;
-        private Boolean _replaceControlItemIcons;
-        private volatile Boolean _updating;
+        private bool _notifyOnReloadProgress;
+        private bool _replaceControlItemIcons;
+        private volatile bool _updating;
 
         #endregion
 
@@ -69,8 +68,8 @@ namespace ERPService.SharedLibs.Eventlog
         /// <param name="notifyOnReloadProgress">Сообщать о прогрессе загрузки событий</param>
         /// <param name="replaceControlItemIcons">Заменять иконки у элементов управления</param>
         public ListedEventsViewLink(ListView lv, EventLinkFilterBase filterParams,
-            ListedEventsViewSettings viewSettings, Boolean notifyOnReloadProgress, 
-            Boolean replaceControlItemIcons)
+            ListedEventsViewSettings viewSettings, bool notifyOnReloadProgress,
+            bool replaceControlItemIcons)
         {
             if (lv == null)
                 throw new ArgumentNullException("lv");
@@ -146,7 +145,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// <param name="viewSettings">Ширина колонок</param>
         /// <param name="notifyOnReloadProgress">Сообщать о прогрессе загрузки событий</param>
         public ListedEventsViewLink(ListView lv, EventLinkFilterBase filterParams,
-            ListedEventsViewSettings viewSettings, Boolean notifyOnReloadProgress)
+            ListedEventsViewSettings viewSettings, bool notifyOnReloadProgress)
             : this(lv, filterParams, viewSettings, notifyOnReloadProgress, true)
         {
         }
@@ -204,7 +203,7 @@ namespace ERPService.SharedLibs.Eventlog
                     _updateItems.Add(item);
                     break;
                 default:
-                    throw new InvalidOperationException(String.Format("Тип команды {0} не поддерживается", 
+                    throw new InvalidOperationException(string.Format("Тип команды {0} не поддерживается", 
                         commandType));
             }
             UpdateControlsEnabled();
@@ -265,7 +264,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// <summary>
         /// Признак выполняющегося обновления представления событий
         /// </summary>
-        public Boolean Updating
+        public bool Updating
         {
             get { return _updating; }
         }
@@ -371,7 +370,7 @@ namespace ERPService.SharedLibs.Eventlog
 
         #endregion
 
-        private void UpdateControlsEnabled(List<ToolStripItem> controls, Boolean value)
+        private void UpdateControlsEnabled(List<ToolStripItem> controls, bool value)
         {
             foreach (ToolStripItem item in controls)
             {
@@ -379,13 +378,13 @@ namespace ERPService.SharedLibs.Eventlog
             }
         }
 
-        private void UpdateDetailedControls(Boolean value)
+        private void UpdateDetailedControls(bool value)
         {
-            String text = String.Empty;
+            string text = string.Empty;
             if (value)
             {
                 StringBuilder sb = new StringBuilder();
-                foreach (String line in Current.Text)
+                foreach (string line in Current.Text)
                 {
                     sb.AppendLine(line);
                 }
@@ -414,16 +413,16 @@ namespace ERPService.SharedLibs.Eventlog
             UpdateControlsEnabled(_updateItems, _sourceConnector != null && !_updating);
         }
 
-        private Int32 InsertEvents(EventRecord[] eventRecords, Int32 prevEventsCount)
+        private int InsertEvents(EventRecord[] eventRecords, int prevEventsCount)
         {
             // конвертируем события в элементы списка
             var lviBuf = new ListViewItem[eventRecords.Length];
 
-            for (Int32 i = 0; i < eventRecords.Length; i++)
+            for (int i = 0; i < eventRecords.Length; i++)
             {
                 lviBuf[i] = new ListViewItem();
                 lviBuf[i].Text = eventRecords[i].Timestamp.ToString("dd MMM yyyy  HH:mm:ss");
-                lviBuf[i].ImageIndex = (Int32)eventRecords[i].EventType - 1;
+                lviBuf[i].ImageIndex = (int)eventRecords[i].EventType - 1;
                 lviBuf[i].SubItems.Add(eventRecords[i].Source);
                 lviBuf[i].SubItems.Add(EventTypeConvertor.ConvertFrom(eventRecords[i].EventType));
                 lviBuf[i].SubItems.Add(eventRecords[i].Text[0]);
@@ -560,7 +559,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// <summary>
         /// Индекс последней записи
         /// </summary>
-        private Int32 LastIndex
+        private int LastIndex
         {
             get { return _lv.Items.Count - 1; }
         }
@@ -570,7 +569,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// в списке
         /// </summary>
         /// <param name="index">Индекс записи</param>
-        private EventRecord GetEventRecordByIndex(Int32 index)
+        private EventRecord GetEventRecordByIndex(int index)
         {
             _lv.Items[index].Selected = true;
             return (EventRecord)_lv.Items[index].Tag;
@@ -590,7 +589,7 @@ namespace ERPService.SharedLibs.Eventlog
             if (_lv.Items.Count > 0 && _lv.SelectedItems.Count > 0)
             {
                 // определяем индекс записи, на которую нужно переключиться
-                Int32 preferredIndex =
+                int preferredIndex =
                     _lv.Items[LastIndex].Selected ? 0 : _lv.SelectedItems[0].Index + 1;
                 // возвращаем запись
                 return GetEventRecordByIndex(preferredIndex);
@@ -609,7 +608,7 @@ namespace ERPService.SharedLibs.Eventlog
             if (_lv.Items.Count > 0 && _lv.SelectedItems.Count > 0)
             {
                 // определяем индекс записи, на которую нужно переключиться
-                Int32 preferredIndex =
+                int preferredIndex =
                     _lv.Items[0].Selected ? LastIndex : _lv.SelectedItems[0].Index - 1;
                 // возвращаем запись
                 return GetEventRecordByIndex(preferredIndex);

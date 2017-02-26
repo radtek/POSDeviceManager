@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
 using System.ComponentModel;
 using System.Drawing.Design;
+using System.Windows.Forms;
 
 namespace ERPService.SharedLibs.PropertyGrid.Editors
 {
@@ -28,13 +26,13 @@ namespace ERPService.SharedLibs.PropertyGrid.Editors
         /// <param name="value">Значение свойства</param>
         protected override Object OnEdit(Object value)
         {
-            String selectedPath = (String)value;
+            string selectedPath = (string)value;
             using (FolderBrowserDialog dialog = new FolderBrowserDialog())
             {
                 dialog.Description = Description;
                 dialog.RootFolder = Root;
                 dialog.ShowNewFolderButton = NewFolder;
-                if (!String.IsNullOrEmpty(selectedPath))
+                if (!string.IsNullOrEmpty(selectedPath))
                     dialog.SelectedPath = selectedPath;
 
                 if (dialog.ShowDialog() == DialogResult.OK)
@@ -46,7 +44,7 @@ namespace ERPService.SharedLibs.PropertyGrid.Editors
         /// <summary>
         /// Заголовок диалога выбора папки
         /// </summary>
-        protected virtual String Description
+        protected virtual string Description
         {
             get { return "Выберите папку"; }
         }
@@ -54,7 +52,7 @@ namespace ERPService.SharedLibs.PropertyGrid.Editors
         /// <summary>
         /// Разрешать создавать новые папки
         /// </summary>
-        protected virtual Boolean NewFolder
+        protected virtual bool NewFolder
         {
             get { return true; }
         }

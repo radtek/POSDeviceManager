@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
-using DevicesCommon;
-using DevicesCommon.Helpers;
 using DevicesBase;
 using DevicesBase.Helpers;
-using System.Globalization;
+using DevicesCommon;
+using DevicesCommon.Helpers;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace SparkTK
@@ -318,7 +318,7 @@ namespace SparkTK
             }
             finally
             {
-                if (!ErrorCode.Succeeded && Logger.DebugInfo && !String.IsNullOrEmpty(_deviceProtocol.DebugInfo))
+                if (!ErrorCode.Succeeded && Logger.DebugInfo && !string.IsNullOrEmpty(_deviceProtocol.DebugInfo))
                     Logger.SaveDebugInfo(this, _deviceProtocol.DebugInfo);
 //                _deviceProtocol.ClearDebugInfo();
             }
@@ -461,7 +461,7 @@ namespace SparkTK
             }
             finally
             {
-                if (!ErrorCode.Succeeded && Logger.DebugInfo && !String.IsNullOrEmpty(_deviceProtocol.DebugInfo))
+                if (!ErrorCode.Succeeded && Logger.DebugInfo && !string.IsNullOrEmpty(_deviceProtocol.DebugInfo))
                     Logger.SaveDebugInfo(this, _deviceProtocol.DebugInfo);
 //                _deviceProtocol.ClearDebugInfo();
             }
@@ -506,7 +506,7 @@ namespace SparkTK
             Port.ReadTimeout = READ_TIMEOUT;
             Port.WriteTimeout = WRITE_TIMEOUT;
 
-            _deviceProtocol.WriteDebugLine(String.Format("OnAfterActivate({0}, {1})", PortName, Baud));
+            _deviceProtocol.WriteDebugLine(string.Format("OnAfterActivate({0}, {1})", PortName, Baud));
             ExecuteDriverCommand(delegate()
             {
                 _deviceProtocol.IsPrinterMode = false;
@@ -530,10 +530,10 @@ namespace SparkTK
         }
 
         protected override void OnOpenDocument(DocumentType docType,
-            String cashierName)
+            string cashierName)
         {
             _deviceProtocol.ClearDebugInfo();
-            _deviceProtocol.WriteDebugLine(String.Format("OnOpenDocument({0}, {1})", docType, cashierName));
+            _deviceProtocol.WriteDebugLine(string.Format("OnOpenDocument({0}, {1})", docType, cashierName));
             ExecuteDriverCommand(delegate()
             {
                 _currDocType = docType;
@@ -570,7 +570,7 @@ namespace SparkTK
 
         protected override void OnCloseDocument(bool cutPaper)
         {
-            _deviceProtocol.WriteDebugLine(String.Format("OnCloseDocument({0})", cutPaper));
+            _deviceProtocol.WriteDebugLine(string.Format("OnCloseDocument({0})", cutPaper));
             ExecuteDriverCommand(_deviceProtocol.IsPrinterMode, delegate()
             {
                 switch (_currDocType)
@@ -619,9 +619,9 @@ namespace SparkTK
             });
         }
 
-        protected override void OnPrintString(String source, FontStyle style)
+        protected override void OnPrintString(string source, FontStyle style)
         {
-            _deviceProtocol.WriteDebugLine(String.Format("OnPrintString({0}, {1})", source, style));
+            _deviceProtocol.WriteDebugLine(string.Format("OnPrintString({0}, {1})", source, style));
             ExecuteDriverCommand(!IsPrim02, delegate()
             {
                 if (_currDocType != DocumentType.PayingIn && _currDocType != DocumentType.PayingOut)
@@ -629,10 +629,10 @@ namespace SparkTK
             });
         }
 
-        protected override void OnPrintBarcode(String barcode, AlignOptions align,
+        protected override void OnPrintBarcode(string barcode, AlignOptions align,
             bool readable)
         {
-            _deviceProtocol.WriteDebugLine(String.Format("OnPrintBarcode({0}, {1}, {2})", barcode, align, readable));
+            _deviceProtocol.WriteDebugLine(string.Format("OnPrintBarcode({0}, {1}, {2})", barcode, align, readable));
             ExecuteDriverCommand(!IsPrim02, delegate()
             {
                 if (IsPrim02)
@@ -685,10 +685,10 @@ namespace SparkTK
             ExecuteDriverCommand(delegate() { });
         }
 
-        protected override void OnRegistration(String commentary, UInt32 quantity, UInt32 amount,
-            Byte section)
+        protected override void OnRegistration(string commentary, uint quantity, uint amount,
+            byte section)
         {
-            _deviceProtocol.WriteDebugLine(String.Format("OnRegistration({0}, {1}, {2}, {3})", commentary, quantity, amount, section));
+            _deviceProtocol.WriteDebugLine(string.Format("OnRegistration({0}, {1}, {2}, {3})", commentary, quantity, amount, section));
             bool nonFiscalDoc = _currDocType == DocumentType.Other || !HasNonzeroRegistrations;
             ExecuteDriverCommand(nonFiscalDoc && !IsPrim02, delegate()
             {
@@ -696,7 +696,7 @@ namespace SparkTK
                 // а то потом с нулевой суммой фискальный чек не закроется
                 if (nonFiscalDoc)
                 {
-                    if (!String.IsNullOrEmpty(commentary))
+                    if (!string.IsNullOrEmpty(commentary))
                         PrintStringInternal(commentary, FontStyle.Regular);
                 }
                 else
@@ -734,9 +734,9 @@ namespace SparkTK
             });
         }
 
-        protected override void OnPayment(UInt32 amount, FiscalPaymentType paymentType)
+        protected override void OnPayment(uint amount, FiscalPaymentType paymentType)
         {
-            _deviceProtocol.WriteDebugLine(String.Format("OnPayment({0}, {1})", amount, paymentType));
+            _deviceProtocol.WriteDebugLine(string.Format("OnPayment({0}, {1})", amount, paymentType));
 
             bool nonFiscalDoc = _currDocType == DocumentType.Other || !HasNonzeroRegistrations;
             if (!nonFiscalDoc)
@@ -775,9 +775,9 @@ namespace SparkTK
                 });
         }
 
-        protected override void OnCash(UInt32 amount)
+        protected override void OnCash(uint amount)
         {
-            _deviceProtocol.WriteDebugLine(String.Format("OnCash({0})", amount));
+            _deviceProtocol.WriteDebugLine(string.Format("OnCash({0})", amount));
             ExecuteDriverCommand(delegate()
             {
                 if (_currDocType == DocumentType.PayingIn || _currDocType == DocumentType.PayingOut)
@@ -850,7 +850,7 @@ namespace SparkTK
             }
             set
             {
-                _deviceProtocol.WriteDebugLine(String.Format("CurrentTimestamp_set({0: yy.MM.dd HH:mm:ss})", value));
+                _deviceProtocol.WriteDebugLine(string.Format("CurrentTimestamp_set({0: yy.MM.dd HH:mm:ss})", value));
                 ExecuteDriverCommand(delegate()
                 {
                     _deviceProtocol.ExecuteCommand("42", true);
@@ -951,7 +951,7 @@ namespace SparkTK
 
         public override void FiscalReport(FiscalReportType reportType, bool full, params object[] reportParams)
         {
-            _deviceProtocol.WriteDebugLine(String.Format("FiscalReport({0}, {1})", reportType, full));
+            _deviceProtocol.WriteDebugLine(string.Format("FiscalReport({0}, {1})", reportType, full));
             ExecuteDriverCommand(delegate()
             {
                 switch (reportType)

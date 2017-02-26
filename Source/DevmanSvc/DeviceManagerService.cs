@@ -1,36 +1,34 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.ServiceProcess;
+п»їusing System;
 using System.Reflection;
+using System.ServiceProcess;
 using DevicesBase;
-using ERPService.SharedLibs.Remoting.Hosts;
 using ERPService.SharedLibs.Eventlog;
 using ERPService.SharedLibs.Helpers;
+using ERPService.SharedLibs.Remoting.Hosts;
 
 namespace DevmanSvc
 {
     /// <summary>
-    /// Хостинг для диспетчера устройств
+    /// РҐРѕСЃС‚РёРЅРі РґР»СЏ РґРёСЃРїРµС‚С‡РµСЂР° СѓСЃС‚СЂРѕР№СЃС‚РІ
     /// </summary>
-    public class DeviceManagerService : ServiceBase
+    public class DeviceManagerService : ServiceBase, IConsoleAware
     {
-        #region Константы
+        #region РљРѕРЅСЃС‚Р°РЅС‚С‹
 
-        private const String serviceStarted = "Сервис запущен";
-        private const String serviceStopped = "Сервис остановлен";
-        private const String serviceHello = "Диспетчер POS-устройств, версия {0}";
+        private const string serviceStarted = "РЎРµСЂРІРёСЃ Р·Р°РїСѓС‰РµРЅ";
+        private const string serviceStopped = "РЎРµСЂРІРёСЃ РѕСЃС‚Р°РЅРѕРІР»РµРЅ";
+        private const string serviceHello = "Р”РёСЃРїРµС‚С‡РµСЂ POS-СѓСЃС‚СЂРѕР№СЃС‚РІ, РІРµСЂСЃРёСЏ {0}";
 
         #endregion
 
-        #region Поля
+        #region РџРѕР»СЏ
 
         private EventLink _eventLink;
         private TcpBinaryHost<DeviceManager> _devmanHost;
 
         #endregion
 
-        #region Закрытые методы
+        #region Р—Р°РєСЂС‹С‚С‹Рµ РјРµС‚РѕРґС‹
 
         private void InitializeComponent()
         {
@@ -42,32 +40,28 @@ namespace DevmanSvc
 
         #endregion
 
-        #region Конструктор
-
         public DeviceManagerService()
         {
             InitializeComponent();
         }
 
-        #endregion
-
-        #region Перегрузка методов базового класса
+        #region РџРµСЂРµРіСЂСѓР·РєР° РјРµС‚РѕРґРѕРІ Р±Р°Р·РѕРІРѕРіРѕ РєР»Р°СЃСЃР°
 
         /// <summary>
-        /// Запуск сервиса
+        /// Р—Р°РїСѓСЃРє СЃРµСЂРІРёСЃР°
         /// </summary>
-        /// <param name="args">Параметры командной строки</param>
-        protected override void OnStart(String[] args)
+        /// <param name="args">РџР°СЂР°РјРµС‚СЂС‹ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё</param>
+        protected override void OnStart(string[] args)
         {
-            // создаем журнал событий
+            // СЃРѕР·РґР°РµРј Р¶СѓСЂРЅР°Р» СЃРѕР±С‹С‚РёР№
             _eventLink = new EventLink(DeviceManager.GetDeviceManagerLogDirectory());
             try
             {
-                // версия сервиса
-                _eventLink.Post(DeviceManager.EventSource, String.Format(serviceHello, 
+                // РІРµСЂСЃРёСЏ СЃРµСЂРІРёСЃР°
+                _eventLink.Post(DeviceManager.EventSource, string.Format(serviceHello, 
                     VersionInfoHelper.GetVersion(Assembly.GetExecutingAssembly())));
 
-                // создаем и публикуем диспетчер
+                // СЃРѕР·РґР°РµРј Рё РїСѓР±Р»РёРєСѓРµРј РґРёСЃРїРµС‚С‡РµСЂ
                 _devmanHost = new TcpBinaryHost<DeviceManager>(new DeviceManager(_eventLink));
                 _devmanHost.EventLink = _devmanHost.Target.DebugInfo ? _eventLink : null;
                 _devmanHost.Marshal();
@@ -75,14 +69,14 @@ namespace DevmanSvc
             }
             catch (Exception e)
             {
-                _eventLink.Post(DeviceManager.EventSource, "Старт сервиса", e);
-                // останавливаем работу сервиса
+                _eventLink.Post(DeviceManager.EventSource, "РЎС‚Р°СЂС‚ СЃРµСЂРІРёСЃР°", e);
+                // РѕСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЂР°Р±РѕС‚Сѓ СЃРµСЂРІРёСЃР°
                 Stop();
             }
         }
 
         /// <summary>
-        /// Остановка сервиса
+        /// РћСЃС‚Р°РЅРѕРІРєР° СЃРµСЂРІРёСЃР°
         /// </summary>
         protected override void OnStop()
         {
@@ -90,7 +84,7 @@ namespace DevmanSvc
             {
                 if (_devmanHost != null)
                 {
-                    // останавливаем диспетчер
+                    // РѕСЃС‚Р°РЅР°РІР»РёРІР°РµРј РґРёСЃРїРµС‚С‡РµСЂ
                     _devmanHost.Dispose();
                     _devmanHost = null;
                 }
@@ -98,10 +92,24 @@ namespace DevmanSvc
             }
             catch (Exception e)
             {
-                _eventLink.Post(DeviceManager.EventSource, "Остановка сервиса", e);
+                _eventLink.Post(DeviceManager.EventSource, "РћСЃС‚Р°РЅРѕРІРєР° СЃРµСЂРІРёСЃР°", e);
             }
-            // закрываем журнал событий
+            // Р·Р°РєСЂС‹РІР°РµРј Р¶СѓСЂРЅР°Р» СЃРѕР±С‹С‚РёР№
             _eventLink.Dispose();
+        }
+
+        #endregion
+
+        #region Р РµР°Р»РёР·Р°С†РёСЏ IConsoleAware
+
+        public void StartApplication(string[] args)
+        {
+            OnStart(args);
+        }
+
+        public void StopApplication()
+        {
+            OnStop();
         }
 
         #endregion

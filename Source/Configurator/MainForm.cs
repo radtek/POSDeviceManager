@@ -1,13 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
+using DevicesBase;
 using ERPService.SharedLibs.Eventlog;
 using ERPService.SharedLibs.Helpers;
-using DevicesBase;
 
 namespace DevmanConfig
 {
@@ -55,7 +50,7 @@ namespace DevmanConfig
             UpdateTreeView();
             tvDevices.SelectedNode = tvDevices.TopNode;
             miSaveConfig.Enabled = btnSave.Enabled = false;
-            lbConfigVersion.Text = String.Format("Версия конфигурации: {0}", devmanProperties.Version);
+            lbConfigVersion.Text = string.Format("Версия конфигурации: {0}", devmanProperties.Version);
 
             if (System.IO.File.Exists(DeviceManager.GetDeviceManagerDirectory() + "\\DevmanSvc.exe"))
                 lbSvcVersion.Text = "Версия службы: " + ERPService.SharedLibs.Helpers.VersionInfoHelper.GetVersion(DeviceManager.GetDeviceManagerDirectory() + "\\DevmanSvc.exe");
@@ -76,12 +71,12 @@ namespace DevmanConfig
             }
             catch (InvalidOperationException e)
             {
-                MessageBox.Show(String.Format("Ошибка сохранения конфигурации. {0}", e.InnerException.Message),
+                MessageBox.Show(string.Format("Ошибка сохранения конфигурации. {0}", e.InnerException.Message),
                     Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             catch (System.IO.IOException e)
             {
-                MessageBox.Show(String.Format("Ошибка ввода-вывода. {0}", e.Message),
+                MessageBox.Show(string.Format("Ошибка ввода-вывода. {0}", e.Message),
                     Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             finally
@@ -157,7 +152,7 @@ namespace DevmanConfig
             string itemName = string.Empty;
             int itemIndex = 1;
             do
-                itemName = String.Format("{0} {1}", itemTemplate, itemIndex++);
+                itemName = string.Format("{0} {1}", itemTemplate, itemIndex++);
             while (parentNode.Nodes.ContainsKey(itemName));
             return itemName;
         }
@@ -257,7 +252,7 @@ namespace DevmanConfig
                 return;
 
             if (MessageBox.Show(this,
-                String.Format("Удалить устройство \"{0}\" из конфигурации?", tvDevices.SelectedNode.Text),
+                string.Format("Удалить устройство \"{0}\" из конфигурации?", tvDevices.SelectedNode.Text),
                 Text, MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
                 return;
 

@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
 using System.Globalization;
 
@@ -13,7 +11,7 @@ namespace ERPService.SharedLibs.PropertyGrid
     {
         private Object ThrowCantConvertException(Object value, Type destinationType)
         {
-            throw new InvalidOperationException(String.Format(
+            throw new InvalidOperationException(string.Format(
                 "Значение [{0}] не может быть преобразовано в тип [{1}]", value, destinationType.Name));
         }
 
@@ -22,7 +20,7 @@ namespace ERPService.SharedLibs.PropertyGrid
         /// using the specified context
         /// </summary>
         /// <param name="context">An ITypeDescriptorContext that provides a format context</param>
-        public override Boolean GetStandardValuesSupported(ITypeDescriptorContext context)
+        public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
         {
             return true;
         }
@@ -32,7 +30,7 @@ namespace ERPService.SharedLibs.PropertyGrid
         /// exclusive list of possible values, using the specified context
         /// </summary>
         /// <param name="context">An ITypeDescriptorContext that provides a format context</param>
-        public override Boolean GetStandardValuesExclusive(ITypeDescriptorContext context)
+        public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
         {
             return true;
         }
@@ -53,9 +51,9 @@ namespace ERPService.SharedLibs.PropertyGrid
         /// <param name="context">An ITypeDescriptorContext that provides a format context</param>
         /// <param name="sourceType">A Type that represents the type you want to convert from</param>
         /// <returns>true if this converter can perform the conversion; otherwise, false</returns>
-        public override Boolean CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
-            if (sourceType == typeof(String))
+            if (sourceType == typeof(string))
                 return true;
             else
                 return base.CanConvertFrom(context, sourceType);
@@ -70,11 +68,11 @@ namespace ERPService.SharedLibs.PropertyGrid
         /// <returns>An Object that represents the converted value</returns>
         public override Object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, Object value)
         {
-            if (value.GetType() == typeof(String))
+            if (value.GetType() == typeof(string))
             {
-                for (Int32 i = 0; i < StringValues.Length; i++)
+                for (int i = 0; i < StringValues.Length; i++)
                 {
-                    if (String.Compare(value.ToString(), StringValues[i], culture, CompareOptions.None) == 0)
+                    if (string.Compare(value.ToString(), StringValues[i], culture, CompareOptions.None) == 0)
                         return ObjectValues[i];
                 }
                 return ThrowCantConvertException(value, context.PropertyDescriptor.PropertyType);
@@ -91,7 +89,7 @@ namespace ERPService.SharedLibs.PropertyGrid
         /// <returns>true if this converter can perform the conversion; otherwise, false</returns>
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
         {
-            if (destinationType == typeof(String))
+            if (destinationType == typeof(string))
                 return true;
             else
                 return base.CanConvertTo(context, destinationType);
@@ -107,9 +105,9 @@ namespace ERPService.SharedLibs.PropertyGrid
         /// <returns>An Object that represents the converted value</returns>
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
-            if (destinationType == typeof(String))
+            if (destinationType == typeof(string))
             {
-                for (Int32 i = 0; i < ObjectValues.Length; i++)
+                for (int i = 0; i < ObjectValues.Length; i++)
                 {
                     if (value.Equals(ObjectValues[i]))
                         return StringValues[i];
@@ -123,7 +121,7 @@ namespace ERPService.SharedLibs.PropertyGrid
         /// <summary>
         /// Набор строковых значений, сопоставленных элементам перечисления
         /// </summary>
-        protected abstract String[] StringValues { get; }
+        protected abstract string[] StringValues { get; }
         
         /// <summary>
         /// Набор значений элементов перечисления

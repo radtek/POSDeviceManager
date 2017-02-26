@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using DevicesCommon.Helpers;
 
 namespace DevicesCommon
 {
-	/// <summary>
-	/// Базовый интерфейс для устройств
-	/// </summary>
-	public interface IDevice
+    /// <summary>
+    /// Базовый интерфейс для устройств
+    /// </summary>
+    public interface IDevice
 	{
 		#region Общие для всех устройств свойства
 
@@ -22,10 +19,10 @@ namespace DevicesCommon
 		/// </summary>
 		bool Active { get; set; }
 
-		/// <summary>
-		/// Идентификатор устройства
-		/// </summary>
-		String DeviceId { get; set; }
+        /// <summary>
+        /// Идентификатор устройства
+        /// </summary>
+        string DeviceId { get; set; }
 
         /// <summary>
         /// Интерфейс для протоколирования работы устройства

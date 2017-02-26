@@ -1,16 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Runtime.Serialization;
-using System.Security;
 using System.Security.Permissions;
 
 namespace DevicesCommon.Helpers
 {
-	/// <summary>
-	/// Флаги состояния принтера
-	/// </summary>
-	[Serializable]
+    /// <summary>
+    /// Флаги состояния принтера
+    /// </summary>
+    [Serializable]
 	public class PrinterStatusFlags : ISerializable
 	{
 		#region Статусные поля печатающего устройства

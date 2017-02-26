@@ -1,28 +1,28 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
-using System.Diagnostics;
-using System.ComponentModel;
 using DevicesCommon;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace DevicesBase
 {
-	/// <summary>
+    /// <summary>
     /// Базовый класс для устройств, предназначенных для чтения данных карт доступа
-	/// </summary>
-	public abstract class CustomGenericReader : CustomSerialDevice, IGenericReader
+    /// </summary>
+    public abstract class CustomGenericReader : CustomSerialDevice, IGenericReader
     {
         #region Поля 
 
         private Parity _parity;
-        private Byte _stopChar;
-        private Queue<String> _data;
-        private Object _syncObject;
+        private byte _stopChar;
+        private Queue<string> _data;
+        private object _syncObject;
         private Thread _readerThread;
-        private Boolean _terminated;
-        private Byte[] _buffer;
+        private bool _terminated;
+        private byte[] _buffer;
         private StringBuilder _tempData;
 
         #endregion
@@ -37,11 +37,11 @@ namespace DevicesBase
         {
             _parity = Parity.None;
             _terminated = false;
-            _syncObject = new Object();
+            _syncObject = new object();
             _stopChar = 0x0A;
-            _data = new Queue<String>();
+            _data = new Queue<string>();
             _readerThread = new Thread(ReadData);
-            _buffer = new Byte[1024];
+            _buffer = new byte[1024];
             _tempData = new StringBuilder();
         }
 
@@ -49,11 +49,11 @@ namespace DevicesBase
 
         #region Закрытые свойства и методы
 
-        private Boolean Terminated
+        private bool Terminated
         {
             get
             {
-                Boolean value;
+                bool value;
                 lock (_syncObject)
                 {
                     value = _terminated;
@@ -79,7 +79,7 @@ namespace DevicesBase
         /// Подготовка полученных от сканера данных
         /// </summary>
         /// <param name="rawData">"Сырые" данные</param>
-        protected abstract String Prepare(String rawData);
+        protected abstract string Prepare(string rawData);
 
         /// <summary>
         /// После активации устройства
@@ -113,19 +113,19 @@ namespace DevicesBase
                 {
                     // читаем все, что есть во входящем буфере порта
                     Array.Clear(_buffer, 0, _buffer.Length);
-                    Int32 bytesRead = Port.Read(_buffer, 0, _buffer.Length);
+                    int bytesRead = Port.Read(_buffer, 0, _buffer.Length);
 
                     if (bytesRead > 0)
                     {
                         // помещаем считанные данные во временную строку
-                        for (Int32 i = 0; i < bytesRead; i++)
+                        for (int i = 0; i < bytesRead; i++)
                         {
                             if (_buffer[i] == _stopChar)
                             {
                                 // завершена очередная строка данных
                                 // разбор строки
-                                String preparedData = Prepare(_tempData.ToString());
-                                if (!String.IsNullOrEmpty(preparedData))
+                                string preparedData = Prepare(_tempData.ToString());
+                                if (!string.IsNullOrEmpty(preparedData))
                                 {
                                     lock (_syncObject)
                                     {
@@ -175,7 +175,7 @@ namespace DevicesBase
         /// <summary>
         /// Стоп-символ
         /// </summary>
-        public Byte StopChar
+        public byte StopChar
         {
             get { return _stopChar; }
             set { _stopChar = value; }
@@ -184,11 +184,11 @@ namespace DevicesBase
         /// <summary>
         /// Очередной блок данных
         /// </summary>
-        public String Data
+        public string Data
         {
             get 
             {
-                String nextData;
+                string nextData;
                 lock (_syncObject)
                 {
                     // извлекаем очередную строку данных из очереди
@@ -201,11 +201,11 @@ namespace DevicesBase
         /// <summary>
         /// Состояние очереди
         /// </summary>
-        public Boolean Empty
+        public bool Empty
         {
             get
             {
-                Boolean state;
+                bool state;
                 lock (_syncObject)
                 {
                     state = _data.Count == 0;

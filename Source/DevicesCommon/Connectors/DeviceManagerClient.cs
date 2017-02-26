@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Net.Sockets;
 using System.Runtime.Remoting;
 using DevicesCommon.Helpers;
@@ -16,12 +13,12 @@ namespace DevicesCommon.Connectors
         /// <summary>
         /// Не ожидать освобождения устройства
         /// </summary>
-        public const Int32 None = 0;
+        public const int None = 0;
 
         /// <summary>
         /// Ожидать освобождения устройства бесконечно
         /// </summary>
-        public const Int32 Infinite = -1;
+        public const int Infinite = -1;
     }
 
 	/// <summary>
@@ -32,7 +29,7 @@ namespace DevicesCommon.Connectors
         #region Поля
 
 		// идентификатор сессии
-		private String _sessionId;
+		private string _sessionId;
 
         #endregion
 
@@ -43,10 +40,10 @@ namespace DevicesCommon.Connectors
         /// </summary>
         /// <remarks>Порт для подключения инициализируется значением по умолчанию - 35100</remarks>
         /// <param name="serverName">Имя сервера</param>
-        public DeviceManagerClient(String serverName)
+        public DeviceManagerClient(string serverName)
             : this(serverName, 35100)
         {
-            _sessionId = String.Empty;
+            _sessionId = string.Empty;
         }
 
         /// <summary>
@@ -54,10 +51,10 @@ namespace DevicesCommon.Connectors
         /// </summary>
         /// <param name="serverName">Имя сервера</param>
         /// <param name="port">Порт сервера</param>
-        public DeviceManagerClient(String serverName, Int32 port)
+        public DeviceManagerClient(string serverName, int port)
             : base(serverName, port, "devicemanager")
         {
-            _sessionId = String.Empty;
+            _sessionId = string.Empty;
         }
 
         #endregion
@@ -71,7 +68,7 @@ namespace DevicesCommon.Connectors
 		{
 			get
 			{
-				return RemoteObject != null && !String.IsNullOrEmpty(_sessionId);
+				return RemoteObject != null && !string.IsNullOrEmpty(_sessionId);
 			}
 		}
 
@@ -116,7 +113,7 @@ namespace DevicesCommon.Connectors
             if (Logged)
             {
                 RemoteObject.Logout(_sessionId);
-                _sessionId = String.Empty;
+                _sessionId = string.Empty;
             }
 		}
 
@@ -125,7 +122,7 @@ namespace DevicesCommon.Connectors
         /// </summary>
         /// <param name="deviceId">Идентификатор устройства</param>
         /// <param name="waitTimeout">Таймаут ожидания захвата устройства, секунды<see cref="WaitConstant"/>></param>
-        public bool Capture(String deviceId, Int32 waitTimeout)
+        public bool Capture(string deviceId, int waitTimeout)
         {
             return RemoteObject.Capture(_sessionId, deviceId, waitTimeout);
         }
@@ -134,7 +131,7 @@ namespace DevicesCommon.Connectors
 		/// Освободить устройство
 		/// </summary>
 		/// <param name="deviceId">Идентификатор устройства</param>
-		public bool Release(String deviceId)
+		public bool Release(string deviceId)
 		{
             return RemoteObject.Release(_sessionId, deviceId);
 		}
@@ -143,7 +140,7 @@ namespace DevicesCommon.Connectors
 		/// Интерфейс устройства
 		/// </summary>
 		/// <param name="deviceId">Идентификатор устройства</param>
-		public IDevice this[String deviceId]
+		public IDevice this[string deviceId]
 		{
 			get
 			{

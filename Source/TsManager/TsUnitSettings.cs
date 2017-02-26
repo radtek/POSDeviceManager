@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
 
 namespace TsManager
@@ -11,19 +9,19 @@ namespace TsManager
     [Serializable]
     public class TsUnitSettings
     {
-        private String _name;
-        private String _hostOrIp;
-        private String _deviceId;
-        private Int32 _port;
+        private string _name;
+        private string _hostOrIp;
+        private string _deviceId;
+        private int _port;
 
         /// <summary>
         /// Создает экземпляр класса
         /// </summary>
         public TsUnitSettings()
         {
-            _name = String.Empty;
+            _name = string.Empty;
             _hostOrIp = "localhost";
-            _deviceId = String.Empty;
+            _deviceId = string.Empty;
             _port = 35100;
         }
 
@@ -34,7 +32,7 @@ namespace TsManager
         [Description("Имя хоста для подключения к \"Форинт-С: Диспетчер устройств\"")]
         [Category("Подключение")]
         [DefaultValue("localhost")]
-        public String HostOrIp
+        public string HostOrIp
         {
             get { return _hostOrIp; }
             set { _hostOrIp = value; }
@@ -47,7 +45,7 @@ namespace TsManager
         [Description("TCP-порт для подключения к \"Форинт-С: Диспетчер устройств\"")]
         [Category("Подключение")]
         [DefaultValue(35100)]
-        public Int32 Port
+        public int Port
         {
             get { return _port; }
             set { _port = value; }
@@ -59,7 +57,7 @@ namespace TsManager
         [DisplayName("Устройство")]
         [Description("Идентификатор устройства в конфигурации диспетчера устройств")]
         [Category("Прочее")]
-        public String DeviceId
+        public string DeviceId
         {
             get { return _deviceId; }
             set { _deviceId = value; }
@@ -71,7 +69,7 @@ namespace TsManager
         [DisplayName("Наименование")]
         [Description("Наименование турникета")]
         [Category("Прочее")]
-        public String Name
+        public string Name
         {
             get { return _name; }
             set { _name = value; }
@@ -80,9 +78,9 @@ namespace TsManager
         /// <summary>
         /// Строковое представление объекта
         /// </summary>
-        public override String ToString()
+        public override string ToString()
         {
-            return String.Format("\"{0}\", [{1}:{2}/{3}]", _name, _hostOrIp, _port, _deviceId);
+            return string.Format("\"{0}\", [{1}:{2}/{3}]", _name, _hostOrIp, _port, _deviceId);
         }
     }
 }

@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 
 namespace ERPService.SharedLibs.Helpers.SerialCommunications
@@ -579,8 +577,8 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
     {
         internal UIntPtr Internal;
         internal UIntPtr InternalHigh;
-        internal UInt32 Offset;
-        internal UInt32 OffsetHigh;
+        internal uint Offset;
+        internal uint OffsetHigh;
         internal IntPtr hEvent;
     }
 
@@ -594,7 +592,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// </summary>
         /// <param name="value">Результат вызова</param>
         /// <exception cref="Win32Exception">Исключение бросается, если value == false</exception>
-        internal static void Win32Check(Boolean value)
+        internal static void Win32Check(bool value)
         {
             if (!value)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -615,12 +613,12 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <param name="hTemplateFile">A handle to a template file with the GENERIC_READ access right</param>
         [DllImport("Kernel32.dll", SetLastError = true)]
         internal extern static SafeFileHandle CreateFile(
-            String lpFileName,
-            UInt32 dwDesiredAccess,
-            UInt32 dwShareMode,
+            string lpFileName,
+            uint dwDesiredAccess,
+            uint dwShareMode,
             IntPtr lpSecurityAttributes,
             CREATION_DISPOSITION dwCreationDisposition,
-            UInt32 dwFlagsAndAttributes,
+            uint dwFlagsAndAttributes,
             IntPtr hTemplateFile
             );
 
@@ -633,11 +631,11 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <param name="lpNumberOfBytesRead">A pointer to the variable that receives the number of bytes read</param>
         /// <param name="lpOverlapped">Pointer to an OVERLAPPED structure. Do not use</param>
         [DllImport("Kernel32.dll", SetLastError = true)]
-        internal extern static Boolean ReadFile(
+        internal extern static bool ReadFile(
             SafeFileHandle hFile,
-            Byte[] lpBuffer,
-            UInt32 nNumberOfBytesToRead,
-            ref UInt32 lpNumberOfBytesRead,
+            byte[] lpBuffer,
+            uint nNumberOfBytesToRead,
+            ref uint lpNumberOfBytesRead,
             IntPtr lpOverlapped
             );
 
@@ -650,11 +648,11 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <param name="lpNumberOfBytesWritten">Pointer to the variable that receives the number of bytes written</param>
         /// <param name="lpOverlapped">Pointer to an OVERLAPPED structure. Do not use</param>
         [DllImport("Kernel32.dll", SetLastError = true)]
-        internal extern static Boolean WriteFile(
+        internal extern static bool WriteFile(
             SafeFileHandle hFile,
-            Byte[] lpBuffer,
-            UInt32 nNumberOfBytesToWrite,
-            ref UInt32 lpNumberOfBytesWritten,
+            byte[] lpBuffer,
+            uint nNumberOfBytesToWrite,
+            ref uint lpNumberOfBytesWritten,
             IntPtr lpOverlapped
             );
 
@@ -664,7 +662,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <param name="hFile">Handle to the communications device</param>
         /// <param name="lpDCB">Pointer to a DCB structure that receives the control settings information</param>
         [DllImport("Kernel32.dll", SetLastError = true)]
-        internal extern static Boolean GetCommState(SafeFileHandle hFile, ref DCB lpDCB);
+        internal extern static bool GetCommState(SafeFileHandle hFile, ref DCB lpDCB);
 
         /// <summary>
         /// Configures a communications device according to the specifications in a device-control block
@@ -673,7 +671,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <param name="lpDCB">Reference to a DCB structure that contains the configuration information 
         /// for the specified communications device</param>
         [DllImport("Kernel32.dll", SetLastError = true)]
-        internal extern static Boolean SetCommState(
+        internal extern static bool SetCommState(
             SafeFileHandle hFile,
             ref DCB lpDCB
             );
@@ -685,9 +683,9 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <param name="hFile">Handle to the communications resource</param>
         /// <param name="dwFlags">Flags</param>
         [DllImport("Kernel32.dll", SetLastError = true)]
-        internal extern static Boolean PurgeComm(
+        internal extern static bool PurgeComm(
             SafeFileHandle hFile,
-            UInt32 dwFlags
+            uint dwFlags
             );
 
         /// <summary>
@@ -698,7 +696,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <param name="lpCommTimeouts">Reference to a COMMTIMEOUTS structure in which the time-out 
         /// information is returned</param>
         [DllImport("Kernel32.dll", SetLastError = true)]
-        internal extern static Boolean GetCommTimeouts(
+        internal extern static bool GetCommTimeouts(
             SafeFileHandle hFile,
             ref COMMTIMEOUTS lpCommTimeouts
             );
@@ -710,7 +708,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <param name="lpCommTimeouts">Pointer to a COMMTIMEOUTS structure that contains the new 
         /// time-out values</param>
         [DllImport("Kernel32.dll", SetLastError = true)]
-        internal extern static Boolean SetCommTimeouts(
+        internal extern static bool SetCommTimeouts(
             SafeHandle hFile,
             ref COMMTIMEOUTS lpCommTimeouts
             );
@@ -723,9 +721,9 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// event that occurred</param>
         /// <param name="lpOverlapped">Pointer to an OVERLAPPED structure. Do not use</param>
         [DllImport("Kernel32.dll", SetLastError = true)]
-        internal extern static Boolean WaitCommEvent(
+        internal extern static bool WaitCommEvent(
             SafeFileHandle hFile,
-            ref UInt32 lpEvtMask,
+            ref uint lpEvtMask,
             IntPtr lpOverlapped
             );
 
@@ -735,9 +733,9 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <param name="hFile">Handle to the communications device</param>
         /// <param name="dwEvtMask">Events to be enabled</param>
         [DllImport("Kernel32.dll", SetLastError = true)]
-        internal extern static Boolean SetCommMask(
+        internal extern static bool SetCommMask(
             SafeFileHandle hFile,
-            UInt32 dwEvtMask
+            uint dwEvtMask
             );
 
         /// <summary>
@@ -746,9 +744,9 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <param name="hFile">Handle to the communications device</param>
         /// <param name="dwFunc">Extended function to be performed</param>
         [DllImport("Kernel32.dll", SetLastError = true)]
-        internal extern static Boolean EscapeCommFunction(
+        internal extern static bool EscapeCommFunction(
             SafeFileHandle hFile,
-            UInt32 dwFunc
+            uint dwFunc
             );
 
         /// <summary>
@@ -758,10 +756,10 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <param name="dwInQueue">Recommended size of the device's internal input buffer, in bytes</param>
         /// <param name="dwOutQueue">Recommended size of the device's internal output buffer, in bytes</param>
         [DllImport("Kernel32.dll", SetLastError = true)]
-        internal extern static Boolean SetupComm(
+        internal extern static bool SetupComm(
             SafeFileHandle hFile,
-            UInt32 dwInQueue,
-            UInt32 dwOutQueue
+            uint dwInQueue,
+            uint dwOutQueue
             );
 
         /// <summary>
@@ -771,9 +769,9 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <param name="lpErrors">Pointer to a variable to be filled with a mask indicating the type of error</param>
         /// <param name="lpStat">Pointer to a COMSTAT structure in which the device's status information is returned</param>
         [DllImport("Kernel32.dll", SetLastError = true)]
-        internal extern static Boolean ClearCommError(
+        internal extern static bool ClearCommError(
             SafeFileHandle hFile,
-            ref UInt32 lpErrors,
+            ref uint lpErrors,
             IntPtr lpStat
             );
 
@@ -783,6 +781,6 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// </summary>
         /// <param name="hFile">A handle to an open file</param>
         [DllImport("Kernel32.dll", SetLastError = true)]
-        internal extern static Boolean FlushFileBuffers(SafeFileHandle hFile);
+        internal extern static bool FlushFileBuffers(SafeFileHandle hFile);
     }
 }

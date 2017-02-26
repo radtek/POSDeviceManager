@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DevicesCommon;
-using DevicesCommon.Helpers;
 using DevicesBase;
 using DevicesBase.Helpers;
+using DevicesCommon;
+using DevicesCommon.Helpers;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace ServicePlus
@@ -55,7 +52,7 @@ namespace ServicePlus
         {
             get 
             {
-                string serial = String.Empty;
+                string serial = string.Empty;
                 ExecuteDriverCommand(false, protocol =>
                 {
                     protocol.ExecuteCommand("A6");
@@ -316,20 +313,20 @@ namespace ServicePlus
                             "2", // тип документа
                             "1", // номер отдела
                             cashierName, // имя оператора
-                            String.Empty); // номер документа
+                            string.Empty); // номер документа
                         break;
                     case DocumentType.Refund:
-                        protocol.ExecuteCommand("20", "3", "1", cashierName, String.Empty);
+                        protocol.ExecuteCommand("20", "3", "1", cashierName, string.Empty);
                         break;
                     case DocumentType.Other:
-                        protocol.ExecuteCommand("20", "1", "1", cashierName, String.Empty);
+                        protocol.ExecuteCommand("20", "1", "1", cashierName, string.Empty);
                         break;
 
                     case DocumentType.PayingIn:
-                        protocol.ExecuteCommand("20", "4", "1", cashierName, String.Empty);
+                        protocol.ExecuteCommand("20", "4", "1", cashierName, string.Empty);
                         break;
                     case DocumentType.PayingOut:
-                        protocol.ExecuteCommand("20", "5", "1", cashierName, String.Empty);
+                        protocol.ExecuteCommand("20", "5", "1", cashierName, string.Empty);
                         break;
 
                     case DocumentType.SectionsReport:
@@ -368,11 +365,11 @@ namespace ServicePlus
                 _currDocType == DocumentType.Refund)
                 ExecuteDriverCommand("30", true, 
                 commentary,
-                String.Empty,
+                string.Empty,
                 (quantity / 1000m).ToString("F3", SPProtocol.Nfi),
                 (10m * amount / quantity).ToString("F2", SPProtocol.Nfi),
                 section.ToString(),
-                String.Empty);
+                string.Empty);
         }
 
         protected override void OnPayment(uint amount, FiscalPaymentType paymentType)
@@ -418,7 +415,7 @@ namespace ServicePlus
 
         protected override void OnCash(uint amount)
         {
-            ExecuteDriverCommand("36", true, String.Empty, (amount / 100m).ToString("F2", SPProtocol.Nfi));
+            ExecuteDriverCommand("36", true, string.Empty, (amount / 100m).ToString("F2", SPProtocol.Nfi));
         }
 
         protected override void OnPrintBarcode(string barcode, AlignOptions align, bool readable)

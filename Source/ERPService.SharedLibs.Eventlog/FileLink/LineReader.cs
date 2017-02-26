@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Text;
 
 namespace ERPService.SharedLibs.Eventlog.FileLink
 {
@@ -16,7 +15,7 @@ namespace ERPService.SharedLibs.Eventlog.FileLink
             _stream = stream;
         }
 
-        internal Boolean Eof
+        internal bool Eof
         {
             get
             {
@@ -29,10 +28,10 @@ namespace ERPService.SharedLibs.Eventlog.FileLink
             _stream.Seek(offset, origin);
         }
 
-        internal String ReadLine()
+        internal string ReadLine()
         {
             // сюда помещаем результат чтения
-            var result = new List<Byte>((Int32)_bufSize);
+            var result = new List<byte>((int)_bufSize);
 
             do
             {
@@ -41,7 +40,7 @@ namespace ERPService.SharedLibs.Eventlog.FileLink
                 if (recentBytes > 0)
                 {
                     // создаем временный буфер для чтения данных
-                    var buffer = new Byte[recentBytes > _bufSize ? _bufSize : recentBytes];
+                    var buffer = new byte[recentBytes > _bufSize ? _bufSize : recentBytes];
 
                     // читаем
                     var bytesRead = _stream.Read(buffer, 0, buffer.Length);

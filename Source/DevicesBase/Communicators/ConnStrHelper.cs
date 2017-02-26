@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace DevicesBase.Communicators
@@ -12,19 +10,19 @@ namespace DevicesBase.Communicators
     {
         private Match _connStrMatch;
 
-        private void ThrowArgException(String connStr)
+        private void ThrowArgException(string connStr)
         {
             throw new ArgumentException(
-                String.Format("Неверный формат стоки подключения: {0}", connStr));
+                string.Format("Неверный формат стоки подключения: {0}", connStr));
         }
 
         /// <summary>
         /// Создает экземпляр класса
         /// </summary>
         /// <param name="connStr">Строка подключения</param>
-        public ConnStrHelper(String connStr)
+        public ConnStrHelper(string connStr)
         {
-            if (String.IsNullOrEmpty(connStr))
+            if (string.IsNullOrEmpty(connStr))
                 ThrowArgException(connStr);
 
             Regex cstr = new Regex(@"(?<Protocol>\w+):\/\/(?<Host>[\w.]+\/?):(?<Port>\d+)",
@@ -39,7 +37,7 @@ namespace DevicesBase.Communicators
         /// Возвращает элемент строки подключения по номеру
         /// </summary>
         /// <param name="itemNo">Номер элемента строки подключения</param>
-        public String this[Int32 itemNo]
+        public string this[int itemNo]
         {
             get
             {

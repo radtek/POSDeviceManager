@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
 using System.Globalization;
 using ERPService.SharedLibs.PropertyGrid.Editors;
@@ -22,9 +20,9 @@ namespace ERPService.SharedLibs.PropertyGrid.Converters
         public override Object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, Object value,
             Type destinationType)
         {
-            if (destinationType == typeof(String))
+            if (destinationType == typeof(string))
             {
-                return new DayOfWeekEditor().Values[(Int32)value - 1];
+                return new DayOfWeekEditor().Values[(int)value - 1];
             }
             else
                 return base.ConvertTo(context, culture, value, destinationType);

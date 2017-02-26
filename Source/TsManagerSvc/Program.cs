@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using System.ServiceProcess;
-using System.Text;
 
 namespace TsManagerSvc
 {

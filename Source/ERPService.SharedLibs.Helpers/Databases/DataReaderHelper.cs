@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Data;
 
 namespace ERPService.SharedLibs.Helpers.Databases
@@ -27,7 +25,7 @@ namespace ERPService.SharedLibs.Helpers.Databases
         /// Чтение логического значение (1 - истина, остальное - ложь)
         /// </summary>
         /// <param name="column">Номер колонки</param>
-        public Boolean GetBoolean(Int32 column)
+        public bool GetBoolean(int column)
         {
             return GetInt32(column) == 1;
         }
@@ -36,16 +34,16 @@ namespace ERPService.SharedLibs.Helpers.Databases
         /// Чтение строкового значения. В случае с DBNull возвращается пустая строка
         /// </summary>
         /// <param name="column">Номер колонки</param>
-        public String GetString(Int32 column)
+        public string GetString(int column)
         {
-            return _reader.IsDBNull(column) ? String.Empty : _reader.GetString(column);
+            return _reader.IsDBNull(column) ? string.Empty : _reader.GetString(column);
         }
 
         /// <summary>
         /// Чтение целочисленного значения. В случае с DBNull возвращается 0
         /// </summary>
         /// <param name="column">Номер колонки</param>
-        public Int32 GetInt32(Int32 column)
+        public int GetInt32(int column)
         {
             return _reader.IsDBNull(column) ? 0 : _reader.GetInt32(column);
         }
@@ -54,7 +52,7 @@ namespace ERPService.SharedLibs.Helpers.Databases
         /// Чтение даты/времени. В случае с DBNull возвращается DateTime.MinValue
         /// </summary>
         /// <param name="column">Номер колонки</param>
-        public DateTime GetDateTime(Int32 column)
+        public DateTime GetDateTime(int column)
         {
             return _reader.IsDBNull(column) ? DateTime.MinValue : _reader.GetDateTime(column);
         }

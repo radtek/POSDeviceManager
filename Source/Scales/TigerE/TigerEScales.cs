@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Globalization;
-using ERPService.SharedLibs.Helpers.SerialCommunications;
-using DevicesCommon;
-using DevicesCommon.Helpers;
 using DevicesBase;
 using DevicesBase.Communicators;
+using DevicesCommon;
+using DevicesCommon.Helpers;
+using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace TigerE
 {
@@ -19,15 +16,15 @@ namespace TigerE
     {
         #region Константы
 
-        private const Int32 MaxAttempts = 10;
-        private const Int32 RawDataSize = 18;
-        private const Int32 ByteTimeout = 100;
+        private const int MaxAttempts = 10;
+        private const int RawDataSize = 18;
+        private const int ByteTimeout = 100;
 
         #endregion
 
         #region Поля
 
-        private String _connStr;
+        private string _connStr;
 
         #endregion;
 
@@ -48,7 +45,7 @@ namespace TigerE
 
         #region Реализация IScaleDevice
 
-        public String ConnectionString
+        public string ConnectionString
         {
             get
             {
@@ -62,7 +59,7 @@ namespace TigerE
                 ConnStrHelper connStrHelper = new ConnStrHelper(_connStr);
 
                 // поддерживается обмен только по RS-232
-                if (String.Compare(connStrHelper[1], "rs", true) != 0)
+                if (string.Compare(connStrHelper[1], "rs", true) != 0)
                     throw new InvalidOperationException("Весы поддерживают обмен только по интерфейсу RS-232");
 
                 // инициализируем параметры связи
@@ -76,7 +73,7 @@ namespace TigerE
             // не поддерживается
         }
 
-        public Int32 Weight
+        public int Weight
         {
             get 
             {
@@ -91,7 +88,7 @@ namespace TigerE
                         Port.WriteByte(0x03);
 
                         // читаем ответ от устройства
-                        var rawData = new Byte[RawDataSize];
+                        var rawData = new byte[RawDataSize];
                         var bytesRead = Port.Read(rawData, 0, RawDataSize);
                         if (bytesRead != RawDataSize)
                             throw new InvalidOperationException("Ошибка в формате данных");
@@ -102,7 +99,7 @@ namespace TigerE
                         // конвертируем часть буфера ответа в строку
                         var weight = Encoding.Default.GetString(rawData, 0, 6);
                         // возвращаем показания веса
-                        return Int32.Parse(weight);
+                        return int.Parse(weight);
                     }
                     catch (TimeoutException)
                     {

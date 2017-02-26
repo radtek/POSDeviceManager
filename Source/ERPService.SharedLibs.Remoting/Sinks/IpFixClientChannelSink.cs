@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.IO;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Messaging;
 using System.Security.Permissions;
-using System.IO;
-using System.Collections;
 
 namespace ERPService.SharedLibs.Remoting.Sinks
 {
@@ -20,7 +17,7 @@ namespace ERPService.SharedLibs.Remoting.Sinks
         // ссылка на следующий приемник в цепи
         private IClientChannelSink _nextSink;
         // имя серверного хоста или его IP-адрес, выдимые с клиента
-        private String _serverHostNameOrIp;
+        private string _serverHostNameOrIp;
 
         #endregion
 
@@ -32,11 +29,11 @@ namespace ERPService.SharedLibs.Remoting.Sinks
         /// <param name="nextSink">Ссылка на следующий приемник в цепи</param>
         /// <param name="serverHostNameOrIp">Имя серверного хоста или его IP-адрес, видимые с клиента</param>
         [SecurityPermission(SecurityAction.LinkDemand)]
-        public IpFixClientChannelSink(IClientChannelSink nextSink, String serverHostNameOrIp)
+        public IpFixClientChannelSink(IClientChannelSink nextSink, string serverHostNameOrIp)
         {
             if (nextSink == null)
                 throw new ArgumentNullException("nextSink");
-            if (String.IsNullOrEmpty(serverHostNameOrIp))
+            if (string.IsNullOrEmpty(serverHostNameOrIp))
                 throw new ArgumentNullException("serverHostNameOrIp");
 
             _nextSink = nextSink;

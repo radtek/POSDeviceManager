@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using ERPService.SharedLibs.Helpers;
 using ERPService.SharedLibs.Eventlog;
+using ERPService.SharedLibs.Helpers;
 
 namespace TsManager
 {
@@ -20,7 +19,7 @@ namespace TsManager
 
         private delegate void EnumWorkerDelegate(TsWorker worker);
 
-        private void EnumWorkers(String checkPointId, EnumWorkerDelegate workerDelegate)
+        private void EnumWorkers(string checkPointId, EnumWorkerDelegate workerDelegate)
         {
             foreach (TsWorker worker in _workers)
             {
@@ -70,7 +69,7 @@ namespace TsManager
 
                         // создаем рабочий поток
                         TsWorker worker = new TsWorker(logic, unitSettings, _eventLink);
-                        _eventLink.Post(TsGlobalConst.EventSource, String.Format(
+                        _eventLink.Post(TsGlobalConst.EventSource, string.Format(
                             "Создан рабочий поток для турникета {0}, СКУД \"{1}\"",
                             unitSettings, logicSettings.AcmsName));
 
@@ -79,7 +78,7 @@ namespace TsManager
                     }
                     catch (Exception e)
                     {
-                        String checkPoint = String.Format(
+                        string checkPoint = string.Format(
                             "Создание рабочего потока для турникета {0}, СКУД \"{1}\"",
                             unitSettings, logicSettings.AcmsName);
                         _eventLink.Post(TsGlobalConst.EventSource, checkPoint, e);

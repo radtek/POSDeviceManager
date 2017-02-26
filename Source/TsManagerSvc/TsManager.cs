@@ -1,14 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.ServiceProcess;
-using System.Text;
 using System.Reflection;
-using TsManager;
+using System.ServiceProcess;
 using ERPService.SharedLibs.Eventlog;
 using ERPService.SharedLibs.Helpers;
+using TsManager;
 
 namespace TsManagerSvc
 {
@@ -28,7 +23,7 @@ namespace TsManagerSvc
             _eventLink = new EventLink(TsGlobalConst.GetLogDirectory());
             try
             {
-                _eventLink.Post(TsGlobalConst.EventSource, String.Format(
+                _eventLink.Post(TsGlobalConst.EventSource, string.Format(
                     "Сервис менеджера турникетов, версия {0}",
                     VersionInfoHelper.GetVersion(Assembly.GetExecutingAssembly())));
 

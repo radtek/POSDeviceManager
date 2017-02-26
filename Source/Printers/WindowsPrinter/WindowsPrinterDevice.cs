@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 using System.Drawing.Printing;
-using DevicesCommon;
-using DevicesCommon.Helpers;
 using DevicesBase;
 using DevicesBase.Helpers;
+using DevicesCommon;
+using DevicesCommon.Helpers;
 
 namespace WindowsPrinter
 {
@@ -96,7 +94,7 @@ namespace WindowsPrinter
         {
             _printBuffer.Add(new LineInfo()
             {
-                Text = readable ? barcode : String.Empty,
+                Text = readable ? barcode : string.Empty,
                 Align = align,
                 Image = BarcodeBuilder.GetBarcodeImage(barcode, BC_HEIGHT)
             });
@@ -131,7 +129,7 @@ namespace WindowsPrinter
             }
             catch (InvalidPrinterException)
             {
-                ErrorCode = new ServerErrorCode(this, 1, String.Format("Принтер с именем \"{0}\" не найден", PortName));
+                ErrorCode = new ServerErrorCode(this, 1, string.Format("Принтер с именем \"{0}\" не найден", PortName));
             }
             catch (Exception e)
             {
@@ -179,7 +177,7 @@ namespace WindowsPrinter
                     _yPos += line.Image.Height;
                 }
 
-                if (!String.IsNullOrEmpty(line.Text))
+                if (!string.IsNullOrEmpty(line.Text))
                 {
                     var printFont = new Font(FONT_FAMILY, FONT_SIZE);
                     switch (line.Style)

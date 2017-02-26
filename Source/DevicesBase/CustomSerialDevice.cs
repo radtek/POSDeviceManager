@@ -1,28 +1,25 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
-using DevicesCommon;
-using DevicesCommon.Helpers;
 using DevicesBase.Helpers;
+using DevicesCommon;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace DevicesBase
 {
-	/// <summary>
-	/// Базовый класс для всех устройств, подключаемых через последовательные и 
+    /// <summary>
+    /// Базовый класс для всех устройств, подключаемых через последовательные и 
     /// параллельные порты
-	/// </summary>
-	public abstract class CustomSerialDevice : CustomConnectableDevice, 
+    /// </summary>
+    public abstract class CustomSerialDevice : CustomConnectableDevice, 
         ISerialDevice, IDisposable
 	{
-        private String _portName;
-        private Int32 _baudRate;
-        private Boolean _portCaptured;
-        private Boolean _portOpened;
-        private Boolean _portActivated;
-        private Boolean _blockPortGetterReentrancy;
-        private Boolean _disposed;
+        private string _portName;
+        private int _baudRate;
+        private bool _portCaptured;
+        private bool _portOpened;
+        private bool _portActivated;
+        private bool _blockPortGetterReentrancy;
+        private bool _disposed;
 
         #region Закрытые методы
 
@@ -106,7 +103,7 @@ namespace DevicesBase
         /// <summary>
         /// Возвращает признак работы по последовательному порту
         /// </summary>
-        protected virtual Boolean IsSerial
+        protected virtual bool IsSerial
         {
             get { return Port.IsSerial; }
         }
@@ -179,7 +176,7 @@ namespace DevicesBase
         /// </summary>
         /// <param name="sender">Коммуникационный порт</param>
         /// <param name="e">Аргументы события</param>
-        protected virtual void SetCommStateEventHandler(Object sender, CommStateEventArgs e)
+        protected virtual void SetCommStateEventHandler(object sender, CommStateEventArgs e)
         {
         }
 
@@ -190,7 +187,7 @@ namespace DevicesBase
 		/// <summary>
 		/// Скорость передачи данных через порт
 		/// </summary>
-		public Int32 Baud
+		public int Baud
 		{
 			get { return _baudRate; }
 			set { _baudRate = value; }
@@ -199,7 +196,7 @@ namespace DevicesBase
 		/// <summary>
 		/// Имя порта (напр., COM1, LPT1...)
 		/// </summary>
-		public override String PortName
+		public override string PortName
 		{
 			get { return _portName; }
             set { _portName = value; } 
@@ -211,7 +208,7 @@ namespace DevicesBase
         /// <remarks>
         /// Подключение устройств сделано ленивым. См. <see cref="CustomSerialDevice.Port"/>.
         /// </remarks>
-		public override Boolean Active
+		public override bool Active
 		{
             get 
             {

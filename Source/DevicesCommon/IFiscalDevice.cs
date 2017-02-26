@@ -1,14 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DevicesCommon.Helpers;
 
 namespace DevicesCommon
 {
-	/// <summary>
-	/// Аргументы делегата для фискального регистратора
-	/// </summary>
-	public class FiscalBreakEventArgs : EventArgs
+    /// <summary>
+    /// Аргументы делегата для фискального регистратора
+    /// </summary>
+    public class FiscalBreakEventArgs : EventArgs
 	{
 		private FiscalBreak breakReason;
 		private bool canContinue;
@@ -92,7 +90,7 @@ namespace DevicesCommon
 		/// <param name="newPassword">Новый пароль налогового инспектора</param>
 		/// <param name="registrationNumber">Регистрационный номер</param>
 		/// <param name="taxpayerNumber">ИНН</param>
-		void Fiscalization(Int32 newPassword, Int64 registrationNumber, Int64 taxpayerNumber);
+		void Fiscalization(int newPassword, Int64 registrationNumber, Int64 taxpayerNumber);
 
 		/// <summary>
 		/// Фискальный отчет
@@ -110,14 +108,14 @@ namespace DevicesCommon
 		/// <param name="firstShift">Номер первой смены</param>
 		/// <param name="lastShift">Номер последней смены</param>
 		void GetLifetime(out DateTime firstDate, out DateTime lastDate,
-			out Int32 firstShift, out Int32 lastShift);
+			out int firstShift, out int lastShift);
 
-		/// <summary>
-		/// Текущий пароль налогового инспектора
-		/// Функции режима НИ вызываются с использованием этого пароля.
-		/// Свойство должно быть инициализировано до вызова первой функции режима НИ
-		/// </summary>
-		Int32 TaxerPassword { get; set;	}
+        /// <summary>
+        /// Текущий пароль налогового инспектора
+        /// Функции режима НИ вызываются с использованием этого пароля.
+        /// Свойство должно быть инициализировано до вызова первой функции режима НИ
+        /// </summary>
+        int TaxerPassword { get; set;	}
 
 		#endregion
 	}

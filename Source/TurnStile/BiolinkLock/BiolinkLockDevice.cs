@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
 using DevicesBase;
 using DevicesCommon;
 using DevicesCommon.Helpers;
-using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace BiolinkLock
 {
@@ -61,7 +56,7 @@ namespace BiolinkLock
                     {
                         int quality = image.ExpressQuality();
                         if (quality < MinQualityThreashold)
-                            return String.Empty;
+                            return string.Empty;
 
                         using (var imageSet = new Biolink.Biometrics2.ImageSet())
                         {
@@ -77,7 +72,7 @@ namespace BiolinkLock
 
                     }
                 }
-                return String.Empty;
+                return string.Empty;
             }
         }
 

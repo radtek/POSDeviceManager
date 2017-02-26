@@ -11,9 +11,9 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
     {
         private EasyCommunicationPort _port;
         private Encoding _encoding;
-        private Int32 _receiveTimeout;
+        private int _receiveTimeout;
 
-        private Boolean IsStopByte(Byte b)
+        private bool IsStopByte(byte b)
         {
             return (b == 10 || b == 13);
         }
@@ -44,7 +44,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <summary>
         /// Таймаут получения ответа
         /// </summary>
-        public Int32 ReceiveTimeout
+        public int ReceiveTimeout
         {
             get { return _receiveTimeout; }
             set { _receiveTimeout = value; }
@@ -55,10 +55,10 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// </summary>
         /// <param name="command">Команда</param>
         /// <returns>Ответ</returns>
-        public String Send(String command)
+        public string Send(string command)
         {
             // добавляем завершающий символ к команде
-            String preparedCommand = String.Concat(command, "\r");
+            string preparedCommand = string.Concat(command, "\r");
 
             // пишем команду в порт
             _port.ClearError();
@@ -69,21 +69,21 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
             DateTime fixedTime = DateTime.Now;
 
             // буфер для хранения ответа
-            List<Byte> answer = new List<Byte>();
+            List<byte> answer = new List<byte>();
             // очередной байт ответа
-            Byte nextByte = 0;
+            byte nextByte = 0;
             // временный буфер данных
-            Byte[] buf = new Byte[1024];
+            byte[] buf = new byte[1024];
 
             // читаем ответ
             do
             {
                 // читаем очередную порцию данных и з порта
                 Array.Clear(buf, 0, buf.Length);
-                Int32 bytesRead = _port.Read(buf, 0, buf.Length);
+                int bytesRead = _port.Read(buf, 0, buf.Length);
                 
                 // разбираем полученные данные
-                for (Int32 i = 0; i < bytesRead; i++)
+                for (int i = 0; i < bytesRead; i++)
                 {
                     nextByte = buf[i];
 

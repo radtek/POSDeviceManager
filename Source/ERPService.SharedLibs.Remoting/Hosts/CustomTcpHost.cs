@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.Remoting;
+using System.Collections;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
-using System.Collections;
 
 namespace ERPService.SharedLibs.Remoting.Hosts
 {
@@ -30,8 +26,8 @@ namespace ERPService.SharedLibs.Remoting.Hosts
         /// <param name="channelName">Имя канала</param>
         /// <param name="port">Порт</param>
         /// <returns>Серверный канал</returns>
-        protected override IChannel CreateChannel(Int32 port, IServerChannelSinkProvider sinkProvider, 
-            String channelName)
+        protected override IChannel CreateChannel(int port, IServerChannelSinkProvider sinkProvider,
+            string channelName)
         {
             IDictionary channelProps = new Hashtable();
             channelProps["name"] = channelName;

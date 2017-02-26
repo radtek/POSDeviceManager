@@ -1,50 +1,46 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace DevicesCommon.Helpers
 {
-	/// <summary>
-	/// Вспомогательный класс, хранит константы типов устройств
-	/// </summary>
-	public static class DeviceNames
+    /// <summary>
+    /// Вспомогательный класс, хранит константы типов устройств
+    /// </summary>
+    public static class DeviceNames
 	{
 		#region Фискальные регистраторы
 
 		/// <summary>
 		/// ФР производства Штрих-М
 		/// </summary>
-		public const String ecrTypeStroke = "Штрих";
+		public const string ecrTypeStroke = "Штрих";
 
 		/// <summary>
 		/// ФР производства СКБВТ ИСКРА, версия 1
 		/// </summary>
-        public const String ecrTypeSpark = "Искра";
+        public const string ecrTypeSpark = "Искра";
 
 		/// <summary>
 		/// ФР производства АТОЛ-ТЕХНОЛОГИИ
 		/// </summary>
-        public const String ecrTypeAtol = "АТОЛ";
+        public const string ecrTypeAtol = "АТОЛ";
 
 		/// <summary>
 		/// ФР производства ПИЛОТ
 		/// </summary>
-        public const String ecrTypePilot = "Пилот";
+        public const string ecrTypePilot = "Пилот";
 
 		/// <summary>
 		/// ФР производства ИНКОТЕКС
 		/// </summary>
-        public const String ecrTypeIncotex = "Инкотекс";
+        public const string ecrTypeIncotex = "Инкотекс";
 
         /// <summary>
         /// ФР производства СКБВТ ИСКРА, версия 2
         /// </summary>
-        public const String ecrTypeSpark2 = "Искра2";
+        public const string ecrTypeSpark2 = "Искра2";
 
         /// <summary>
         /// ФР производства Сервис-Плюс
         /// </summary>
-        public const String ecrTypeServicePlus = "СервисПлюс";
+        public const string ecrTypeServicePlus = "СервисПлюс";
 
 		#endregion
 
@@ -53,12 +49,12 @@ namespace DevicesCommon.Helpers
 		/// <summary>
 		/// Стандартный принтер чеков по протоколу ESC POS
 		/// </summary>
-        public const String printerTypeGenericEpson = "Epson";
+        public const string printerTypeGenericEpson = "Epson";
 
         /// <summary>
         /// Принтер подкладных документов по протоколу Star
         /// </summary>
-        public const String printerTypeStarSlipPrinter = "Star";
+        public const string printerTypeStarSlipPrinter = "Star";
 
 		#endregion
 
@@ -67,7 +63,7 @@ namespace DevicesCommon.Helpers
 		/// <summary>
 		/// RFID-считыватель производства Iron Logic
 		/// </summary>
-        public const String ironLogicRFIDReader = "Iron Logic RFID";
+        public const string ironLogicRFIDReader = "Iron Logic RFID";
 
 		#endregion
 
@@ -76,22 +72,22 @@ namespace DevicesCommon.Helpers
 		/// <summary>
 		/// Firich VFD
 		/// </summary>
-        public const String customerDisplayVFD = "VFD";
+        public const string customerDisplayVFD = "VFD";
 
 		/// <summary>
 		/// DSP
 		/// </summary>
-        public const String customerDisplayDSP = "DSP";
+        public const string customerDisplayDSP = "DSP";
 
 		/// <summary>
 		/// Epson
 		/// </summary>
-        public const String customerDisplayEpson = "Epson";
+        public const string customerDisplayEpson = "Epson";
 
         /// <summary>
         /// Aedex
         /// </summary>
-        public const String customerDisplayAedex = "Aedex";
+        public const string customerDisplayAedex = "Aedex";
 
 		#endregion
 
@@ -100,7 +96,7 @@ namespace DevicesCommon.Helpers
         /// <summary>
         /// Модуль управления бильярдом через контроллер CL-8RC
         /// </summary>
-        public const String blcCl8rc = "Контроллер CL-8RC";
+        public const string blcCl8rc = "Контроллер CL-8RC";
 
         #endregion
 
@@ -109,7 +105,7 @@ namespace DevicesCommon.Helpers
         /// <summary>
         /// Весы DIGI порционные
         /// </summary>
-        public const String digiSimpleScales = "DIGI порционные";
+        public const string digiSimpleScales = "DIGI порционные";
 
         #endregion
 
@@ -118,7 +114,7 @@ namespace DevicesCommon.Helpers
         /// <summary>
         /// Стандартный GSM-модем (AT-команды)
         /// </summary>
-        public const String standardGSMModem = "Стандартный GSM-модем (AT-команды)";
+        public const string standardGSMModem = "Стандартный GSM-модем (AT-команды)";
 
         #endregion
 
@@ -127,7 +123,7 @@ namespace DevicesCommon.Helpers
         /// <summary>
         /// Модуль управления турникетом T283 через контроллер NL-16D0-DI3
         /// </summary>
-        public const String t283dualTripod = "T283 (двухпроходный)";
+        public const string t283dualTripod = "T283 (двухпроходный)";
 
         #endregion
     }

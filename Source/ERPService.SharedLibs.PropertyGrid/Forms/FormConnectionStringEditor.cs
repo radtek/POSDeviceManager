@@ -1,10 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Text;
-using System.Windows.Forms;
 
 namespace ERPService.SharedLibs.PropertyGrid.Forms
 {
@@ -28,11 +23,11 @@ namespace ERPService.SharedLibs.PropertyGrid.Forms
         {
             get
             {
-                if (String.IsNullOrEmpty(tbServer.Text))
+                if (string.IsNullOrEmpty(tbServer.Text))
                     throw new InvalidOperationException("Задайте имя сервера баз данных");
-                if (String.IsNullOrEmpty(tbDatabase.Text))
+                if (string.IsNullOrEmpty(tbDatabase.Text))
                     throw new InvalidOperationException("Задайте имя базы данных");
-                if (!cbWindowsIdent.Checked && String.IsNullOrEmpty(tbUser.Text))
+                if (!cbWindowsIdent.Checked && string.IsNullOrEmpty(tbUser.Text))
                     throw new InvalidOperationException("Задайте имя пользователя или выберите режим Windows-идентификации");
 
                 StringBuilder sb = new StringBuilder("Data Source=");
@@ -56,13 +51,13 @@ namespace ERPService.SharedLibs.PropertyGrid.Forms
             set
             {
                 // разбиваем строку подключения на пары параметр-значение
-                String[] connStrParts = value.ToString().Split(new Char[] { ';' }, 
+                string[] connStrParts = value.ToString().Split(new Char[] { ';' }, 
                     StringSplitOptions.RemoveEmptyEntries);
 
-                foreach (String part in connStrParts)
+                foreach (string part in connStrParts)
                 {
                     // разбиваем элемент на параметр и значение
-                    String[] partItems = part.Split(new Char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] partItems = part.Split(new Char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
                     if (partItems.Length == 2)
                     {
                         // обрабытываются только элементы с заданными значениями
@@ -70,7 +65,7 @@ namespace ERPService.SharedLibs.PropertyGrid.Forms
                         {
                             case "Data Source":
                                 // проверяем, не является ли подключением к именованному экземпляру
-                                String[] serverParts = partItems[1].Split(new Char[] { '\\' }, 
+                                string[] serverParts = partItems[1].Split(new Char[] { '\\' }, 
                                     StringSplitOptions.RemoveEmptyEntries);
 
                                 switch (serverParts.Length)
@@ -81,12 +76,12 @@ namespace ERPService.SharedLibs.PropertyGrid.Forms
                                         break;
                                     case 2:
                                         // не является ли подключением к SQL Express
-                                        cbSqlExpress.Checked = String.Compare(serverParts[1], "SQLEXPRESS") == 0;
+                                        cbSqlExpress.Checked = string.Compare(serverParts[1], "SQLEXPRESS") == 0;
                                         tbServer.Text = cbSqlExpress.Checked ? serverParts[0] : partItems[1];
                                         break;
                                     default:
                                         // имя сервера задано некорректно
-                                        tbServer.Text = String.Empty;
+                                        tbServer.Text = string.Empty;
                                         break;
                                 }
                                 break;

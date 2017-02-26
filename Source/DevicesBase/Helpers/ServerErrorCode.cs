@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
+using System.Text;
 using DevicesCommon;
 using DevicesCommon.Helpers;
 
@@ -16,17 +15,17 @@ namespace DevicesBase.Helpers
         #region Константы
 
         // шаблон сообщения для успешного выполнения действия
-        private const String noErrors = "Ошибок нет";
+        private const string noErrors = "Ошибок нет";
         // шаблон описания ошибки, специфической для протокола обмена с устройством
-        private const String specificError = "Ошибка {0}. {1}";
+        private const string specificError = "Ошибка {0}. {1}";
         // шаблон для хранения информации об исключении
-        private const String exceptionText = "Исключение {0}. Текст: \"{1}\". Стек: \"{2}\"";
+        private const string exceptionText = "Исключение {0}. Текст: \"{1}\". Стек: \"{2}\"";
 
         #endregion
 
         #region Поля
 
-        private String _commandDump;
+        private string _commandDump;
 
         #endregion
 
@@ -41,8 +40,8 @@ namespace DevicesBase.Helpers
         /// <param name="specificDescription">Описание кода ошибки</param>
         /// <param name="sender">Устройство-отправитель кода ошибки</param>
         /// <param name="commandDump"></param>
-        public ServerErrorCode(IDevice sender, GeneralError value, String description,
-            Int16 specificValue, String specificDescription, String commandDump)
+        public ServerErrorCode(IDevice sender, GeneralError value, string description,
+            Int16 specificValue, string specificDescription, string commandDump)
             : base(sender.DeviceId, value, description, specificValue, specificDescription)
         {
             _commandDump = commandDump;
@@ -71,7 +70,7 @@ namespace DevicesBase.Helpers
 
             StringBuilder sb = new StringBuilder(FullDescription);
             sb.AppendLine("Дамп команды или ответа:");
-            sb.AppendLine(String.IsNullOrEmpty(_commandDump) ? "Нет данных" : _commandDump);
+            sb.AppendLine(string.IsNullOrEmpty(_commandDump) ? "Нет данных" : _commandDump);
             sender.Logger.WriteEntry(sb.ToString(), entryType);
         }
 
@@ -82,7 +81,7 @@ namespace DevicesBase.Helpers
         /// <param name="value">Общий код ошибки</param>
         /// <param name="sender">Устройство-отправитель кода ошибки</param>
         public ServerErrorCode(IDevice sender, GeneralError value)
-            : this(sender, value, GetGeneralDescription(value), 0, noErrors, String.Empty)
+            : this(sender, value, GetGeneralDescription(value), 0, noErrors, string.Empty)
         {
         }
 
@@ -93,7 +92,7 @@ namespace DevicesBase.Helpers
         /// <param name="value">Общий код ошибки</param>
         /// <param name="sender">Устройство-отправитель кода ошибки</param>
         /// <param name="commandDump">Дамп команды или ответа</param>
-        public ServerErrorCode(IDevice sender, GeneralError value, String commandDump)
+        public ServerErrorCode(IDevice sender, GeneralError value, string commandDump)
             : this(sender, value, GetGeneralDescription(value), 0, noErrors, commandDump)
         {
         }
@@ -105,9 +104,9 @@ namespace DevicesBase.Helpers
         /// <param name="specificValue">Код ошибки протокола обмена с устройством</param>
         /// <param name="specificDescription">Описание кода ошибки</param>
         /// <param name="sender">Устройство-отправитель кода ошибки</param>
-        public ServerErrorCode(IDevice sender, Int16 specificValue, String specificDescription)
+        public ServerErrorCode(IDevice sender, Int16 specificValue, string specificDescription)
             : this(sender, GeneralError.Specific, GetGeneralDescription(GeneralError.Specific),
-            specificValue, specificDescription, String.Empty)
+            specificValue, specificDescription, string.Empty)
         {
         }
 
@@ -119,8 +118,8 @@ namespace DevicesBase.Helpers
         /// <param name="specificDescription">Описание кода ошибки</param>
         /// <param name="sender">Устройство-отправитель кода ошибки</param>
         /// <param name="commandDump">Дамп команды или ответа</param>
-        public ServerErrorCode(IDevice sender, Int16 specificValue, String specificDescription,
-            String commandDump)
+        public ServerErrorCode(IDevice sender, Int16 specificValue, string specificDescription,
+            string commandDump)
             : this(sender, GeneralError.Specific, GetGeneralDescription(GeneralError.Specific),
             specificValue, specificDescription, commandDump)
         {
@@ -133,8 +132,8 @@ namespace DevicesBase.Helpers
         /// <param name="ex">Исключение</param>
         public ServerErrorCode(IDevice sender, Exception ex)
             : this(sender, GeneralError.Exception,
-            String.Format(exceptionText, ex.GetType().Name, ex.Message, ex.StackTrace), 0, 
-            ex.Message, String.Empty)
+            string.Format(exceptionText, ex.GetType().Name, ex.Message, ex.StackTrace), 0, 
+            ex.Message, string.Empty)
         {
         }
 
@@ -144,9 +143,9 @@ namespace DevicesBase.Helpers
         /// <param name="sender">Устройство-отправитель кода ошибки</param>
         /// <param name="ex">Исключение</param>
         /// <param name="commandDump">Дамп команды или ответа</param>
-        public ServerErrorCode(IDevice sender, Exception ex, String commandDump)
+        public ServerErrorCode(IDevice sender, Exception ex, string commandDump)
             : this(sender, GeneralError.Exception,
-            String.Format(exceptionText, ex.GetType().Name, ex.Message, ex.StackTrace), 0,
+            string.Format(exceptionText, ex.GetType().Name, ex.Message, ex.StackTrace), 0,
             ex.Message, commandDump)
         {
         }
@@ -158,7 +157,7 @@ namespace DevicesBase.Helpers
         /// <summary>
         /// Дамп команды или ответа
         /// </summary>
-        public String CommandDump
+        public string CommandDump
         {
             get { return _commandDump; }
         }

@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ERPService.SharedLibs.Remoting.Connectors
@@ -10,12 +8,12 @@ namespace ERPService.SharedLibs.Remoting.Connectors
     /// </summary>
     public static class ConnectorHelper
     {
-        private const String urlTemplate =
+        private const string urlTemplate =
             @"(?<Protocol>\w+)(?:\u003A\u002F\u002F)(?<Host>\w+)(?:\u003A)(?<Port>\d+)(?:\u002F)(?<ObjectName>\w+)(?:\u002F\u003Fformat\u003D)(?<Format>\w+)";
-        private const String badUrlFormat =
+        private const string badUrlFormat =
             "Строка подключения не соответствует формату [Протокол]://[Имя или IP-адрес]:[Порт]/[Имя объекта]/?format=[Формат данных]";
-        private const String badProtocol = "Протокол [{0}] не поддерживается";
-        private const String badDataFormat = "Формат данных [{0}] не поддерживается";
+        private const string badProtocol = "Протокол [{0}] не поддерживается";
+        private const string badDataFormat = "Формат данных [{0}] не поддерживается";
 
         /// <summary>
         /// Создает коннектор по строке подключения
@@ -28,9 +26,9 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// tcp://localhost:9555/remoteObject/?format=binary
         /// http://server:15000/remoteObject/?format=SOAP
         /// </remarks>
-        public static CustomConnector<TConnector> Create<TConnector>(String connectionString)
+        public static CustomConnector<TConnector> Create<TConnector>(string connectionString)
         {
-            if (String.IsNullOrEmpty(connectionString))
+            if (string.IsNullOrEmpty(connectionString))
                 throw new ArgumentNullException("connectionString");
 
             Match match = Regex.Match(connectionString, urlTemplate);
@@ -49,7 +47,7 @@ namespace ERPService.SharedLibs.Remoting.Connectors
                                 connector = new TcpSoapConnector<TConnector>();
                                 break;
                             default:
-                                throw new ArgumentException(String.Format(badDataFormat,
+                                throw new ArgumentException(string.Format(badDataFormat,
                                     match.Groups["Format"].Value));
                         }
                         break;
@@ -63,12 +61,12 @@ namespace ERPService.SharedLibs.Remoting.Connectors
                                 connector = new HttpSoapConnector<TConnector>();
                                 break;
                             default:
-                                throw new ArgumentException(String.Format(badDataFormat,
+                                throw new ArgumentException(string.Format(badDataFormat,
                                     match.Groups["Format"].Value));
                         }
                         break;
                     default:
-                        throw new ArgumentException(String.Format(badProtocol,
+                        throw new ArgumentException(string.Format(badProtocol,
                             match.Groups["Protocol"].Value));
                 }
 

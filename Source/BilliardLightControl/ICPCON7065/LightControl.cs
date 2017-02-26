@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using ERPService.SharedLibs.Helpers.SerialCommunications;
 using DevicesBase;
-using DevicesCommon;
-using DevicesCommon.Helpers;
 using DevicesBase.Helpers;
+using DevicesCommon.Helpers;
 
 namespace ICPCON7065
 {
@@ -131,7 +127,7 @@ namespace ICPCON7065
             int output = (billiardTableNo - 1) % 5;
 
             // выполняем команду
-            ErrorCode = ExecuteCommand(String.Format("#{0:D2}1{1}{2:D2}", address, output, switchOn));
+            ErrorCode = ExecuteCommand(string.Format("#{0:D2}1{1}{2:D2}", address, output, switchOn));
         }
 
         #endregion

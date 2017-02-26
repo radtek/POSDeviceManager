@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.Text;
 using System.Runtime.Remoting.Channels;
 
 namespace ERPService.SharedLibs.Remoting.Channels
@@ -11,17 +9,17 @@ namespace ERPService.SharedLibs.Remoting.Channels
     /// </summary>
     internal class IpFixChannelHelper
     {
-        private String _serverNameOrIp;
+        private string _serverNameOrIp;
 
         internal IpFixChannelHelper(IDictionary channelProps)
         {
             _serverNameOrIp = channelProps["ServerNameOrIp"].ToString();
         }
 
-        private Boolean Match(String url)
+        private bool Match(string url)
         {
             UriBuilder uriBuilder = new UriBuilder(url);
-            return String.Compare(uriBuilder.Host, _serverNameOrIp, true) == 0;
+            return string.Compare(uriBuilder.Host, _serverNameOrIp, true) == 0;
         }
 
         /// <summary>
@@ -30,16 +28,16 @@ namespace ERPService.SharedLibs.Remoting.Channels
         /// </summary>
         /// <param name="url">URL объекта</param>
         /// <param name="remoteChannelData">Дополнительные данные канала</param>
-        internal Boolean Match(String url, Object remoteChannelData)
+        internal bool Match(string url, Object remoteChannelData)
         {
-            if (String.IsNullOrEmpty(url))
+            if (string.IsNullOrEmpty(url))
             {
                 // проверяем данные канала
                 if (remoteChannelData is ChannelDataStore)
                 {
-                    foreach (String uri in ((ChannelDataStore)remoteChannelData).ChannelUris)
+                    foreach (string uri in ((ChannelDataStore)remoteChannelData).ChannelUris)
                     {
-                        if (String.IsNullOrEmpty(uri))
+                        if (string.IsNullOrEmpty(uri))
                             continue;
 
                         if (Match(uri))

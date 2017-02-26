@@ -1,9 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace ERPService.SharedLibs.PropertyGrid.Forms
@@ -32,7 +27,7 @@ namespace ERPService.SharedLibs.PropertyGrid.Forms
             }
             set
             {
-                tbText.Lines = (String[])value;
+                tbText.Lines = (string[])value;
                 tbText.SelectionStart = 0;
                 WriteCursorLocation();
             }
@@ -44,7 +39,7 @@ namespace ERPService.SharedLibs.PropertyGrid.Forms
         private void WriteCursorLocation()
         {
             // абсцисса и ордината
-            Int32 X, Y;
+            int X, Y;
 
             if (tbText.Text.Length == 0)
             {
@@ -59,7 +54,7 @@ namespace ERPService.SharedLibs.PropertyGrid.Forms
 
                 // ордината
                 Y = 1;
-                Int32 nPos = tbText.Text.IndexOf("\n", 0); ;
+                int nPos = tbText.Text.IndexOf("\n", 0); ;
 
                 while ((nPos < tbText.SelectionStart) && (nPos >= 0))
                 {
@@ -67,7 +62,7 @@ namespace ERPService.SharedLibs.PropertyGrid.Forms
                     nPos = tbText.Text.IndexOf("\n", nPos + 1);
                 }
             }
-            lblPosition.Text = String.Format("Позиция курсора: {0}/{1}", X, Y);
+            lblPosition.Text = string.Format("Позиция курсора: {0}/{1}", X, Y);
         }
 
         private void OnTextChanged(object sender, EventArgs e)

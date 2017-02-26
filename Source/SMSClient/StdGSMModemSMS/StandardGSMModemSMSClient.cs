@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DevicesCommon;
-using DevicesCommon.Helpers;
 using DevicesBase;
+using DevicesCommon.Helpers;
 using ERPService.SharedLibs.Helpers;
 
 namespace StdGSMModemSMS
@@ -11,9 +8,9 @@ namespace StdGSMModemSMS
     [SMSClient(DeviceNames.standardGSMModem)]
     public class StandardGSMModemSMSClient : CustomSMSClient
     {
-        private Boolean _active = false;
+        private bool _active = false;
 
-        protected override EncodedMessage[] OnEncode(String messageText, 
+        protected override EncodedMessage[] OnEncode(string messageText, 
             PhoneNumber recipient)
         {
             ShortMessageEncoder encoder = new ShortMessageEncoder();
@@ -41,7 +38,7 @@ namespace StdGSMModemSMS
             }
         }
 
-        public override Boolean Active
+        public override bool Active
         {
             get { return _active; }
             set { _active = value; }

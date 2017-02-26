@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Http;
 using System.Collections;
+using System.Runtime.Remoting.Channels;
 using ERPService.SharedLibs.Remoting.Channels;
 
 namespace ERPService.SharedLibs.Remoting.Connectors
@@ -14,9 +10,9 @@ namespace ERPService.SharedLibs.Remoting.Connectors
     /// <typeparam name="T">Интерфейс объекта</typeparam>
     public abstract class CustomHttpConnector<T> : CustomConnector<T>
     {
-        private String _proxyName;
-        private Int32 _proxyPort;
-        private Int32 _clientConnectionLimit;
+        private string _proxyName;
+        private int _proxyPort;
+        private int _clientConnectionLimit;
 
         /// <summary>
         /// Создает экземпляр класса
@@ -28,8 +24,8 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// открыто к зададнному серверу</param>
         /// <param name="proxyName">Имя или IP-адрес прокси-сервера</param>
         /// <param name="proxyPort">Порт прокси-сервера</param>
-        protected CustomHttpConnector(String serverNameOrIp, Int32 port, String objectName,
-            Int32 clientConnectionLimit, String proxyName, Int32 proxyPort)
+        protected CustomHttpConnector(string serverNameOrIp, int port, string objectName,
+            int clientConnectionLimit, string proxyName, int proxyPort)
             : base(serverNameOrIp, port, objectName)
         {
             _clientConnectionLimit = clientConnectionLimit;
@@ -44,14 +40,14 @@ namespace ERPService.SharedLibs.Remoting.Connectors
             : base()
         {
             _clientConnectionLimit = 2;
-            _proxyName = String.Empty;
+            _proxyName = string.Empty;
             _proxyPort = 8080;
         }
 
         /// <summary>
         /// Имя или IP-адрес прокси-сервера
         /// </summary>
-        public String ProxyName
+        public string ProxyName
         {
             get { return _proxyName; }
             set
@@ -64,7 +60,7 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// <summary>
         /// Порт прокси-сервера
         /// </summary>
-        public Int32 ProxyPort
+        public int ProxyPort
         {
             get { return _proxyPort; }
             set
@@ -78,7 +74,7 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// Сколько подключений может быть одновременно 
         /// открыто к зададнному серверу
         /// </summary>
-        public Int32 ClientConnectionLimit
+        public int ClientConnectionLimit
         {
             get { return _clientConnectionLimit; }
             set { _clientConnectionLimit = value; }
@@ -90,11 +86,11 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// <param name="sinkProvider">Провайдер приемников канала</param>
         /// <param name="channelName">Имя канала</param>
         /// <returns>Клиентский канал</returns>
-        protected override IChannel CreateChannel(IClientChannelSinkProvider sinkProvider, String channelName)
+        protected override IChannel CreateChannel(IClientChannelSinkProvider sinkProvider, string channelName)
         {
             IDictionary channelProps = GetBasicChannelProperties(channelName);
             channelProps["clientConnectionLimit"] = _clientConnectionLimit;
-            if (!String.IsNullOrEmpty(_proxyName))
+            if (!string.IsNullOrEmpty(_proxyName))
             {
                 channelProps["proxyName"] = _proxyName;
                 channelProps["proxyPort"] = _proxyPort;

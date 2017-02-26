@@ -1,11 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using ERPService.SharedLibs.Eventlog;
 
 namespace ERPService.SharedLibs.Eventlog
 {
@@ -46,12 +41,12 @@ namespace ERPService.SharedLibs.Eventlog
                 throw new ArgumentNullException("eventRecord");
 
             // дата и время
-            lblDateTime.Text = String.Format("Дата и время: {0}", 
+            lblDateTime.Text = string.Format("Дата и время: {0}", 
                 eventRecord.Timestamp.ToString("dd MMM yyyy  HH:mm:ss"));
             // источник события
-            lblSource.Text = String.Format("Приложение: {0}", eventRecord.Source);
+            lblSource.Text = string.Format("Приложение: {0}", eventRecord.Source);
             // тип события
-            lblEventType.Text = String.Format("Тип: {0}", 
+            lblEventType.Text = string.Format("Тип: {0}", 
                 EventTypeConvertor.ConvertFrom(eventRecord.EventType));
             // текст события
             tbText.Lines = eventRecord.Text.ToArray();

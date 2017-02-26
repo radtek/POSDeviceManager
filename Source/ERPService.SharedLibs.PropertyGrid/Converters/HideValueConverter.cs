@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Globalization;
 using System.ComponentModel;
+using System.Globalization;
 
 namespace ERPService.SharedLibs.PropertyGrid.Converters
 {
@@ -23,7 +21,7 @@ namespace ERPService.SharedLibs.PropertyGrid.Converters
         public override Object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, Object value,
             Type destinationType)
         {
-            if (destinationType == typeof(String))
+            if (destinationType == typeof(string))
             {
                 // фактически запрещает отображение реального значения свойства
                 // в пропертигриде

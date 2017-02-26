@@ -1,266 +1,176 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+п»їusing System;
 
 namespace DevicesCommon.Helpers
 {
-	/// <summary>
-	/// Атрибут для класса диспетчера устройств
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class)]
-	public sealed class DeviceManagerAttribute : System.Attribute
-	{
+    /// <summary>
+    /// РђС‚СЂРёР±СѓС‚ РґР»СЏ РєР»Р°СЃСЃР° РґРёСЃРїРµС‚С‡РµСЂР° СѓСЃС‚СЂРѕР№СЃС‚РІ
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+	public sealed class DeviceManagerAttribute : Attribute
+    {
 	}
 
 	/// <summary>
-	/// Базовый атрибут для драйверов устройств
+	/// Р‘Р°Р·РѕРІС‹Р№ Р°С‚СЂРёР±СѓС‚ РґР»СЏ РґСЂР°Р№РІРµСЂРѕРІ СѓСЃС‚СЂРѕР№СЃС‚РІ
 	/// </summary>
-	public abstract class DeviceAttribute : System.Attribute
-	{
-		// наименование типа устройства
-		private String deviceType;
-
+	public abstract class DeviceAttribute : Attribute
+    {
 		/// <summary>
-		/// Конструктор
+		/// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 		/// </summary>
-		/// <param name="deviceType">Тип устройства</param>
-		protected DeviceAttribute(String deviceType)
+		/// <param name="deviceType">РўРёРї СѓСЃС‚СЂРѕР№СЃС‚РІР°</param>
+		protected DeviceAttribute(string deviceType)
 		{
-			this.deviceType = deviceType;
+			DeviceType = deviceType;
 		}
 
 		/// <summary>
-		/// Тип устройства
+		/// РўРёРї СѓСЃС‚СЂРѕР№СЃС‚РІР°
 		/// </summary>
-		public String DeviceType
-		{
-			get
-			{
-				return deviceType;
-			}
-		}
+		public string DeviceType { get; }
 	}
 
     /// <summary>
-    /// Атрибут реализации модуля управления турникетом
+    /// РђС‚СЂРёР±СѓС‚ СЂРµР°Р»РёР·Р°С†РёРё РјРѕРґСѓР»СЏ СѓРїСЂР°РІР»РµРЅРёСЏ С‚СѓСЂРЅРёРєРµС‚РѕРј
     /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public sealed class TurnstileDeviceAttribute : DeviceAttribute
     {
         /// <summary>
-        /// Создает экземпляр класса
+        /// РЎРѕР·РґР°РµС‚ СЌРєР·РµРјРїР»СЏСЂ РєР»Р°СЃСЃР°
         /// </summary>
-        /// <param name="turnstileType">Тип турникета</param>
-        public TurnstileDeviceAttribute(String turnstileType)
+        /// <param name="turnstileType">РўРёРї С‚СѓСЂРЅРёРєРµС‚Р°</param>
+        public TurnstileDeviceAttribute(string turnstileType)
             : base(turnstileType)
         {
         }
-
-        /// <summary>
-        /// Тип турникета
-        /// </summary>
-        public String TurnstileType
-        {
-            get { return base.DeviceType; }
-        }
     }
 
     /// <summary>
-    /// Атрибут реализации считывателя
+    /// РђС‚СЂРёР±СѓС‚ СЂРµР°Р»РёР·Р°С†РёРё СЃС‡РёС‚С‹РІР°С‚РµР»СЏ
     /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public sealed class GenericReaderAttribute : DeviceAttribute
     {
         /// <summary>
-        /// Создает экземпляр класса
+        /// РЎРѕР·РґР°РµС‚ СЌРєР·РµРјРїР»СЏСЂ РєР»Р°СЃСЃР°
         /// </summary>
-        /// <param name="readerType">Тип считывателя</param>
-        public GenericReaderAttribute(String readerType)
+        /// <param name="readerType">РўРёРї СЃС‡РёС‚С‹РІР°С‚РµР»СЏ</param>
+        public GenericReaderAttribute(string readerType)
             : base(readerType)
         {
         }
-
-        /// <summary>
-        /// Тип считывателя
-        /// </summary>
-        public String ReaderType
-        {
-            get { return base.DeviceType; }
-        }
     }
 
     /// <summary>
-    /// Атрибут реализации SMS-клиента
+    /// РђС‚СЂРёР±СѓС‚ СЂРµР°Р»РёР·Р°С†РёРё SMS-РєР»РёРµРЅС‚Р°
     /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public sealed class SMSClientAttribute : DeviceAttribute
     {
         /// <summary>
-        /// Создает экземпляр класса
+        /// РЎРѕР·РґР°РµС‚ СЌРєР·РµРјРїР»СЏСЂ РєР»Р°СЃСЃР°
         /// </summary>
-        /// <param name="smsClientType">Тип SMS-клиента</param>
-        public SMSClientAttribute(String smsClientType)
+        /// <param name="smsClientType">РўРёРї SMS-РєР»РёРµРЅС‚Р°</param>
+        public SMSClientAttribute(string smsClientType)
             : base(smsClientType)
         {
-        }
-
-        /// <summary>
-        /// Тип SMS-клиента
-        /// </summary>
-        public String SMSClientType
-        {
-            get { return base.DeviceType; }
         }
     }
 
 	/// <summary>
-	/// Атрибут драйвера весов
+	/// РђС‚СЂРёР±СѓС‚ РґСЂР°Р№РІРµСЂР° РІРµСЃРѕРІ
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class)]
-	public sealed class ScaleAttribute : DeviceAttribute
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public sealed class ScaleAttribute : DeviceAttribute
 	{
 		/// <summary>
-		/// Конструктор
+		/// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 		/// </summary>
-		/// <param name="scaleType">Тип весов</param>
-		public ScaleAttribute(String scaleType) : base(scaleType)
+		/// <param name="scaleType">РўРёРї РІРµСЃРѕРІ</param>
+		public ScaleAttribute(string scaleType) 
+            : base(scaleType)
 		{
-		}
-
-		/// <summary>
-		/// Тип весов
-		/// </summary>
-		public String ScaleType
-		{
-			get
-			{
-				return base.DeviceType;
-			}
-		}
-	}
-
-	/// <summary>
-	/// Атрибут драйвера дисплея покупателя
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class)]
-	public sealed class CustomerDisplayAttribute : DeviceAttribute
-	{
-		/// <summary>
-		/// Конструктор
-		/// </summary>
-		/// <param name="displayType">Тип дисплея покупателя</param>
-		public CustomerDisplayAttribute(String displayType) : base(displayType)
-		{
-		}
-
-		/// <summary>
-		/// Тип дисплея покупателя
-		/// </summary>
-		public String DisplayType
-		{
-			get
-			{
-				return base.DeviceType;
-			}
-		}
-	}
-
-	/// <summary>
-	/// Атрибут драйвера фискального регистратора
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class)]
-	public sealed class FiscalDeviceAttribute : DeviceAttribute
-	{
-		/// <summary>
-		/// Конструктор
-		/// </summary>
-		/// <param name="fiscalType">Тип фискального регистратора</param>
-		public FiscalDeviceAttribute(String fiscalType) : base(fiscalType)
-		{
-		}
-
-		/// <summary>
-		/// Тип фискального регистратора
-		/// </summary>
-		public String FiscalType
-		{
-			get
-			{
-				return base.DeviceType;
-			}
-		}
-	}
-
-	/// <summary>
-	/// Атрибут драйвера печатающего устройства
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class)]
-	public sealed class PrintableDeviceAttribute : DeviceAttribute
-	{
-		/// <summary>
-		/// Конструктор
-		/// </summary>
-		/// <param name="printerType">Тип печатающего устройства</param>
-		public PrintableDeviceAttribute(String printerType) : base(printerType)
-		{
-		}
-
-		/// <summary>
-		/// Тип печатающего устройства
-		/// </summary>
-		public String PrinterType
-		{
-			get
-			{
-				return base.DeviceType;
-			}
-		}
-	}
-
-	/// <summary>
-	/// Атрибут драйвера сканера штрихкода
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class)]
-	public sealed class SerialScannerAttribute : DeviceAttribute
-	{
-		/// <summary>
-		/// Конструктор
-		/// </summary>
-		/// <param name="scannerType">Тип сканера штрихкода</param>
-		public SerialScannerAttribute(String scannerType) : base(scannerType)
-		{
-		}
-
-		/// <summary>
-		/// Тип сканера штрихкода
-		/// </summary>
-		public String ScannerType
-		{
-			get
-			{
-				return base.DeviceType;
-			}
 		}
 	}
 
     /// <summary>
-    /// Атрибут модуля управления бильярдом
+    /// РђС‚СЂРёР±СѓС‚ РґСЂР°Р№РІРµСЂР° РґРёСЃРїР»РµСЏ РїРѕРєСѓРїР°С‚РµР»СЏ
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public sealed class CustomerDisplayAttribute : DeviceAttribute
+	{
+		/// <summary>
+		/// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
+		/// </summary>
+		/// <param name="displayType">РўРёРї РґРёСЃРїР»РµСЏ РїРѕРєСѓРїР°С‚РµР»СЏ</param>
+		public CustomerDisplayAttribute(string displayType) 
+            : base(displayType)
+		{
+		}
+	}
+
+    /// <summary>
+    /// РђС‚СЂРёР±СѓС‚ РґСЂР°Р№РІРµСЂР° С„РёСЃРєР°Р»СЊРЅРѕРіРѕ СЂРµРіРёСЃС‚СЂР°С‚РѕСЂР°
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public sealed class FiscalDeviceAttribute : DeviceAttribute
+	{
+		/// <summary>
+		/// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
+		/// </summary>
+		/// <param name="fiscalType">РўРёРї С„РёСЃРєР°Р»СЊРЅРѕРіРѕ СЂРµРіРёСЃС‚СЂР°С‚РѕСЂР°</param>
+		public FiscalDeviceAttribute(string fiscalType)
+            : base(fiscalType)
+		{
+		}
+	}
+
+    /// <summary>
+    /// РђС‚СЂРёР±СѓС‚ РґСЂР°Р№РІРµСЂР° РїРµС‡Р°С‚Р°СЋС‰РµРіРѕ СѓСЃС‚СЂРѕР№СЃС‚РІР°
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public sealed class PrintableDeviceAttribute : DeviceAttribute
+	{
+		/// <summary>
+		/// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
+		/// </summary>
+		/// <param name="printerType">РўРёРї РїРµС‡Р°С‚Р°СЋС‰РµРіРѕ СѓСЃС‚СЂРѕР№СЃС‚РІР°</param>
+		public PrintableDeviceAttribute(string printerType)
+            : base(printerType)
+		{
+		}
+	}
+
+    /// <summary>
+    /// РђС‚СЂРёР±СѓС‚ РґСЂР°Р№РІРµСЂР° СЃРєР°РЅРµСЂР° С€С‚СЂРёС…РєРѕРґР°
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public sealed class SerialScannerAttribute : DeviceAttribute
+	{
+		/// <summary>
+		/// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
+		/// </summary>
+		/// <param name="scannerType">РўРёРї СЃРєР°РЅРµСЂР° С€С‚СЂРёС…РєРѕРґР°</param>
+		public SerialScannerAttribute(string scannerType)
+            : base(scannerType)
+		{
+		}
+	}
+
+    /// <summary>
+    /// РђС‚СЂРёР±СѓС‚ РјРѕРґСѓР»СЏ СѓРїСЂР°РІР»РµРЅРёСЏ Р±РёР»СЊСЏСЂРґРѕРј
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public sealed class BilliardsManagerAttribute : DeviceAttribute
     {
         /// <summary>
-        /// Создает экземпляр класса
+        /// РЎРѕР·РґР°РµС‚ СЌРєР·РµРјРїР»СЏСЂ РєР»Р°СЃСЃР°
         /// </summary>
-        /// <param name="billiardsManagerType">Тип модуля управления бильярдом</param>
-        public BilliardsManagerAttribute(String billiardsManagerType)
+        /// <param name="billiardsManagerType">РўРёРї РјРѕРґСѓР»СЏ СѓРїСЂР°РІР»РµРЅРёСЏ Р±РёР»СЊСЏСЂРґРѕРј</param>
+        public BilliardsManagerAttribute(string billiardsManagerType)
             : base(billiardsManagerType)
         {
-        }
-
-        /// <summary>
-        /// Тип модуля управления бильярдом
-        /// </summary>
-        public String BilliardsManagerType
-        {
-            get { return base.DeviceType; }
         }
     }
 }

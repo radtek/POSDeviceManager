@@ -1,21 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace DevicesCommon
 {
-	/// <summary>
-	/// Интерфейс для дисплеев покупателя
-	/// </summary>
-	public interface ICustomerDisplay : ISerialDevice
+    /// <summary>
+    /// Интерфейс для дисплеев покупателя
+    /// </summary>
+    public interface ICustomerDisplay : ISerialDevice
 	{
-#region Свойства
+        #region Свойства
 
-		/// <summary>
-		/// Вывод строк на дисплей
-		/// </summary>
-		/// <param name="lineNumber">Номер строки</param>
-		String this[Int32 lineNumber] { set; }
+        /// <summary>
+        /// Вывод строк на дисплей
+        /// </summary>
+        /// <param name="lineNumber">Номер строки</param>
+        string this[int lineNumber] { set; }
 
 #endregion
 

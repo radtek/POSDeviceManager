@@ -1,24 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+п»їusing System;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using System.IO;
 using System.Xml;
 using DevicesCommon;
 using DevicesCommon.Helpers;
-using DevicesCommon.Connectors;
 
 namespace DevmanConfig
 {
 
     internal partial class TestPrintForm : Form
     {
-        #region Константы и перечисления
+        #region РљРѕРЅСЃС‚Р°РЅС‚С‹ Рё РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ
 
-        private string[] docTypes = new string[] { 
+        private static readonly string[] docTypes = new[] 
+        { 
             "sale", 
             "refund", 
             "other", 
@@ -26,7 +22,9 @@ namespace DevmanConfig
             "payOut", 
             "reportX", 
             "reportZ", 
-            "reportSections" };
+            "reportSections",
+            "reportFdoExchangeState"
+        };
 
         private enum Align { left, right, center };
 
@@ -59,7 +57,7 @@ namespace DevmanConfig
         {
             using (OpenFileDialog fileDlg = new OpenFileDialog())
             {
-                fileDlg.Filter = "Документы XML (*.xml)|*xml|Все файлы (*.*)|*.*";
+                fileDlg.Filter = "Р”РѕРєСѓРјРµРЅС‚С‹ XML (*.xml)|*xml|Р’СЃРµ С„Р°Р№Р»С‹ (*.*)|*.*";
                 fileDlg.InitialDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                 if (fileDlg.ShowDialog() == DialogResult.OK)
                     tbFileName.Text = fileDlg.FileName;
@@ -74,7 +72,7 @@ namespace DevmanConfig
                 return GenerateReceipt();
         }
 
-        #region Автоматическая генерация документа
+        #region РђРІС‚РѕРјР°С‚РёС‡РµСЃРєР°СЏ РіРµРЅРµСЂР°С†РёСЏ РґРѕРєСѓРјРµРЅС‚Р°
 
         private string GenerateReceipt()
         {
@@ -86,70 +84,111 @@ namespace DevmanConfig
                 xmlWriter.WriteStartElement("documents");
                 xmlWriter.WriteStartElement("document");
                 xmlWriter.WriteAttributeString("type", docTypes[cbDocType.SelectedIndex]);
-                xmlWriter.WriteAttributeString("cashier", "Кассир Вася");
-                if (cbDrawer.SelectedIndex > 0)
-                    xmlWriter.WriteAttributeString("drawer", cbDrawer.SelectedIndex == 1 ? "openBefore" : "openAfter");
 
-                if (cbDocType.SelectedIndex < 3)
+                if (cb54FZ.Checked)
                 {
-                    WriteReceiptLine(xmlWriter, "ТЕСТОВАЯ ПЕЧАТЬ", Align.center);
-                    WriteSeparator(xmlWriter, "=");
-                    WriteReceiptLine(xmlWriter, cbDocType.SelectedItem.ToString(), Align.center, Style.doubleAll);
-                    WriteReceiptLine(xmlWriter, DateTime.Now.ToString("Дата: dd.MM.yyyy Время: HH:mm:ss"));
-                    WriteReceiptLine(xmlWriter, "Кассовый чек №1");
+                    xmlWriter.WriteAttributeString("customerPhoneOrEMail", "+71234567890");
+                }
 
-                    // таблица
-                    xmlWriter.WriteStartElement("line");
-                    xmlWriter.WriteAttributeString("type", "table");
-                    xmlWriter.WriteAttributeString("grid", "-");
+                xmlWriter.WriteAttributeString("cashier", "РљР°СЃСЃРёСЂ Р’Р°СЃСЏ");
 
-                    // заголовок таблицы
-                    xmlWriter.WriteStartElement("columns");
-                    WriteColumn(xmlWriter, Align.left, 0, "Наименование");
-                    WriteColumn(xmlWriter, Align.right, 7, "Кол-во");
-                    WriteColumn(xmlWriter, Align.right, 7, "Сумма");
-                    xmlWriter.WriteEndElement();
-                    // конец заголовка таблицы
+                if (cbDrawer.SelectedIndex > 0)
+                {
+                    xmlWriter.WriteAttributeString("drawer", cbDrawer.SelectedIndex == 1 ? "openBefore" : "openAfter");
+                }
 
-                    // строки таблицы
-                    xmlWriter.WriteStartElement("rows");
+                if (cbDocType.SelectedIndex < 2 && cb54FZ.Checked)
+                {
+                    var price = Convert.ToInt32(numAmount.Value * 100);
+                    var priceAsString = price.ToString();
+
+                    // РіРµРЅРµСЂРёСЂСѓРµРј С‡РµРє РїРѕ 54-Р¤Р—;
+                    // РїРѕР·РёС†РёРё
                     for (int i = 0; i < numPosCount.Value; i++)
-                        WritePosition(xmlWriter, i + 1);
-                    xmlWriter.WriteEndElement();
-                    // конец строк таблицы
-
-                    xmlWriter.WriteEndElement();
-                    // конец таблицы
-
-                    WriteReceiptLine(xmlWriter, "Скидка 10% 283,00", Align.right);
-                    WriteReceiptLine(xmlWriter, "К ОПЛАТЕ: 2 547,00", Align.right, Style.doubleAll);
-                    WriteSeparator(xmlWriter, "-");
-
-                    // регистрация
-                    if (cbDocType.SelectedIndex < 3)
                     {
                         xmlWriter.WriteStartElement("line");
                         xmlWriter.WriteAttributeString("type", "registration");
-                        xmlWriter.WriteAttributeString("amount", Convert.ToInt32(numAmount.Value * 100).ToString());
+                        xmlWriter.WriteAttributeString("quantity", "1000");
+                        xmlWriter.WriteAttributeString("price", priceAsString);
+                        xmlWriter.WriteAttributeString("amount", priceAsString);
                         xmlWriter.WriteAttributeString("section", "1");
-                        xmlWriter.WriteEndElement();
-
-                        // оплата
-                        xmlWriter.WriteStartElement("line");
-                        xmlWriter.WriteAttributeString("type", "payment");
-                        xmlWriter.WriteAttributeString("paymentType", "cash");
-                        xmlWriter.WriteAttributeString("amount", Convert.ToInt32(numAmount.Value * 100).ToString());
+                        xmlWriter.WriteAttributeString("vatRateId", "3");
+                        xmlWriter.WriteString("РЁР°РјРїР°РЅСЃРєРѕРµ Р РѕСЃС‚РѕРІСЃРєРѕРµ");
                         xmlWriter.WriteEndElement();
                     }
 
-                }
-                else if (cbDocType.SelectedIndex < 5)
-                {
-                    // внесение, выплата
+                    // РѕРїР»Р°С‚Р°
                     xmlWriter.WriteStartElement("line");
-                    xmlWriter.WriteAttributeString("type", "cash");
-                    xmlWriter.WriteAttributeString("amount", Convert.ToInt32(numAmount.Value * 100).ToString());
+                    xmlWriter.WriteAttributeString("type", "payment");
+                    xmlWriter.WriteAttributeString("paymentType", "cash");
+                    xmlWriter.WriteAttributeString("amount", Convert.ToInt32(numAmount.Value * numPosCount.Value * 100).ToString());
                     xmlWriter.WriteEndElement();
+                }
+                else
+                {
+                    if (cbDocType.SelectedIndex < 3)
+                    {
+                        WriteReceiptLine(xmlWriter, "РўР•РЎРўРћР’РђРЇ РџР•Р§РђРўР¬", Align.center);
+                        WriteSeparator(xmlWriter, "=");
+                        WriteReceiptLine(xmlWriter, cbDocType.SelectedItem.ToString(), Align.center, Style.doubleAll);
+                        WriteReceiptLine(xmlWriter, DateTime.Now.ToString("Р”Р°С‚Р°: dd.MM.yyyy Р’СЂРµРјСЏ: HH:mm:ss"));
+                        WriteReceiptLine(xmlWriter, "РљР°СЃСЃРѕРІС‹Р№ С‡РµРє в„–1");
+
+                        // С‚Р°Р±Р»РёС†Р°
+                        xmlWriter.WriteStartElement("line");
+                        xmlWriter.WriteAttributeString("type", "table");
+                        xmlWriter.WriteAttributeString("grid", "-");
+
+                        // Р·Р°РіРѕР»РѕРІРѕРє С‚Р°Р±Р»РёС†С‹
+                        xmlWriter.WriteStartElement("columns");
+                        WriteColumn(xmlWriter, Align.left, 0, "РќР°РёРјРµРЅРѕРІР°РЅРёРµ");
+                        WriteColumn(xmlWriter, Align.right, 7, "РљРѕР»-РІРѕ");
+                        WriteColumn(xmlWriter, Align.right, 7, "РЎСѓРјРјР°");
+                        xmlWriter.WriteEndElement();
+                        // РєРѕРЅРµС† Р·Р°РіРѕР»РѕРІРєР° С‚Р°Р±Р»РёС†С‹
+
+                        // СЃС‚СЂРѕРєРё С‚Р°Р±Р»РёС†С‹
+                        xmlWriter.WriteStartElement("rows");
+                        for (int i = 0; i < numPosCount.Value; i++)
+                            WritePosition(xmlWriter, i + 1);
+                        xmlWriter.WriteEndElement();
+                        // РєРѕРЅРµС† СЃС‚СЂРѕРє С‚Р°Р±Р»РёС†С‹
+
+                        xmlWriter.WriteEndElement();
+                        // РєРѕРЅРµС† С‚Р°Р±Р»РёС†С‹
+
+                        WriteReceiptLine(xmlWriter, "РЎРєРёРґРєР° 10% 283,00", Align.right);
+                        WriteReceiptLine(xmlWriter, "Рљ РћРџР›РђРўР•: 2В 547,00", Align.right, Style.doubleAll);
+                        WriteSeparator(xmlWriter, "-");
+
+                        // СЂРµРіРёСЃС‚СЂР°С†РёСЏ
+                        if (cbDocType.SelectedIndex < 2)
+                        {
+                            xmlWriter.WriteStartElement("line");
+                            xmlWriter.WriteAttributeString("type", "registration");
+                            xmlWriter.WriteAttributeString("amount", Convert.ToInt32(numAmount.Value * 100).ToString());
+                            xmlWriter.WriteAttributeString("section", "1");
+                            xmlWriter.WriteEndElement();
+
+                            // РѕРїР»Р°С‚Р°
+                            xmlWriter.WriteStartElement("line");
+                            xmlWriter.WriteAttributeString("type", "payment");
+                            xmlWriter.WriteAttributeString("paymentType", "cash");
+                            xmlWriter.WriteAttributeString("amount", Convert.ToInt32(numAmount.Value * 100).ToString());
+                            xmlWriter.WriteEndElement();
+                        }
+                    }
+                    else
+                    {
+                        if (cbDocType.SelectedIndex < 5)
+                        {
+                            // РІРЅРµСЃРµРЅРёРµ, РІС‹РїР»Р°С‚Р°
+                            xmlWriter.WriteStartElement("line");
+                            xmlWriter.WriteAttributeString("type", "cash");
+                            xmlWriter.WriteAttributeString("amount", Convert.ToInt32(numAmount.Value * 100).ToString());
+                            xmlWriter.WriteEndElement();
+                        }
+                    }
                 }
 
                 xmlWriter.WriteEndElement();
@@ -195,7 +234,7 @@ namespace DevmanConfig
         private void WritePosition(XmlTextWriter xmlWriter, int n)
         {
             xmlWriter.WriteStartElement("row");
-            xmlWriter.WriteElementString("field", String.Format("{0}. Шампанское Ростовское", n));
+            xmlWriter.WriteElementString("field", string.Format("{0}. РЁР°РјРїР°РЅСЃРєРѕРµ Р РѕСЃС‚РѕРІСЃРєРѕРµ", n));
             xmlWriter.WriteElementString("field", "1");
             xmlWriter.WriteElementString("field", "135,00");
             xmlWriter.WriteEndElement();
@@ -236,7 +275,7 @@ namespace DevmanConfig
                     deviceId,
                     delegate(IPrintableDevice device)
                     {
-                        // проверка наличия бумаги
+                        // РїСЂРѕРІРµСЂРєР° РЅР°Р»РёС‡РёСЏ Р±СѓРјР°РіРё
                         PaperOutStatus paperStatus = device.PrinterStatus.PaperOut;
                         if (!device.ErrorCode.Succeeded)
                         {
@@ -249,12 +288,12 @@ namespace DevmanConfig
                             paperStatus == PaperOutStatus.OutPassive)
                         {
                             MessageBox.Show(this,
-                                "Отсутствует бумага в печатающем устройстве", Text,
+                                "РћС‚СЃСѓС‚СЃС‚РІСѓРµС‚ Р±СѓРјР°РіР° РІ РїРµС‡Р°С‚Р°СЋС‰РµРј СѓСЃС‚СЂРѕР№СЃС‚РІРµ", Text,
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
 
-                        // печать
+                        // РїРµС‡Р°С‚СЊ
                         device.Print(GetXmlDocument());
                         if (!device.ErrorCode.Succeeded)
                         {

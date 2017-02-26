@@ -1,13 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using DevicesCommon;
-using DevicesCommon.Helpers;
-using DevicesCommon.Connectors;
 
 namespace DevmanConfig
 {
@@ -57,7 +50,7 @@ namespace DevmanConfig
                 pos = tbDisplayLines.Text.IndexOf("\n", currPos);
             }
 
-            lbPosition.Text = String.Format("{0}:{1}", tbDisplayLines.SelectionStart + tbDisplayLines.SelectionLength - currPos + 1, rowNo + 1);
+            lbPosition.Text = string.Format("{0}:{1}", tbDisplayLines.SelectionStart + tbDisplayLines.SelectionLength - currPos + 1, rowNo + 1);
         }
 
         /// <summary>

@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DevicesBase.Communicators;
 using DevicesCommon.Helpers;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
@@ -48,7 +46,7 @@ namespace DevicesBase
         /// <summary>
         /// Работа по последовательному порту
         /// </summary>
-        protected override Boolean IsSerial
+        protected override bool IsSerial
         {
             get { return false; }
         }
@@ -107,7 +105,7 @@ namespace DevicesBase
         /// <summary>
         /// Активация устройства
         /// </summary>
-        public override Boolean Active
+        public override bool Active
         {
             get 
             {
@@ -134,7 +132,7 @@ namespace DevicesBase
         /// Печать документа
         /// </summary>
         /// <param name="xmlData">Данные документа</param>
-        public override void Print(String xmlData)
+        public override void Print(string xmlData)
         {
             try
             {
@@ -179,7 +177,7 @@ namespace DevicesBase
         /// <summary>
         /// TCP-порт принтера
         /// </summary>
-        protected abstract Int32 TcpPort
+        protected abstract int TcpPort
         {
             get;
         }
@@ -187,7 +185,7 @@ namespace DevicesBase
         /// <summary>
         /// Таймаут чтения
         /// </summary>
-        protected abstract Int32 ReadTimeout
+        protected abstract int ReadTimeout
         {
             get;
         }
@@ -195,7 +193,7 @@ namespace DevicesBase
         /// <summary>
         /// Таймаут записи
         /// </summary>
-        protected abstract Int32 WriteTimeout
+        protected abstract int WriteTimeout
         {
             get;
         }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using ERPService.SharedLibs.Eventlog.FileLink;
 
@@ -17,7 +14,7 @@ namespace ERPService.SharedLibs.Eventlog.Iterators
         internal LineReader Reader { get; private set; }
         internal Index Index { get; private set; }
 
-        internal LogsIteratorHelper(String logFile)
+        internal LogsIteratorHelper(string logFile)
         {
             _stream = new FileStream(logFile, FileMode.Open, FileAccess.Read,
                 FileShare.ReadWrite);

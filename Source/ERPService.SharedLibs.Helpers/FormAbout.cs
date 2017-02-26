@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace ERPService.SharedLibs.Helpers
 {
@@ -14,11 +10,11 @@ namespace ERPService.SharedLibs.Helpers
     /// </summary>
     internal partial class FormAbout : Form
     {
-        private String _appProductName;
-        private String _appProductVersion;
-        private String _appName;
-        private Int32 _copyrightYear;
-        private List<KeyValuePair<String, String>> _componentVersions;
+        private string _appProductName;
+        private string _appProductVersion;
+        private string _appName;
+        private int _copyrightYear;
+        private List<KeyValuePair<string, string>> _componentVersions;
 
         /// <summary>
         /// Создает экземпляр класса
@@ -26,7 +22,7 @@ namespace ERPService.SharedLibs.Helpers
         public FormAbout()
         {
             InitializeComponent();
-            _componentVersions = new List<KeyValuePair<String, String>>();
+            _componentVersions = new List<KeyValuePair<string, string>>();
             _copyrightYear = 2008;
             _appProductName = "Программный продукт";
             _appProductVersion = "Версия";
@@ -36,12 +32,12 @@ namespace ERPService.SharedLibs.Helpers
         /// Показывает диалог "О программе"
         /// </summary>
         /// <param name="showComponents">Отображать информацию о версии компонентов</param>
-        public void ShowDialog(Boolean showComponents)
+        public void ShowDialog(bool showComponents)
         {
             labelProductName.Text = _appProductName;
             labelAppName.Text = _appName;
-            labelProductVersion.Text = String.Format("Версия: {0}", _appProductVersion);
-            labelCopyright.Text = String.Format("© ERP Service, {0}", _copyrightYear);
+            labelProductVersion.Text = string.Format("Версия: {0}", _appProductVersion);
+            labelCopyright.Text = string.Format("© ERP Service, {0}", _copyrightYear);
 
             if (showComponents)
                 listView1.Select();
@@ -61,7 +57,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Имя приложения
         /// </summary>
-        public String AppName
+        public string AppName
         {
             get { return _appName; }
             set { _appName = value; }
@@ -70,7 +66,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Год авторского права (либо модификации)
         /// </summary>
-        public Int32 CopyrightYear
+        public int CopyrightYear
         {
             get { return _copyrightYear; }
             set { _copyrightYear = value; }
@@ -79,7 +75,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Версия продукта
         /// </summary>
-        public String AppProductVersion
+        public string AppProductVersion
         {
             get { return _appProductVersion; }
             set { _appProductVersion = value; }
@@ -88,7 +84,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Имя продукта
         /// </summary>
-        public String AppProductName
+        public string AppProductName
         {
             get { return _appProductName; }
             set { _appProductName = value; }
@@ -99,7 +95,7 @@ namespace ERPService.SharedLibs.Helpers
         /// </summary>
         /// <param name="componentName">Имя компонента</param>
         /// <param name="componentVersion">Версия компонента</param>
-        public void AppendComponentInfo(String componentName, String componentVersion)
+        public void AppendComponentInfo(string componentName, string componentVersion)
         {
             ListViewItem item = new ListViewItem(componentName);
             item.SubItems.Add(componentVersion);

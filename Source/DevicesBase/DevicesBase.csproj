@@ -64,18 +64,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ERPService.SharedLibs.Eventlog, Version=1.0.0.40720, Culture=neutral, PublicKeyToken=081cb29e9151b772, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\trunk\Release\ERPService.SharedLibs.Eventlog.dll</HintPath>
-    </Reference>
-    <Reference Include="ERPService.SharedLibs.Helpers, Version=1.0.0.40720, Culture=neutral, PublicKeyToken=b0fa05ad2b4b08b5, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\trunk\Release\ERPService.SharedLibs.Helpers.dll</HintPath>
-    </Reference>
-    <Reference Include="ERPService.SharedLibs.Remoting, Version=1.0.0.40720, Culture=neutral, PublicKeyToken=6729cec654b05004, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\trunk\Release\ERPService.SharedLibs.Remoting.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -110,6 +98,7 @@
     <Compile Include="Helpers\SessionHelper.cs" />
     <Compile Include="ISerialPortsPool.cs" />
     <Compile Include="Managers\DeviceManager.cs" />
+    <Compile Include="Managers\DeviceTypeHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -131,12 +120,24 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DevicesCommon\DevicesCommon.csproj">
-      <Project>{3C778F01-918F-49B0-8C34-91D78BF5A054}</Project>
+      <Project>{3c778f01-918f-49b0-8c34-91d78bf5a054}</Project>
       <Name>DevicesCommon</Name>
     </ProjectReference>
     <ProjectReference Include="..\DevmanConfig\DevmanConfig.csproj">
       <Project>{f6527744-5e6e-4968-805b-5e0dbeb02ad1}</Project>
       <Name>DevmanConfig</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERPService.SharedLibs.Eventlog\ERPService.SharedLibs.Eventlog.csproj">
+      <Project>{f3ee037c-8d18-477b-a39a-4de71f46f992}</Project>
+      <Name>ERPService.SharedLibs.Eventlog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERPService.SharedLibs.Helpers\ERPService.SharedLibs.Helpers.csproj">
+      <Project>{5e459a85-669c-408d-85f1-d99427d34c6b}</Project>
+      <Name>ERPService.SharedLibs.Helpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERPService.SharedLibs.Remoting\ERPService.SharedLibs.Remoting.csproj">
+      <Project>{570fe212-8e83-4d1b-aea9-06bde6f34773}</Project>
+      <Name>ERPService.SharedLibs.Remoting</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

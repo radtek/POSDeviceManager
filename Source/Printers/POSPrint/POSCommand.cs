@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 using DevicesCommon.Helpers;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
@@ -81,18 +80,18 @@ namespace POSPrint
 
         public void AddNumeric(int nValue, int nLength)
         {
-            String s = nValue.ToString("d" + nLength);
+            string s = nValue.ToString("d" + nLength);
             Array.Copy(Encoding.ASCII.GetBytes(s), 0, m_Cmd, m_CmdLen, nLength);
             m_CmdLen += nLength;
         }
 
-        public void AddChar(String sValue, int nLength)
+        public void AddChar(string sValue, int nLength)
         {            
             Array.Copy(Encoding.GetEncoding(866).GetBytes(sValue), 0, m_Cmd, m_CmdLen, nLength);
             m_CmdLen += nLength;
         }
 
-        public void AddBChar(String sValue)
+        public void AddBChar(string sValue)
         {
             AddNumeric(sValue.Length, 3);
             AddChar(sValue, sValue.Length);

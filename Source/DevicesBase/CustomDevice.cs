@@ -1,24 +1,22 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using DevicesCommon;
-using System.Collections;
-using DevicesCommon.Helpers;
 using DevicesBase.Helpers;
+using DevicesCommon;
+using DevicesCommon.Helpers;
 
 namespace DevicesBase
 {
-	/// <summary>
-	/// Базовый класс для всех устройств
-	/// </summary>
-	public abstract class CustomDevice : MarshalByRefObject, IDevice
+    /// <summary>
+    /// Базовый класс для всех устройств
+    /// </summary>
+    public abstract class CustomDevice : MarshalByRefObject, IDevice
 	{
         #region Закрытые поля класса
 
         // идентификатор устройства
-        private String deviceId;
+        private string deviceId;
         // таблица описаний кодов ошибок, специфических для протокола обмена
-        private Dictionary<Int16, String> specificErrors;
+        private Dictionary<Int16, string> specificErrors;
         // интерфейс для протоколирования работы устройства
         private ILogger logger;
         // интерфейс для доступа к пулу последовательных портов
@@ -48,8 +46,8 @@ namespace DevicesBase
 		/// </summary>
 		protected CustomDevice()
 		{
-            deviceId = String.Empty;
-            specificErrors = new Dictionary<Int16, String>();
+            deviceId = string.Empty;
+            specificErrors = new Dictionary<Int16, string>();
             ErrorCode = new ServerErrorCode(this, GeneralError.Success);
 		}
 
@@ -63,7 +61,7 @@ namespace DevicesBase
         /// </summary>
         /// <param name="specificCode">Код ошибки протокола обмена с устройством</param>
         /// <param name="specificDescription">Описание кода ошибки протокола обмена с устройством</param>
-        protected void AddSpecificError(Int16 specificCode, String specificDescription)
+        protected void AddSpecificError(Int16 specificCode, string specificDescription)
         {
             specificErrors.Add(specificCode, specificDescription);
         }
@@ -73,10 +71,10 @@ namespace DevicesBase
         /// </summary>
         /// <param name="specificCode">Код ошибки</param>
         /// <returns>Описание кода ошибки протокола обмена с устройством</returns>
-        protected String GetSpecificDescription(Int16 specificCode)
+        protected string GetSpecificDescription(Int16 specificCode)
         {
             return specificErrors.ContainsKey(specificCode) ?
-                specificErrors[specificCode] : String.Format("Не найдено описание для ошибки с кодом {0}", specificCode);
+                specificErrors[specificCode] : string.Format("Не найдено описание для ошибки с кодом {0}", specificCode);
         }
 
 		#endregion
@@ -91,7 +89,7 @@ namespace DevicesBase
 		/// <summary>
 		/// Идентификатор устройства
 		/// </summary>
-		public String DeviceId
+		public string DeviceId
 		{
 			get { return deviceId; }
 			set { deviceId = value; }

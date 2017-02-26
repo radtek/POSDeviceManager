@@ -1,8 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
-using System.Collections.Generic;
 
 namespace ERPService.SharedLibs.Eventlog
 {
@@ -44,12 +44,12 @@ namespace ERPService.SharedLibs.Eventlog
 
         #region Константы
 
-        private const String _recordIdFmt = "RECID:{0}";
-        private const String _defaultLogFilePrefix = "app";
-        private const String _storageNameFmt = "{0}\\{1}-{2}.log";
-        private const String _dateRangeError = "Ошибка задания диапазона дат. Начало диапазона {0} больше конца диапазона {1}";
-        private const Int32 _defSeekSize = 16384;
-        private const Int32 _fieldsCount = 6;
+        private const string _recordIdFmt = "RECID:{0}";
+        private const string _defaultLogFilePrefix = "app";
+        private const string _storageNameFmt = "{0}\\{1}-{2}.log";
+        private const string _dateRangeError = "Ошибка задания диапазона дат. Начало диапазона {0} больше конца диапазона {1}";
+        private const int _defSeekSize = 16384;
+        private const int _fieldsCount = 6;
 
         #endregion
 
@@ -63,17 +63,17 @@ namespace ERPService.SharedLibs.Eventlog
         // для записи в поток
         private StreamWriter _storageWriter;
         // папка для хранения файлов журнала
-        private readonly String _storageFolder;
+        private readonly string _storageFolder;
         // дата последнего открытия лога
         private DateTime _lastOpeningDate;
         // флаг открытия для чтения
-        private readonly Boolean _readOnly;
+        private readonly bool _readOnly;
         // внутренний буфер событий
         private readonly EventsQueue _eventsQueue;
         // итераторы для чтения логов
-        private readonly Dictionary<String, IEnumerator<EventRecord[]>> _eventIterators;
+        private readonly Dictionary<string, IEnumerator<EventRecord[]>> _eventIterators;
         // префикс лог-файлов
-        private readonly String _logFilePrefix;
+        private readonly string _logFilePrefix;
 
         #endregion
 
@@ -83,7 +83,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// Создает экземпляр класса
         /// </summary>
         /// <param name="storageFolder">Имя папки-хранилища для логов</param>
-        public EventLink(String storageFolder)
+        public EventLink(string storageFolder)
             : this(storageFolder, false, true, 10, _defaultLogFilePrefix)
         {
         }
@@ -93,7 +93,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// </summary>
         /// <param name="storageFolder">Имя папки-хранилища для логов</param>
         /// <param name="logFilePrefix">Префикс лог-файлов</param>
-        public EventLink(String storageFolder, String logFilePrefix)
+        public EventLink(string storageFolder, string logFilePrefix)
             : this(storageFolder, false, true, 10, logFilePrefix)
         {
         }
@@ -103,7 +103,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// </summary>
         /// <param name="storageFolder">Имя папки-хранилища для логов</param>
         /// <param name="readOnly">Открыть только для чтения</param>
-        public EventLink(String storageFolder, Boolean readOnly)
+        public EventLink(string storageFolder, bool readOnly)
             : this(storageFolder, readOnly, true, 10, _defaultLogFilePrefix)
         {
         }
@@ -114,7 +114,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// <param name="storageFolder">Имя папки-хранилища для логов</param>
         /// <param name="readOnly">Открыть только для чтения</param>
         /// <param name="logFilePrefix">Префикс лог-файлов</param>
-        public EventLink(String storageFolder, Boolean readOnly, String logFilePrefix)
+        public EventLink(string storageFolder, bool readOnly, string logFilePrefix)
             : this(storageFolder, readOnly, true, 10, logFilePrefix)
         {
         }
@@ -126,8 +126,8 @@ namespace ERPService.SharedLibs.Eventlog
         /// <param name="readOnly">Открыть только для чтения</param>
         /// <param name="bufferedOutput">Буферизированный вывод событий в файл</param>
         /// <param name="flushPeriod">Периодичность сброса буфера, секунды</param>
-        public EventLink(String storageFolder, Boolean readOnly, Boolean bufferedOutput, 
-            Int32 flushPeriod)
+        public EventLink(string storageFolder, bool readOnly, bool bufferedOutput,
+            int flushPeriod)
             : this(storageFolder, readOnly, bufferedOutput, flushPeriod, _defaultLogFilePrefix)
         {
         }
@@ -140,14 +140,14 @@ namespace ERPService.SharedLibs.Eventlog
         /// <param name="bufferedOutput">Буферизированный вывод событий в файл</param>
         /// <param name="flushPeriod">Периодичность сброса буфера, секунды</param>
         /// <param name="logFilePrefix">Префикс лог-файлов</param>
-        public EventLink(String storageFolder, Boolean readOnly, Boolean bufferedOutput,
-            Int32 flushPeriod, String logFilePrefix)
+        public EventLink(string storageFolder, bool readOnly, bool bufferedOutput,
+            int flushPeriod, string logFilePrefix)
         {
-            if (String.IsNullOrEmpty(storageFolder))
+            if (string.IsNullOrEmpty(storageFolder))
                 throw new ArgumentNullException("storageFolder");
             if (flushPeriod < 0)
                 throw new ArgumentOutOfRangeException("flushPeriod");
-            if (String.IsNullOrEmpty(logFilePrefix))
+            if (string.IsNullOrEmpty(logFilePrefix))
                 throw new ArgumentNullException("logFilePrefix");
 
             _storageFolder = storageFolder;
@@ -156,7 +156,7 @@ namespace ERPService.SharedLibs.Eventlog
 
             _syncFilesMutex = MutexHelper.CreateSyncFilesMutex(storageFolder);
 
-            _eventIterators = new Dictionary<String, IEnumerator<EventRecord[]>>();
+            _eventIterators = new Dictionary<string, IEnumerator<EventRecord[]>>();
 
             if (!Directory.Exists(_storageFolder))
                 Directory.CreateDirectory(_storageFolder);
@@ -248,7 +248,7 @@ namespace ERPService.SharedLibs.Eventlog
                 _lastOpeningDate = DateTime.Today;
 
                 // формируем ожидаемое имя лога
-                String logName = GetStorageName(_lastOpeningDate);
+                string logName = GetStorageName(_lastOpeningDate);
 
                 if (File.Exists(logName))
                 {
@@ -279,10 +279,10 @@ namespace ERPService.SharedLibs.Eventlog
         /// </summary>
         /// <param name="mask">Маска даты</param>
         /// <returns>Имя хранилища по маске даты</returns>
-        private String GetStorageName(DateTime mask)
+        private string GetStorageName(DateTime mask)
         {
             // возвращаем имя хранилища
-            return String.Format(_storageNameFmt,
+            return string.Format(_storageNameFmt,
                 _storageFolder,
                 _logFilePrefix,
                 mask.ToString("yyyy-MM-dd"));
@@ -292,7 +292,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// Возвращает true, если изменилась системная дата с момента
         /// последнего открытия лога
         /// </summary>
-        private Boolean DateChanged
+        private bool DateChanged
         {
             get
             {
@@ -304,9 +304,9 @@ namespace ERPService.SharedLibs.Eventlog
         /// Преобразование комбинации флагов фильтра типов событий в список строк
         /// </summary>
         /// <param name="eventTypes">Список допустимых типов событий</param>
-        private List<String> EventsToStrings(EventType[] eventTypes)
+        private List<string> EventsToStrings(EventType[] eventTypes)
         {
-            List<String> eventsToPass = new List<String>();
+            List<string> eventsToPass = new List<string>();
             if (eventTypes != null)
             {
                 foreach (EventType et in eventTypes)
@@ -322,7 +322,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// </summary>
         /// <param name="rawData">Сообщение</param>
         /// <returns>Строки сообщения для записи в лог</returns>
-        private String[] SplitLine(String rawData)
+        private string[] SplitLine(string rawData)
         {
             return rawData.Split(new Char[] { (Char)10, (Char)13, (Char)9 },
                 StringSplitOptions.RemoveEmptyEntries);
@@ -347,8 +347,8 @@ namespace ERPService.SharedLibs.Eventlog
         /// метода IEventLinkBasics.GetLog
         /// </param>
         /// <returns>Идентификатор итератора</returns>
-        public String BeginGetLog(DateTime fromDate, DateTime toDate, String[] sourceFilter,
-            EventType[] eventFilter, Int32 maxEvents, Int32 eventPerIteration)
+        public string BeginGetLog(DateTime fromDate, DateTime toDate, string[] sourceFilter,
+            EventType[] eventFilter, int maxEvents, int eventPerIteration)
         {
             // создаем контейнер для итератора
             var iteratorContainer = new Iterators.EventsIterator(GetStorageName);
@@ -383,15 +383,15 @@ namespace ERPService.SharedLibs.Eventlog
         /// <returns>
         /// Очередной блок событий из журнала или null, если достигнут конец журнала
         /// </returns>
-        public EventRecord[] GetLog(String iteratorId)
+        public EventRecord[] GetLog(string iteratorId)
         {
-            if (String.IsNullOrEmpty(iteratorId))
+            if (string.IsNullOrEmpty(iteratorId))
                 throw new ArgumentNullException("iteratorId");
             
             IEnumerator<EventRecord[]> iterator = null;
 
             if (!_eventIterators.TryGetValue(iteratorId, out iterator))
-                throw new InvalidOperationException(String.Format(
+                throw new InvalidOperationException(string.Format(
                     "Итератор с идентификатором [{0}] не найден", iteratorId));
 
             if (iterator.MoveNext())
@@ -404,15 +404,15 @@ namespace ERPService.SharedLibs.Eventlog
         /// Завершить последовательный доступ к событиям 
         /// </summary>
         /// <param name="iteratorId">Идентификатор итератора</param>
-        public void EndGetLog(String iteratorId)
+        public void EndGetLog(string iteratorId)
         {
-            if (String.IsNullOrEmpty(iteratorId))
+            if (string.IsNullOrEmpty(iteratorId))
                 throw new ArgumentNullException("iteratorId");
 
             IEnumerator<EventRecord[]> iterator = null;
 
             if (!_eventIterators.TryGetValue(iteratorId, out iterator))
-                throw new InvalidOperationException(String.Format(
+                throw new InvalidOperationException(string.Format(
                     "Итератор с идентификатором [{0}] не найден", iteratorId));
 
             iterator.Dispose();
@@ -430,7 +430,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// <param name="sourceFilter">Фильтр по источнику событий</param>
         /// <param name="eventFilter">Фильтр по типам событий</param>
         public EventRecord[] GetLog(DateTime fromDate, DateTime toDate,
-            String[] sourceFilter, EventType[] eventFilter)
+            string[] sourceFilter, EventType[] eventFilter)
         {
             return GetLog(fromDate, toDate, sourceFilter, eventFilter, -1);
         }
@@ -444,7 +444,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// <param name="eventFilter">Фильтр по типам событий</param>
         /// <param name="maxEvents">Максимальное количество событий</param>
         public EventRecord[] GetLog(DateTime fromDate, DateTime toDate,
-            String[] sourceFilter, EventType[] eventFilter, Int32 maxEvents)
+            string[] sourceFilter, EventType[] eventFilter, int maxEvents)
         {
             if (maxEvents == 0)
                 throw new ArgumentOutOfRangeException("maxEvents");
@@ -476,7 +476,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// </summary>
         /// <param name="sourceId">Идентификатор источника событий</param>
         /// <param name="text">Текстовые данные события</param>
-        public void Post(String sourceId, String text)
+        public void Post(string sourceId, string text)
         {
             Post(sourceId, EventType.Information, SplitLine(text));
         }
@@ -487,7 +487,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// <param name="sourceId">Идентификатор источника событий</param>
         /// <param name="eventType">Тип события</param>
         /// <param name="text">Текстовые данные события</param>
-        public void Post(String sourceId, EventType eventType, String text)
+        public void Post(string sourceId, EventType eventType, string text)
         {
             Post(sourceId, eventType, SplitLine(text));
         }
@@ -497,7 +497,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// </summary>
         /// <param name="sourceId">Идентификатор источника событий</param>
         /// <param name="text">Текстовые данные события</param>
-        public void Post(String sourceId, String[] text)
+        public void Post(string sourceId, string[] text)
         {
             Post(sourceId, EventType.Information, text);
         }
@@ -508,7 +508,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// <param name="sourceId">Идентификатор источника событий</param>
         /// <param name="eventType">Тип события</param>
         /// <param name="text">Текстовые данные события</param>
-        public void Post(String sourceId, EventType eventType, String[] text)
+        public void Post(string sourceId, EventType eventType, string[] text)
         {
             if (_readOnly)
                 throw new InvalidOperationException("Журнал событий открыт только для чтения");
@@ -524,7 +524,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// <param name="sourceId">Идентификатор источника событий</param>
         /// <param name="checkPointId">Наименование контрольной точки</param>
         /// <param name="e">Исключение</param>
-        public void Post(String sourceId, String checkPointId, Exception e)
+        public void Post(string sourceId, string checkPointId, Exception e)
         {
             Post(sourceId, EventType.Error, EventLinkExceptionHelper.GetStrings(checkPointId, e));
         }
@@ -534,7 +534,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// </summary>
         /// <param name="sourceId">Идентификатор источника событий</param>
         /// <param name="exceptionData">Данные исключения, подготовленные для публикации</param>
-        public void PostException(String sourceId, String[] exceptionData)
+        public void PostException(string sourceId, string[] exceptionData)
         {
             Post(sourceId, EventType.Error, exceptionData);
         }

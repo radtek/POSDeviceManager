@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
+using System.Net;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using System.Net;
-using System.IO;
-using TsManager;
 using DevicesCommon;
+using TsManager;
 
 namespace TsBiometricsLogic
 {
@@ -56,12 +54,12 @@ namespace TsBiometricsLogic
 
         private bool CheckBalance(string cardNo, decimal minBalance)
         {
-            var request = (HttpWebRequest)WebRequest.Create(String.Format(
+            var request = (HttpWebRequest)WebRequest.Create(string.Format(
                 "http://{0}:{1}/", _settings.HostOrIp, _settings.Port));
             request.Method = "POST";
             using (Stream requestStream = request.GetRequestStream())
             {
-                var requestBytes = Encoding.GetEncoding(1251).GetBytes(String.Format(INFO_REQUEST, cardNo));
+                var requestBytes = Encoding.GetEncoding(1251).GetBytes(string.Format(INFO_REQUEST, cardNo));
                 requestStream.Write(requestBytes, 0, requestBytes.Length);
             }
 
@@ -94,12 +92,12 @@ namespace TsBiometricsLogic
 
         private string GetCardNo(string idData)
         {
-            var request = (HttpWebRequest)WebRequest.Create(String.Format(
+            var request = (HttpWebRequest)WebRequest.Create(string.Format(
             "http://{0}:{1}/", _settings.HostOrIp, _settings.Port));
             request.Method = "POST";
             using (Stream requestStream = request.GetRequestStream())
             {
-                var requestBytes = Encoding.GetEncoding(1251).GetBytes(String.Format(CLIENT_REQUEST, idData));
+                var requestBytes = Encoding.GetEncoding(1251).GetBytes(string.Format(CLIENT_REQUEST, idData));
                 requestStream.Write(requestBytes, 0, requestBytes.Length);
             }
 
@@ -127,12 +125,12 @@ namespace TsBiometricsLogic
 
         private void RegisterVisit(string cardNo, string point, int terminal)
         {
-            var request = (HttpWebRequest)WebRequest.Create(String.Format(
+            var request = (HttpWebRequest)WebRequest.Create(string.Format(
             "http://{0}:{1}/", _settings.HostOrIp, _settings.Port));
             request.Method = "POST";
             using (Stream requestStream = request.GetRequestStream())
             {
-                var requestBytes = Encoding.GetEncoding(1251).GetBytes(String.Format(REGISTER_REQUEST, cardNo, point, terminal));
+                var requestBytes = Encoding.GetEncoding(1251).GetBytes(string.Format(REGISTER_REQUEST, cardNo, point, terminal));
                 requestStream.Write(requestBytes, 0, requestBytes.Length);
             }
 

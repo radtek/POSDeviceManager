@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using ERPService.SharedLibs.Eventlog;
 
 namespace TsManagerConfigurator
@@ -8,12 +5,12 @@ namespace TsManagerConfigurator
     public class TsManagerConfiguratorSettings
     {
         public FilterSettings FilterSettings { get; set; }
-        public Int32 Splitter1 { get; set; }
-        public Int32 Splitter2 { get; set; }
-        public Int32 Left { get; set; }
-        public Int32 Top { get; set; }
-        public Int32 Width { get; set; }
-        public Int32 Height { get; set; }
+        public int Splitter1 { get; set; }
+        public int Splitter2 { get; set; }
+        public int Left { get; set; }
+        public int Top { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
         public ListedEventsViewSettings LogColumns { get; set; }
 
         public TsManagerConfiguratorSettings()

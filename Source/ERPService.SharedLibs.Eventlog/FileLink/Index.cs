@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Text;
 using System.Threading;
 
 namespace ERPService.SharedLibs.Eventlog.FileLink
@@ -68,7 +66,7 @@ namespace ERPService.SharedLibs.Eventlog.FileLink
             /// <summary>
             /// Число строк в записи
             /// </summary>
-            public Int32 LinesCount { get; set; }
+            public int LinesCount { get; set; }
         }
 
         #endregion
@@ -81,8 +79,8 @@ namespace ERPService.SharedLibs.Eventlog.FileLink
         /// <param name="validationResult">Результат валидации индекса</param>
         /// <param name="logFile">Имя лог-файла</param>
         /// <param name="indexName">Имя индекса</param>
-        private void ReIndex(IndexValidationResult validationResult, String logFile, 
-            String indexName)
+        private void ReIndex(IndexValidationResult validationResult, string logFile,
+            string indexName)
         {
             if (validationResult.State == IndexState.Corrupted && File.Exists(indexName))
                 // удаляем существующий индекс
@@ -91,7 +89,7 @@ namespace ERPService.SharedLibs.Eventlog.FileLink
             using (var source = OpenForReading(logFile))
             using (var index = OpenForWriting(indexName))
             {
-                var recordId = String.Empty;
+                var recordId = string.Empty;
                 var recordOffset = 0L;
                 var recordLines = 0;
 
@@ -117,7 +115,7 @@ namespace ERPService.SharedLibs.Eventlog.FileLink
                             source.Seek(validationResult.LastRecordOffset, SeekOrigin.Begin);
                             // перемещаемся к концу индексного файла минус один элемент индекса
                             // (начинаем переиндексацию с последней известной записи!)
-                            writer.Seek(-(Int32)IndexElementSize, SeekOrigin.End);
+                            writer.Seek(-(int)IndexElementSize, SeekOrigin.End);
                             break;
                     }
 
@@ -138,9 +136,9 @@ namespace ERPService.SharedLibs.Eventlog.FileLink
                         // если сохраненный идентификатор записи не совпадает с 
                         // идентификатором считанной строки, эта строка является
                         // первой в записи
-                        if (String.Compare(recordId, rawEntry[0]) != 0)
+                        if (string.Compare(recordId, rawEntry[0]) != 0)
                         {
-                            if (!String.IsNullOrEmpty(recordId))
+                            if (!string.IsNullOrEmpty(recordId))
                             {
                                 // сведения о предыдущей записи нужно сохранить
                                 // в индексном файле
@@ -182,7 +180,7 @@ namespace ERPService.SharedLibs.Eventlog.FileLink
         /// <param name="logFile">Имя исходного лог-файла</param>
         /// <param name="indexName">Имя индексного файла</param>
         /// <returns>Результат валидации индекса</returns>
-        private IndexValidationResult ValidateIndex(String logFile, String indexName)
+        private IndexValidationResult ValidateIndex(string logFile, string indexName)
         {
             if (!File.Exists(indexName))
                 // индекс поврежден, если индексного файла не существует
@@ -251,13 +249,13 @@ namespace ERPService.SharedLibs.Eventlog.FileLink
             return sizeof(Int64) * 2 + recordCount * IndexElementSize;
         }
 
-        private FileStream OpenForReading(String fileName)
+        private FileStream OpenForReading(string fileName)
         {
             return new FileStream(fileName, FileMode.Open, FileAccess.Read,
                 FileShare.ReadWrite);
         }
 
-        private FileStream OpenForWriting(String fileName)
+        private FileStream OpenForWriting(string fileName)
         {
             return new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write, 
                 FileShare.None, 1024, FileOptions.WriteThrough);
@@ -265,7 +263,7 @@ namespace ERPService.SharedLibs.Eventlog.FileLink
 
         private Int64 IndexElementSize
         {
-            get { return sizeof(Int64) + sizeof(Int32); }
+            get { return sizeof(Int64) + sizeof(int); }
         }
 
         #endregion
@@ -276,9 +274,9 @@ namespace ERPService.SharedLibs.Eventlog.FileLink
         /// Создает экземпляр класса
         /// </summary>
         /// <param name="logFile">Имя исходного лог-файла</param>
-        public Index(String logFile)
+        public Index(string logFile)
         {
-            if (String.IsNullOrEmpty(logFile))
+            if (string.IsNullOrEmpty(logFile))
                 throw new ArgumentNullException("logFile");
 
             _recordCount = -1;
@@ -289,7 +287,7 @@ namespace ERPService.SharedLibs.Eventlog.FileLink
             _syncIndexMutex.WaitMutex();
 
             // формируем имя индексного файла
-            var indexName = String.Format("{0}.index", logFile);
+            var indexName = string.Format("{0}.index", logFile);
             // проверяем индекс
             var validationResult = ValidateIndex(logFile, indexName);
             if (validationResult.State != IndexState.Valid)
@@ -346,7 +344,7 @@ namespace ERPService.SharedLibs.Eventlog.FileLink
         {
             // вычисляем смещение в индексе, по которому находится информация
             // о записи
-            var offset = 2 * sizeof(Int64) + recordNo * (sizeof(Int64) + sizeof(Int32));
+            var offset = 2 * sizeof(Int64) + recordNo * (sizeof(Int64) + sizeof(int));
             _stream.Seek(offset, SeekOrigin.Begin);
         }
 

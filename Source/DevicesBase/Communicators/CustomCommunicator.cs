@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 
 namespace DevicesBase.Communicators
@@ -20,7 +19,7 @@ namespace DevicesBase.Communicators
         /// <summary>
         /// Таймаут чтения
         /// </summary>
-        public abstract Int32 ReadTimeout
+        public abstract int ReadTimeout
         {
             get; set;
         }
@@ -28,7 +27,7 @@ namespace DevicesBase.Communicators
         /// <summary>
         /// Таймаут записи
         /// </summary>
-        public abstract Int32 WriteTimeout
+        public abstract int WriteTimeout
         {
             get; set;
         }
@@ -49,7 +48,7 @@ namespace DevicesBase.Communicators
         /// <param name="buffer">Буфер данных</param>
         /// <param name="offset">Смещение от начала буфера</param>
         /// <param name="size">Размер принимаемых данных</param>
-        public abstract Int32 Read(Byte[] buffer, Int32 offset, Int32 size);
+        public abstract int Read(byte[] buffer, int offset, int size);
 
         /// <summary>
         /// Запись данных в коммуникатор
@@ -57,14 +56,14 @@ namespace DevicesBase.Communicators
         /// <param name="buffer">Буфер данных</param>
         /// <param name="offset">Смещение от начала буфера</param>
         /// <param name="size">Размер записываемых данных</param>
-        public abstract Int32 Write(Byte[] buffer, Int32 offset, Int32 size);
+        public abstract int Write(byte[] buffer, int offset, int size);
 
         /// <summary>
         /// Чтение байта из коммуникатора
         /// </summary>
-        public Byte ReadByte()
+        public byte ReadByte()
         {
-            var buf = new Byte[1];
+            var buf = new byte[1];
             if (Read(buf, 0, buf.Length) != buf.Length)
                 throw new IOException("Операция чтения завершена с ошибкой.");
 
@@ -75,7 +74,7 @@ namespace DevicesBase.Communicators
         /// Запись байта в коммуникатор
         /// </summary>
         /// <param name="b">Байт для записи</param>
-        public void WriteByte(Byte b)
+        public void WriteByte(byte b)
         {
             var buf = new[] { b };
             if (Write(buf, 0, buf.Length) != buf.Length)

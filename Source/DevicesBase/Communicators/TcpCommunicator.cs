@@ -1,4 +1,3 @@
-using System;
 using System.Net.Sockets;
 using DevicesCommon.Helpers;
 
@@ -10,15 +9,15 @@ namespace DevicesBase.Communicators
     public sealed class TcpCommunicator : CustomCommunicator
     {
         Socket socket;
-        String host;
-        Int32 port;
+        string host;
+        int port;
 
         /// <summary>
         /// Создает экземпляр класса
         /// </summary>
         /// <param name="host">Имя хоста</param>
         /// <param name="port">Порт</param>
-        public TcpCommunicator(String host, Int32 port) 
+        public TcpCommunicator(string host, int port) 
             : base()
         {
             this.host = host;
@@ -30,7 +29,7 @@ namespace DevicesBase.Communicators
         /// <summary>
         /// Таймаут чтения
         /// </summary>
-        public override Int32 ReadTimeout
+        public override int ReadTimeout
         {
             get { return socket.ReceiveTimeout; }
             set { socket.ReceiveTimeout = value; }
@@ -39,7 +38,7 @@ namespace DevicesBase.Communicators
         /// <summary>
         /// Таймаут записи
         /// </summary>
-        public override Int32 WriteTimeout
+        public override int WriteTimeout
         {
             get { return socket.SendTimeout; }
             set { socket.SendTimeout = value; }
@@ -57,7 +56,7 @@ namespace DevicesBase.Communicators
             catch (SocketException e)
             {
                 throw new CommunicationException(
-                    String.Format("Ошибка подключения к хосту {0}:{1}", host, port), e);
+                    string.Format("Ошибка подключения к хосту {0}:{1}", host, port), e);
             }
         }
 
@@ -75,7 +74,7 @@ namespace DevicesBase.Communicators
         /// <param name="buffer">Буфер данных</param>
         /// <param name="offset">Смещение от начала буфера</param>
         /// <param name="size">Размер принимаемых данных</param>
-        public override Int32 Read(Byte[] buffer, Int32 offset, Int32 size)
+        public override int Read(byte[] buffer, int offset, int size)
         {
             int received = 0;
             do
@@ -94,7 +93,7 @@ namespace DevicesBase.Communicators
                         e.SocketErrorCode == SocketError.NoBufferSpaceAvailable)
                         System.Threading.Thread.Sleep(30);
                     else
-                        throw new CommunicationException(String.Format("Ошибка чтения из сокета"), e);
+                        throw new CommunicationException(string.Format("Ошибка чтения из сокета"), e);
                 }
             }
             while(received < size);
@@ -108,7 +107,7 @@ namespace DevicesBase.Communicators
         /// <param name="buffer">Буфер данных</param>
         /// <param name="offset">Смещение от начала буфера</param>
         /// <param name="size">Размер записываемых данных</param>
-        public override Int32 Write(Byte[] buffer, Int32 offset, Int32 size)
+        public override int Write(byte[] buffer, int offset, int size)
         {
             try
             {
@@ -117,7 +116,7 @@ namespace DevicesBase.Communicators
             catch (SocketException e)
             {
                 throw new CommunicationException(
-                    String.Format("Ошибка записи в сокет"), e);
+                    string.Format("Ошибка записи в сокет"), e);
             }
         }
     }

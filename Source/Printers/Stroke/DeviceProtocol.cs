@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
-using DevicesCommon;
 using DevicesCommon.Helpers;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
 
@@ -161,7 +159,7 @@ namespace Stroke
             string[] bufDump = Array.ConvertAll(nBuffer, new Converter<byte, string>(delegate(byte b) { return b.ToString("X"); }));
             _debugInfo.AppendFormat("{0:HH:mm:ss}\t{1}\r\n", DateTime.Now, message);
             if (nBufferLen > 0)
-                _debugInfo.AppendFormat("\t{0:X}\r\n", String.Join(" ", bufDump, 0, nBufferLen));
+                _debugInfo.AppendFormat("\t{0:X}\r\n", string.Join(" ", bufDump, 0, nBufferLen));
             else
                 _debugInfo.Append("\tнет\r\n");
         }
@@ -351,7 +349,7 @@ namespace Stroke
             return BitConverter.ToInt64(nBuf, 0);
         }
 
-        public Int32 GetInt32(int nPos)
+        public int GetInt32(int nPos)
         {
             return BitConverter.ToInt32(_rspBuffer, nPos);
         }
@@ -392,9 +390,9 @@ namespace Stroke
                 new Converter<byte, string>(delegate(byte b) { return b.ToString("X"); }));
             string[] rspDump = Array.ConvertAll(Response,
                 new Converter<byte, string>(delegate(byte b) { return b.ToString("X"); }));
-            return String.Format("Байты команды ({0}):\n{1:X}\nБайты ответа ({2}):\n{3:X}",
-                ReqLen, String.Join(" ", reqDump, 0, ReqLen),
-                RspLen, String.Join(" ", rspDump, 0, RspLen));
+            return string.Format("Байты команды ({0}):\n{1:X}\nБайты ответа ({2}):\n{3:X}",
+                ReqLen, string.Join(" ", reqDump, 0, ReqLen),
+                RspLen, string.Join(" ", rspDump, 0, RspLen));
         }
 
         public int GetReceiptNo(long password)

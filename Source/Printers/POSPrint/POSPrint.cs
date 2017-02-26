@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 using DevicesBase;
 using DevicesBase.Helpers;
 using DevicesCommon;
 using DevicesCommon.Helpers;
-using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace POSPrint
 {
@@ -286,7 +284,7 @@ namespace POSPrint
         }
 
         protected override void OnOpenDocument(DocumentType docType,
-            String cashierName)
+            string cashierName)
         {
             ExecuteDriverCommand(delegate()
             {
@@ -374,7 +372,7 @@ namespace POSPrint
             });
         }
 
-        protected override void OnPrintString(String source, FontStyle style)
+        protected override void OnPrintString(string source, FontStyle style)
         {
             ExecuteDriverCommand(delegate()
             {
@@ -400,7 +398,7 @@ namespace POSPrint
             });
         }
 
-        protected override void OnPrintBarcode(String barcode, AlignOptions align,
+        protected override void OnPrintBarcode(string barcode, AlignOptions align,
             bool readable)
         {
             ExecuteDriverCommand(delegate()
@@ -456,8 +454,8 @@ namespace POSPrint
             ExecuteDriverCommand(delegate() { });
         }
 
-        protected override void OnRegistration(String commentary, UInt32 quantity, UInt32 amount,
-            Byte section)
+        protected override void OnRegistration(string commentary, uint quantity, uint amount,
+            byte section)
         {
             ExecuteDriverCommand(delegate()
             {
@@ -483,7 +481,7 @@ namespace POSPrint
             });
         }
 
-        protected override void OnPayment(UInt32 amount, FiscalPaymentType paymentType)
+        protected override void OnPayment(uint amount, FiscalPaymentType paymentType)
         {
             ExecuteDriverCommand(delegate()
             {
@@ -513,7 +511,7 @@ namespace POSPrint
             });
         }
 
-        protected override void OnCash(UInt32 amount)
+        protected override void OnCash(uint amount)
         {
             ExecuteDriverCommand(delegate()
             {
@@ -781,7 +779,7 @@ namespace POSPrint
         {
             ExecuteDriverCommand(delegate()
             {
-                String sCurrentPasswd;
+                string sCurrentPasswd;
                 _errorCode = (short)GeneralError.Success;
                 if (!this.Status.Fiscalized)
                 {

@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DevicesBase.Helpers
 {
@@ -10,15 +8,15 @@ namespace DevicesBase.Helpers
     internal class SessionHelper
     {
         private DateTime accessDateTime;
-        private String sessionID;
-        private Int32 sessionTimeout;
+        private string sessionID;
+        private int sessionTimeout;
 
         /// <summary>
         /// Конструктор
         /// </summary>
         /// <param name="sessionID">Идентификатор сессии</param>
         /// <param name="sessionTimeout">Таймаут сессии</param>
-        public SessionHelper(String sessionID, Int32 sessionTimeout)
+        public SessionHelper(string sessionID, int sessionTimeout)
         {
             this.sessionID = sessionID;
             this.sessionTimeout = sessionTimeout;
@@ -43,7 +41,7 @@ namespace DevicesBase.Helpers
         /// <summary>
         /// Идентификатор сесии
         /// </summary>
-        public String SessionID
+        public string SessionID
         {
             get
             {

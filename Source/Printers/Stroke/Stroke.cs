@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Drawing.Imaging;
 using DevicesBase;
 using DevicesBase.Helpers;
 using DevicesCommon;
 using DevicesCommon.Helpers;
-using System.Drawing.Imaging;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace Stroke
@@ -624,7 +622,7 @@ namespace Stroke
                 {
                     StrokePrinterFlags printerFlags;
                     if (_protocol.TryGetPrinterFlags(DEF_OPERATOR_PASSWD, out printerFlags))    
-                        message = String.Format("{0}. Режим: {1}. Подрежим: {2}", message, stateModes[printerFlags.Mode], stateSubModes[printerFlags.Submode]);
+                        message = string.Format("{0}. Режим: {1}. Подрежим: {2}", message, stateModes[printerFlags.Mode], stateSubModes[printerFlags.Submode]);
                 }
                 this.ErrorCode = new ServerErrorCode(this, E.ErrorCode, message, dumpStr);
 
@@ -647,7 +645,7 @@ namespace Stroke
             }
             finally
             {
-                if (!ErrorCode.Succeeded && Logger.DebugInfo && !String.IsNullOrEmpty(_protocol.DebugInfo))
+                if (!ErrorCode.Succeeded && Logger.DebugInfo && !string.IsNullOrEmpty(_protocol.DebugInfo))
                     Logger.SaveDebugInfo(this, _protocol.DebugInfo);
 
                 _protocol.ClearDebugInfo();
@@ -715,7 +713,7 @@ namespace Stroke
         }
 
         protected override void OnOpenDocument(DocumentType docType,
-            String cashierName)
+            string cashierName)
         {
             FiscalStatusFlags fsFlags = Status;
             _needPrintTopMargin = false;
@@ -814,7 +812,7 @@ namespace Stroke
             });
         }
 
-        protected override void OnPrintString(String source, FontStyle style)
+        protected override void OnPrintString(string source, FontStyle style)
         {
             _protocol.WriteDebugLine("OnPrintString");
             ExecuteDriverCommand(CommandFlags.CheckActive | CommandFlags.CheckPaperStatus, delegate()
@@ -834,7 +832,7 @@ namespace Stroke
             });
         }
 
-        protected override void OnPrintBarcode(String barcode, AlignOptions align,
+        protected override void OnPrintBarcode(string barcode, AlignOptions align,
             bool readable)
         {
             _protocol.WriteDebugLine("OnPrintBarcode");
@@ -897,8 +895,8 @@ namespace Stroke
             });
         }
 
-        protected override void OnRegistration(String commentary, UInt32 quantity, UInt32 amount,
-            Byte section)
+        protected override void OnRegistration(string commentary, uint quantity, uint amount,
+            byte section)
         {
             _protocol.WriteDebugLine("OnRegistration");
             ExecuteDriverCommand(CommandFlags.CheckActive | CommandFlags.Fiscal | CommandFlags.TapePrinter | CommandFlags.CheckPaperStatus, delegate()
@@ -925,7 +923,7 @@ namespace Stroke
             });
         }
 
-        protected override void OnPayment(UInt32 amount, FiscalPaymentType paymentType)
+        protected override void OnPayment(uint amount, FiscalPaymentType paymentType)
         {
             ExecuteDriverCommand(CommandFlags.CheckActive | CommandFlags.Fiscal | CommandFlags.TapePrinter, delegate()
             {
@@ -933,7 +931,7 @@ namespace Stroke
             });
         }
 
-        protected override void OnCash(UInt32 amount)
+        protected override void OnCash(uint amount)
         {
             ExecuteDriverCommand(CommandFlags.CheckActive | CommandFlags.Fiscal | CommandFlags.TapePrinter, delegate()
             {

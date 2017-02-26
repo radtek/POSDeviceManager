@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
 using System.Drawing.Design;
-using ERPService.SharedLibs.PropertyGrid.Editors;
 using ERPService.SharedLibs.PropertyGrid.Converters;
 
 namespace ERPService.SharedLibs.Eventlog
@@ -14,9 +11,9 @@ namespace ERPService.SharedLibs.Eventlog
     [Serializable]
     public abstract class EventLinkFilterBase : ICloneable
     {
-        private Int32 _maxEvents;
-        private String[] _eventSources;
-        private Int32 _maxEventsPerIteration;
+        private int _maxEvents;
+        private string[] _eventSources;
+        private int _maxEventsPerIteration;
 
         /// <summary>
         /// Создает экземпляр класса
@@ -29,14 +26,14 @@ namespace ERPService.SharedLibs.Eventlog
             FromDate = DateTime.Today.AddDays(-7);
             ToDate = DateTime.Today;
             _maxEvents = 100;
-            _eventSources = new String[0];
+            _eventSources = new string[0];
             _maxEventsPerIteration = 100;
         }
 
         /// <summary>
         /// Возвращает список всех доступных источников событий
         /// </summary>
-        public abstract String[] GetAvailableEventSources();
+        public abstract string[] GetAvailableEventSources();
 
         /// <summary>
         /// Показывать информационные события
@@ -47,7 +44,7 @@ namespace ERPService.SharedLibs.Eventlog
         [Description("Показывать информационные события")]
         [DefaultValue(true)]
         [TypeConverter(typeof(RussianBooleanConverter))]
-        public Boolean ShowInfos { get; set; }
+        public bool ShowInfos { get; set; }
 
         /// <summary>
         /// Показывать события, содержащие сведения об ошибках
@@ -58,7 +55,7 @@ namespace ERPService.SharedLibs.Eventlog
         [Description("Показывать события, содержащие сведения об ошибках")]
         [DefaultValue(true)]
         [TypeConverter(typeof(RussianBooleanConverter))]
-        public Boolean ShowErrors { get; set; }
+        public bool ShowErrors { get; set; }
 
         /// <summary>
         /// Показывать события, содержащие предупреждения
@@ -69,7 +66,7 @@ namespace ERPService.SharedLibs.Eventlog
         [Description("Показывать события, содержащие предупреждения")]
         [DefaultValue(true)]
         [TypeConverter(typeof(RussianBooleanConverter))]
-        public Boolean ShowWarnings { get; set; }
+        public bool ShowWarnings { get; set; }
 
         /// <summary>
         /// Начало интервала
@@ -97,12 +94,12 @@ namespace ERPService.SharedLibs.Eventlog
         [DisplayName("Максимальное число событий")]
         [Description("Максимальное число событий, загружаемое с сервера")]
         [DefaultValue(100)]
-        public Int32 MaxEvents
+        public int MaxEvents
         {
             get { return _maxEvents; }
             set 
             {
-                if ((value < 1 || value > Int32.MaxValue) && value != -1)
+                if ((value < 1 || value > int.MaxValue) && value != -1)
                     throw new ArgumentOutOfRangeException("value");
                 _maxEvents = value; 
             }
@@ -117,7 +114,7 @@ namespace ERPService.SharedLibs.Eventlog
         [Description("Источники, события от которых нужно загружать")]
         [Editor(typeof(EventSourcesEditor), typeof(UITypeEditor))]
         [TypeConverter(typeof(HideValueConverter))]
-        public String[] EventSources
+        public string[] EventSources
         {
             get { return _eventSources; }
             set 
@@ -136,12 +133,12 @@ namespace ERPService.SharedLibs.Eventlog
         [DisplayName("Максимальный размер блока")]
         [Description("Максимальный размер блока событий, загружаемый за одно обращение к источнику событий")]
         [DefaultValue(100)]
-        public Int32 MaxEventsPerIteration
+        public int MaxEventsPerIteration
         {
             get { return _maxEventsPerIteration; }
             set
             {
-                if (value < 1 || value > Int32.MaxValue)
+                if (value < 1 || value > int.MaxValue)
                     throw new ArgumentOutOfRangeException("value");
                 _maxEventsPerIteration = value;
             }
@@ -159,7 +156,7 @@ namespace ERPService.SharedLibs.Eventlog
             FromDate = source.FromDate;
             ToDate = source.ToDate;
             _maxEvents = source.MaxEvents;
-            _eventSources = new String[source.EventSources.Length];
+            _eventSources = new string[source.EventSources.Length];
             _maxEventsPerIteration = source.MaxEventsPerIteration;
             Array.Copy(source.EventSources, _eventSources, source.EventSources.Length);
         }
