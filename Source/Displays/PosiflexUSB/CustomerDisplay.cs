@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
-using System.Runtime;
-using DevicesCommon;
-using DevicesCommon.Helpers;
+using System.Text;
 using DevicesBase;
 using DevicesBase.Helpers;
+using DevicesCommon.Helpers;
 
 namespace PosiflexUSB
 {

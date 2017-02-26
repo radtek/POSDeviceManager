@@ -1,19 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
-using DevicesCommon;
-using DevicesCommon.Helpers;
 using DevicesBase.Helpers;
+using DevicesCommon;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace DevicesBase
 {
-	/// <summary>
-	/// Базовый класс для всех устройств, подключаемых через последовательные и 
+    /// <summary>
+    /// Базовый класс для всех устройств, подключаемых через последовательные и 
     /// параллельные порты
-	/// </summary>
-	public abstract class CustomSerialDevice : CustomConnectableDevice, 
+    /// </summary>
+    public abstract class CustomSerialDevice : CustomConnectableDevice, 
         ISerialDevice, IDisposable
 	{
         private string _portName;

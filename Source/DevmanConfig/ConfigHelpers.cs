@@ -1,24 +1,20 @@
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.Text;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
-using System.Reflection;
-using System.Windows.Forms.ComponentModel;
 using System.Drawing.Design;
-using System.Windows.Forms.Design;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
-using DevicesCommon.Helpers;
+using System.Windows.Forms.Design;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using System.Linq;
 using DevicesCommon;
-using ERPService.SharedLibs.PropertyGrid;
-using ERPService.SharedLibs.PropertyGrid.Converters;
-using ERPService.SharedLibs.PropertyGrid.Editors;
+using DevicesCommon.Helpers;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
+using ERPService.SharedLibs.PropertyGrid;
 
 namespace DevmanConfig
 {

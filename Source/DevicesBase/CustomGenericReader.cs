@@ -1,18 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
-using System.Diagnostics;
-using System.ComponentModel;
 using DevicesCommon;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace DevicesBase
 {
-	/// <summary>
+    /// <summary>
     /// Ѕазовый класс дл€ устройств, предназначенных дл€ чтени€ данных карт доступа
-	/// </summary>
-	public abstract class CustomGenericReader : CustomSerialDevice, IGenericReader
+    /// </summary>
+    public abstract class CustomGenericReader : CustomSerialDevice, IGenericReader
     {
         #region ѕол€ 
 

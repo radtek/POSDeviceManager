@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.ComponentModel;
 using System.Drawing.Design;
-using ERPService.SharedLibs.PropertyGrid;
 using ERPService.SharedLibs.PropertyGrid.Converters;
 using ERPService.SharedLibs.PropertyGrid.Editors;
 

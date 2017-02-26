@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Globalization;
 using System.ComponentModel;
+using System.Globalization;
 
 namespace ERPService.SharedLibs.PropertyGrid.Converters
 {

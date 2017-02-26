@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
-using DevicesCommon;
-using DevicesCommon.Helpers;
 using DevicesBase;
 using DevicesBase.Communicators;
 using DevicesBase.Helpers;
+using DevicesCommon;
+using DevicesCommon.Helpers;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace CasAP

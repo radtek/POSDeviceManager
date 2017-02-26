@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ERPService.SharedLibs.PropertyGrid.Forms;
+﻿using ERPService.SharedLibs.PropertyGrid.Forms;
 
 namespace ERPService.SharedLibs.PropertyGrid.Editors
 {

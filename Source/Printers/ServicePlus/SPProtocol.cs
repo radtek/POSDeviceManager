@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using DevicesCommon;
-using DevicesCommon.Helpers;
-using DevicesBase;
-using DevicesBase.Helpers;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace ServicePlus

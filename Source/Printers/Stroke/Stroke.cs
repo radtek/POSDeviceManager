@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Drawing.Imaging;
 using DevicesBase;
 using DevicesBase.Helpers;
 using DevicesCommon;
 using DevicesCommon.Helpers;
-using System.Drawing.Imaging;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace Stroke

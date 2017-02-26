@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
-using DevicesCommon;
-using DevicesCommon.Helpers;
 
 namespace Atol
 {

@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
 using System.ServiceProcess;
 using System.Windows.Forms;
-using System.Reflection;
 
 namespace ERPService.SharedLibs.Helpers
 {

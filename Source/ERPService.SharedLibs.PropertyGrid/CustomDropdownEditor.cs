@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Drawing.Design;
 using System.ComponentModel;
+using System.Drawing.Design;
 using System.Windows.Forms;
 
 namespace ERPService.SharedLibs.PropertyGrid

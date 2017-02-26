@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using ERPService.SharedLibs.Helpers.SerialCommunications;
 using DevicesBase;
-using DevicesCommon;
-using DevicesCommon.Helpers;
 using DevicesBase.Helpers;
+using DevicesCommon.Helpers;
 
 namespace ICPCON7065
 {

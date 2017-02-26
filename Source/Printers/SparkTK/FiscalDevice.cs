@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
-using DevicesCommon;
-using DevicesCommon.Helpers;
 using DevicesBase;
 using DevicesBase.Helpers;
-using System.Globalization;
+using DevicesCommon;
+using DevicesCommon.Helpers;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace SparkTK

@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 
 namespace ERPService.SharedLibs.Helpers
 {

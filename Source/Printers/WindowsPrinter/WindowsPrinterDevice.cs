@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 using System.Drawing.Printing;
-using DevicesCommon;
-using DevicesCommon.Helpers;
 using DevicesBase;
 using DevicesBase.Helpers;
+using DevicesCommon;
+using DevicesCommon.Helpers;
 
 namespace WindowsPrinter
 {

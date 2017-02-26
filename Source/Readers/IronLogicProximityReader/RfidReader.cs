@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
-using DevicesCommon;
-using DevicesCommon.Helpers;
 using DevicesBase;
-using ERPService.SharedLibs.Helpers;
+using DevicesCommon.Helpers;
 
 namespace IronLogicProximityReader
 {

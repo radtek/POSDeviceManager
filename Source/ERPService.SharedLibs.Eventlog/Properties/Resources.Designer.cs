@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ERPService.SharedLibs.Eventlog.Properties {
-    using System;
-    
-    
+namespace ERPService.SharedLibs.Eventlog.Properties
+{
+
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>

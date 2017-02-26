@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ERPService.SharedLibs.Eventlog;
+﻿using ERPService.SharedLibs.Eventlog;
 using TsManager;
 
 namespace TsManagerConfigurator

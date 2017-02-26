@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 using DevicesCommon.Helpers;
 using ERPService.SharedLibs.Helpers.SerialCommunications;

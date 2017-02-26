@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
-using ERPService.SharedLibs.Eventlog;
 using DevicesBase;
+using ERPService.SharedLibs.Eventlog;
 
 namespace DevmanConfig
 {

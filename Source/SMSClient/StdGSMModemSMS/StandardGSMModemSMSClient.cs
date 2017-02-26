@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DevicesCommon;
-using DevicesCommon.Helpers;
 using DevicesBase;
+using DevicesCommon.Helpers;
 using ERPService.SharedLibs.Helpers;
 
 namespace StdGSMModemSMS

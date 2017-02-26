@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
-using ERPService.SharedLibs.Helpers.SerialCommunications;
+using System.Text;
 using DevicesBase;
+using DevicesBase.Helpers;
 using DevicesCommon;
 using DevicesCommon.Helpers;
-using DevicesBase.Helpers;
+using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace cl8rc
 {

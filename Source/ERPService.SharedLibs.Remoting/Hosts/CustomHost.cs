@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
-using ERPService.SharedLibs.Remoting.Sinks;
 using ERPService.SharedLibs.Eventlog;
+using ERPService.SharedLibs.Remoting.Sinks;
 
 namespace ERPService.SharedLibs.Remoting.Hosts
 {

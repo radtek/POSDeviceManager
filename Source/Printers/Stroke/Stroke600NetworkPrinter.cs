@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using DevicesBase;
 using DevicesBase.Helpers;
 using DevicesCommon;
 using DevicesCommon.Helpers;
-using System.Drawing.Imaging;
 
 namespace Stroke
 {

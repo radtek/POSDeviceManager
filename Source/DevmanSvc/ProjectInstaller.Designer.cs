@@ -1,6 +1,6 @@
 namespace DevmanSvc
 {
-	partial class ProjectInstaller
+    partial class ProjectInstaller
 	{
 		/// <summary>
 		/// Required designer variable.

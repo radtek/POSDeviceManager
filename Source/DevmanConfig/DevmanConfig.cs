@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
+using System.Drawing;
 using System.Drawing.Design;
+using System.IO;
+using System.Text;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
-using System.IO;
-using System.Windows.Forms;
-using System.Drawing;
 using DevicesCommon;
 using DevicesCommon.Helpers;
-using ERPService.SharedLibs.PropertyGrid;
 using ERPService.SharedLibs.PropertyGrid.Converters;
 using ERPService.SharedLibs.PropertyGrid.Editors;
 

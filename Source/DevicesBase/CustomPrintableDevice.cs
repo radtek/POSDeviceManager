@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using DevicesCommon;
-using System.IO.Ports;
-using System.Collections;
-using System.Xml;
-using DevicesCommon.Helpers;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
+using System.Text;
+using System.Xml;
 using DevicesBase.Helpers;
+using DevicesCommon;
+using DevicesCommon.Helpers;
 
 namespace DevicesBase
 {

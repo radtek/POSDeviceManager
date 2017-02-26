@@ -1,14 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.Diagnostics;
-using TsManager;
-using ERPService.SharedLibs.Helpers;
+using System.Windows.Forms;
 using ERPService.SharedLibs.Eventlog;
+using ERPService.SharedLibs.Helpers;
+using TsManager;
 
 namespace TsManagerConfigurator
 {

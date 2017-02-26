@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
-using ERPService.SharedLibs.Helpers.SerialCommunications;
 using System.Threading;
+using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace SparkTK
 {

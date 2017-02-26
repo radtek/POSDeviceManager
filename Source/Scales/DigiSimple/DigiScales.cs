@@ -1,13 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DevicesCommon;
-using DevicesCommon.Helpers;
-using DevicesBase;
-using DevicesBase.Communicators;
-using System.Threading;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Text;
+using System.Threading;
+using DevicesBase;
+using DevicesBase.Communicators;
+using DevicesCommon;
+using DevicesCommon.Helpers;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace DigiSimple

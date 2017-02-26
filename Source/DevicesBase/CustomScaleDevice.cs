@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using DevicesCommon;
-using DevicesCommon.Helpers;
+using System.Xml;
 using DevicesBase.Communicators;
 using DevicesBase.Helpers;
-using System.Xml;
+using DevicesCommon;
+using DevicesCommon.Helpers;
 
 namespace DevicesBase
 {

@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using DevicesCommon;
 
 namespace DevicesBase
 {
-	/// <summary>
-	/// Базовый класс для дисплеев покупателя
-	/// </summary>
-	public abstract class CustomDisplayDevice : CustomSerialDevice, ICustomerDisplay
+    /// <summary>
+    /// Базовый класс для дисплеев покупателя
+    /// </summary>
+    public abstract class CustomDisplayDevice : CustomSerialDevice, ICustomerDisplay
 	{
 		#region Конструктор
 

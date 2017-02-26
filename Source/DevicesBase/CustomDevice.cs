@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using DevicesCommon;
-using System.Collections;
-using DevicesCommon.Helpers;
 using DevicesBase.Helpers;
+using DevicesCommon;
+using DevicesCommon.Helpers;
 
 namespace DevicesBase
 {
-	/// <summary>
-	/// Базовый класс для всех устройств
-	/// </summary>
-	public abstract class CustomDevice : MarshalByRefObject, IDevice
+    /// <summary>
+    /// Базовый класс для всех устройств
+    /// </summary>
+    public abstract class CustomDevice : MarshalByRefObject, IDevice
 	{
         #region Закрытые поля класса
 

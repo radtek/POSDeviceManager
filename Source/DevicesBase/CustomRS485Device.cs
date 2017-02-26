@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
 using DevicesCommon;
-using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace DevicesBase
 {

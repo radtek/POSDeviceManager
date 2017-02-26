@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.ComponentModel;
 using DevicesBase;
 using DevicesCommon;
 using DevicesCommon.Helpers;

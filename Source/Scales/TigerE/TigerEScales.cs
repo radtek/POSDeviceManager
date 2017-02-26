@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Globalization;
-using ERPService.SharedLibs.Helpers.SerialCommunications;
-using DevicesCommon;
-using DevicesCommon.Helpers;
 using DevicesBase;
 using DevicesBase.Communicators;
+using DevicesCommon;
+using DevicesCommon.Helpers;
+using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace TigerE
 {

@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
+using System.Windows.Forms;
 using DevicesCommon;
 using DevicesCommon.Connectors;
-using System.Windows.Forms;
 
 namespace DevmanConfig
 {

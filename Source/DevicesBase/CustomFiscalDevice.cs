@@ -1,15 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DevicesCommon;
 using DevicesCommon.Helpers;
 
 namespace DevicesBase
 {
-	/// <summary>
-	/// Базовый класс для фискальных устройств
-	/// </summary>
-	public abstract class CustomFiscalDevice : CustomPrintableDevice, IFiscalDevice
+    /// <summary>
+    /// Базовый класс для фискальных устройств
+    /// </summary>
+    public abstract class CustomFiscalDevice : CustomPrintableDevice, IFiscalDevice
 	{
 		// пароль НИ
 		private int taxerPassword;

@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
 using DevicesBase;
 using DevicesCommon;
 using DevicesCommon.Helpers;
-using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace BiolinkLock
 {

@@ -132,7 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DevicesCommon\DevicesCommon.csproj">
-      <Project>{3C778F01-918F-49B0-8C34-91D78BF5A054}</Project>
+      <Project>{3c778f01-918f-49b0-8c34-91d78bf5a054}</Project>
       <Name>DevicesCommon</Name>
     </ProjectReference>
     <ProjectReference Include="..\DevmanConfig\DevmanConfig.csproj">

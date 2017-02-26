@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using DevicesCommon;
-using DevicesCommon.Helpers;
 
 namespace DevicesBase
 {
-	/// <summary>
-	/// Базовый класс для всех подключаемых устройств
-	/// </summary>
-	public abstract class CustomConnectableDevice : CustomDevice, IConnectableDevice
+    /// <summary>
+    /// Базовый класс для всех подключаемых устройств
+    /// </summary>
+    public abstract class CustomConnectableDevice : CustomDevice, IConnectableDevice
 	{
 		#region Конструктор
 
