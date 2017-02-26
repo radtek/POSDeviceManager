@@ -1,4 +1,4 @@
-namespace DevmanConfig
+п»їnamespace DevmanConfig
 {
     partial class TestPrintForm
     {
@@ -43,6 +43,7 @@ namespace DevmanConfig
             this.lbDrawer = new System.Windows.Forms.Label();
             this.rbFromFile = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.cb54FZ = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPosCount)).BeginInit();
             this.SuspendLayout();
@@ -51,11 +52,11 @@ namespace DevmanConfig
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(291, 177);
+            this.btnCancel.Location = new System.Drawing.Point(291, 197);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 14;
-            this.btnCancel.Text = "Закрыть";
+            this.btnCancel.TabIndex = 15;
+            this.btnCancel.Text = "Р—Р°РєСЂС‹С‚СЊ";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // lbFileName
@@ -65,7 +66,7 @@ namespace DevmanConfig
             this.lbFileName.Name = "lbFileName";
             this.lbFileName.Size = new System.Drawing.Size(39, 13);
             this.lbFileName.TabIndex = 1;
-            this.lbFileName.Text = "Файл:";
+            this.lbFileName.Text = "Р¤Р°Р№Р»:";
             // 
             // numAmount
             // 
@@ -97,14 +98,14 @@ namespace DevmanConfig
             this.cbDocType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDocType.FormattingEnabled = true;
             this.cbDocType.Items.AddRange(new object[] {
-            "Продажа",
-            "Возврат",
-            "Нефискальный",
-            "Внесение",
-            "Выплата",
-            "X-отчет",
-            "Z-отчет",
-            "Отчет по секциям"});
+            "РџСЂРѕРґР°Р¶Р°",
+            "Р’РѕР·РІСЂР°С‚",
+            "РќРµС„РёСЃРєР°Р»СЊРЅС‹Р№",
+            "Р’РЅРµСЃРµРЅРёРµ",
+            "Р’С‹РїР»Р°С‚Р°",
+            "X-РѕС‚С‡РµС‚",
+            "Z-РѕС‚С‡РµС‚",
+            "РћС‚С‡РµС‚ РїРѕ СЃРµРєС†РёСЏРј"});
             this.cbDocType.Location = new System.Drawing.Point(155, 84);
             this.cbDocType.Name = "cbDocType";
             this.cbDocType.Size = new System.Drawing.Size(211, 21);
@@ -113,11 +114,11 @@ namespace DevmanConfig
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(210, 177);
+            this.btnOk.Location = new System.Drawing.Point(210, 197);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
-            this.btnOk.TabIndex = 13;
-            this.btnOk.Text = "Печать";
+            this.btnOk.TabIndex = 14;
+            this.btnOk.Text = "РџРµС‡Р°С‚СЊ";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
@@ -128,7 +129,7 @@ namespace DevmanConfig
             this.lbAmount.Name = "lbAmount";
             this.lbAmount.Size = new System.Drawing.Size(44, 13);
             this.lbAmount.TabIndex = 11;
-            this.lbAmount.Text = "Сумма:";
+            this.lbAmount.Text = "РЎСѓРјРјР°:";
             // 
             // lbDocType
             // 
@@ -137,7 +138,7 @@ namespace DevmanConfig
             this.lbDocType.Name = "lbDocType";
             this.lbDocType.Size = new System.Drawing.Size(86, 13);
             this.lbDocType.TabIndex = 5;
-            this.lbDocType.Text = "Тип документа:";
+            this.lbDocType.Text = "РўРёРї РґРѕРєСѓРјРµРЅС‚Р°:";
             // 
             // lbPosCount
             // 
@@ -146,7 +147,7 @@ namespace DevmanConfig
             this.lbPosCount.Name = "lbPosCount";
             this.lbPosCount.Size = new System.Drawing.Size(114, 13);
             this.lbPosCount.TabIndex = 9;
-            this.lbPosCount.Text = "Количество позиций:";
+            this.lbPosCount.Text = "РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕР·РёС†РёР№:";
             // 
             // numPosCount
             // 
@@ -175,9 +176,9 @@ namespace DevmanConfig
             this.cbDrawer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDrawer.FormattingEnabled = true;
             this.cbDrawer.Items.AddRange(new object[] {
-            "Не открывать",
-            "Открыть до начала печати",
-            "Открыть по завершению печати"});
+            "РќРµ РѕС‚РєСЂС‹РІР°С‚СЊ",
+            "РћС‚РєСЂС‹С‚СЊ РґРѕ РЅР°С‡Р°Р»Р° РїРµС‡Р°С‚Рё",
+            "РћС‚РєСЂС‹С‚СЊ РїРѕ Р·Р°РІРµСЂС€РµРЅРёСЋ РїРµС‡Р°С‚Рё"});
             this.cbDrawer.Location = new System.Drawing.Point(155, 111);
             this.cbDrawer.Name = "cbDrawer";
             this.cbDrawer.Size = new System.Drawing.Size(211, 21);
@@ -190,7 +191,7 @@ namespace DevmanConfig
             this.lbDrawer.Name = "lbDrawer";
             this.lbDrawer.Size = new System.Drawing.Size(95, 13);
             this.lbDrawer.TabIndex = 7;
-            this.lbDrawer.Text = "Денежный ящик:";
+            this.lbDrawer.Text = "Р”РµРЅРµР¶РЅС‹Р№ СЏС‰РёРє:";
             // 
             // rbFromFile
             // 
@@ -201,7 +202,7 @@ namespace DevmanConfig
             this.rbFromFile.Size = new System.Drawing.Size(92, 17);
             this.rbFromFile.TabIndex = 0;
             this.rbFromFile.TabStop = true;
-            this.rbFromFile.Text = "Из xml-файла";
+            this.rbFromFile.Text = "РР· xml-С„Р°Р№Р»Р°";
             this.rbFromFile.UseVisualStyleBackColor = true;
             this.rbFromFile.CheckedChanged += new System.EventHandler(this.rbFromFile_CheckedChanged);
             // 
@@ -212,9 +213,19 @@ namespace DevmanConfig
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(103, 17);
             this.radioButton2.TabIndex = 4;
-            this.radioButton2.Text = "Автоматически";
+            this.radioButton2.Text = "РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРё";
             this.radioButton2.UseVisualStyleBackColor = true;
             this.radioButton2.CheckedChanged += new System.EventHandler(this.rbFromFile_CheckedChanged);
+            // 
+            // cb54FZ
+            // 
+            this.cb54FZ.AutoSize = true;
+            this.cb54FZ.Location = new System.Drawing.Point(155, 164);
+            this.cb54FZ.Name = "cb54FZ";
+            this.cb54FZ.Size = new System.Drawing.Size(59, 17);
+            this.cb54FZ.TabIndex = 13;
+            this.cb54FZ.Text = "54-Р¤Р—";
+            this.cb54FZ.UseVisualStyleBackColor = true;
             // 
             // TestPrintForm
             // 
@@ -222,8 +233,9 @@ namespace DevmanConfig
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(378, 212);
+            this.ClientSize = new System.Drawing.Size(378, 232);
             this.ControlBox = false;
+            this.Controls.Add(this.cb54FZ);
             this.Controls.Add(this.btnOpenFile);
             this.Controls.Add(this.cbDrawer);
             this.Controls.Add(this.cbDocType);
@@ -243,7 +255,7 @@ namespace DevmanConfig
             this.Name = "TestPrintForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Тестовая печать";
+            this.Text = "РўРµСЃС‚РѕРІР°СЏ РїРµС‡Р°С‚СЊ";
             ((System.ComponentModel.ISupportInitialize)(this.numAmount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPosCount)).EndInit();
             this.ResumeLayout(false);
@@ -268,5 +280,6 @@ namespace DevmanConfig
         private System.Windows.Forms.Label lbDrawer;
         private System.Windows.Forms.RadioButton rbFromFile;
         private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.CheckBox cb54FZ;
     }
 }

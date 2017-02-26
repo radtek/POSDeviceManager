@@ -39,23 +39,6 @@
     <DocumentationFile>..\..\Bin\Release\TsManager.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ERPService.SharedLibs.Eventlog, Version=1.0.0.30618, Culture=neutral, PublicKeyToken=081cb29e9151b772, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\trunk\Release\ERPService.SharedLibs.Eventlog.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="ERPService.SharedLibs.Helpers, Version=1.0.0.30607, Culture=neutral, PublicKeyToken=b0fa05ad2b4b08b5, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\trunk\Release\ERPService.SharedLibs.Helpers.dll</HintPath>
-    </Reference>
-    <Reference Include="ERPService.SharedLibs.PropertyGrid, Version=1.0.0.30618, Culture=neutral, PublicKeyToken=781b7a2d593b63a5, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\trunk\Release\ERPService.SharedLibs.PropertyGrid.dll</HintPath>
-    </Reference>
-    <Reference Include="ERPService.SharedLibs.Remoting, Version=1.0.0.30313, Culture=neutral, PublicKeyToken=6729cec654b05004, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\trunk\Release\ERPService.SharedLibs.Remoting.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -89,6 +72,22 @@
       <Project>{3C778F01-918F-49B0-8C34-91D78BF5A054}</Project>
       <Name>DevicesCommon</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\ERPService.SharedLibs.Eventlog\ERPService.SharedLibs.Eventlog.csproj">
+      <Project>{f3ee037c-8d18-477b-a39a-4de71f46f992}</Project>
+      <Name>ERPService.SharedLibs.Eventlog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERPService.SharedLibs.Helpers\ERPService.SharedLibs.Helpers.csproj">
+      <Project>{5e459a85-669c-408d-85f1-d99427d34c6b}</Project>
+      <Name>ERPService.SharedLibs.Helpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERPService.SharedLibs.PropertyGrid\ERPService.SharedLibs.PropertyGrid.csproj">
+      <Project>{04e2e55b-eace-4965-ae70-1709868eb4cc}</Project>
+      <Name>ERPService.SharedLibs.PropertyGrid</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERPService.SharedLibs.Remoting\ERPService.SharedLibs.Remoting.csproj">
+      <Project>{570fe212-8e83-4d1b-aea9-06bde6f34773}</Project>
+      <Name>ERPService.SharedLibs.Remoting</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

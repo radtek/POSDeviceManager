@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Drawing.Imaging;
 using DevicesBase;
 using DevicesBase.Helpers;
@@ -29,22 +29,22 @@ namespace Atol
 
     internal struct DeviceParams
     {
-        // максимальная длина передаваемой строки
+        // РјР°РєСЃРёРјР°Р»СЊРЅР°СЏ РґР»РёРЅР° РїРµСЂРµРґР°РІР°РµРјРѕР№ СЃС‚СЂРѕРєРё
         public int MaxStringLen;
 
-        // максимальное количество печатаемых символов
+        // РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РїРµС‡Р°С‚Р°РµРјС‹С… СЃРёРјРІРѕР»РѕРІ
         public int StringLen;
 
-        // ширина чековой ленты в точках
+        // С€РёСЂРёРЅР° С‡РµРєРѕРІРѕР№ Р»РµРЅС‚С‹ РІ С‚РѕС‡РєР°С…
         public int TapeWidth;
 
-        // множитель ширины штрих-кода
+        // РјРЅРѕР¶РёС‚РµР»СЊ С€РёСЂРёРЅС‹ С€С‚СЂРёС…-РєРѕРґР°
         public int BarcodeWidth;
 
-        // кол-во символов подкладного документа
+        // РєРѕР»-РІРѕ СЃРёРјРІРѕР»РѕРІ РїРѕРґРєР»Р°РґРЅРѕРіРѕ РґРѕРєСѓРјРµРЅС‚Р°
         public int SlipLineSize;
 
-        // поддержка отрезчика
+        // РїРѕРґРґРµСЂР¶РєР° РѕС‚СЂРµР·С‡РёРєР°
         public bool IsCutterSupported;
     }
 
@@ -52,18 +52,18 @@ namespace Atol
     [FiscalDeviceAttribute(DeviceNames.ecrTypeAtol)]
     public class AtolFiscalDevice : CustomFiscalDevice, ICommunicationPortProvider
     {
-        #region Константы
+        #region РљРѕРЅСЃС‚Р°РЅС‚С‹
 
         private const int READ_TIMEOUT = 1000;
         private const int WRITE_TIMEOUT = 200;
 
-        // пароль доступа к ККМ
+        // РїР°СЂРѕР»СЊ РґРѕСЃС‚СѓРїР° Рє РљРљРњ
         private const int OPERATOR_PASSWD = 1111;
 
-        // пароль переключения режимов
+        // РїР°СЂРѕР»СЊ РїРµСЂРµРєР»СЋС‡РµРЅРёСЏ СЂРµР¶РёРјРѕРІ
         private const int MODE_PASSWD = 30;
 
-        // следующие константы нужны для формирования штрих-кода
+        // СЃР»РµРґСѓСЋС‰РёРµ РєРѕРЅСЃС‚Р°РЅС‚С‹ РЅСѓР¶РЅС‹ РґР»СЏ С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ С€С‚СЂРёС…-РєРѕРґР°
         private const int ODD = 0;
         private const int EVEN = 1;
         private const int RIGHT = 2;
@@ -95,166 +95,164 @@ namespace Atol
 
         #endregion
 
-        #region Поля класса
+        #region РџРѕР»СЏ РєР»Р°СЃСЃР°
 
-        // тип текущего документа
+        // С‚РёРї С‚РµРєСѓС‰РµРіРѕ РґРѕРєСѓРјРµРЅС‚Р°
         private DocumentType _currDocType;
 
-        // сумма чека (при внесении/выплате денег)
+        // СЃСѓРјРјР° С‡РµРєР° (РїСЂРё РІРЅРµСЃРµРЅРёРё/РІС‹РїР»Р°С‚Рµ РґРµРЅРµРі Рё СЂРµРіРёСЃС‚СЂР°С†РёРё РїРѕ 54-Р¤Р—)
         private long _docAmount = 0;
 
-        // модель устройства
+        // РјРѕРґРµР»СЊ СѓСЃС‚СЂРѕР№СЃС‚РІР°
         private AtolModel _deviceModel = AtolModel.Unknown;
 
         private AtolProtocol _atolProtocol;
 
         #endregion
 
-        #region Конструктор
+        #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
         public AtolFiscalDevice()
             : base()
         {
-            AddSpecificError(1, "Контрольная лента обработана без ошибок");
-            AddSpecificError(8, "Неверная цена (сумма)");
-            AddSpecificError(10, "Неверное количество");
-            AddSpecificError(11, "Переполнение счетчика наличности");
-            AddSpecificError(12, "Невозможно сторно последней операции");
-            AddSpecificError(13, "Сторно по коду невозможно (в чеке зарегистрировано меньшее количество товаров с указанным кодом)");
-            AddSpecificError(14, "Невозможен повтор последней операции");
-            AddSpecificError(15, "Повторная скидка на операцию невозможна");
-            AddSpecificError(16, "Скидка/надбавка на предыдущую операцию невозможна");
-            AddSpecificError(17, "Неверный код товара");
-            AddSpecificError(18, "Неверный штрих-код товара");
-            AddSpecificError(19, "Неверный формат");
-            AddSpecificError(20, "Неверная длина");
-            AddSpecificError(21, "ККМ заблокирована в режиме ввода даты");
-            AddSpecificError(22, "Требуется подтверждение ввода даты");
-            AddSpecificError(24, "Нет больше данных для передачи ПО ККМ");
-            AddSpecificError(25, "Нет подтверждения или отмены продажи");
-            AddSpecificError(26, "Отчет с гашением прерван. Вход в режим невозможен");
-            AddSpecificError(27, "Отключение контроля наличности невозможно (не настроены необходимые типы оплаты)");
-            AddSpecificError(30, "Вход в режим заблокирован");
-            AddSpecificError(31, "Проверьте дату и время");
-            AddSpecificError(32, "Дата и время ККМ меньше, чем в ЭКЛЗ");
-            AddSpecificError(33, "Невозможно закрыть архив");
-            AddSpecificError(50, "Переполнение таблицы заказов");
-            AddSpecificError(51, "Невозможен возврат товара");
-            AddSpecificError(61, "Товар не найден");
-            AddSpecificError(62, "Весовой штрих-код с количеством <>1.000");
-            AddSpecificError(63, "Переполнение буфера чека");
-            AddSpecificError(64, "Недостаточное количество товара");
-            AddSpecificError(65, "Сторнируемое количество больше проданного");
-            AddSpecificError(66, "Заблокированный товар не найден в буфере чека");
-            AddSpecificError(67, "Данный товар не продавался в чеке, сторно невозможно");
-            AddSpecificError(68, "Memo Plus 3 заблокировано с ПК");
-            AddSpecificError(69, "Ошибка контрольной суммы таблицы настроек Memo Plus 3");
-            AddSpecificError(70, "Неверная команда от ККМ");
-            AddSpecificError(102, "Команда не реализуется в данном режиме ККМ");
-            AddSpecificError(103, "Нет бумаги");
-            AddSpecificError(104, "Нет связи с принтером чеков");
-            AddSpecificError(105, "Механическая ошибка печатающего устройства");
-            AddSpecificError(106, "Неверный тип чека");
-            AddSpecificError(107, "Нет больше строк картинки");
-            AddSpecificError(108, "Неверный номер регистра");
-            AddSpecificError(109, "Недопустимое целевое устройство");
-            AddSpecificError(110, "Нет места в массиве картинок");
-            AddSpecificError(111, "Неверный номер картинки / картинка отсутствует");
-            AddSpecificError(112, "Сумма сторно больше, чем было получено данным типом оплаты");
-            AddSpecificError(113, "Сумма не наличных платежей превышает сумму чека");
-            AddSpecificError(114, "Сумма платежей меньше суммы чека");
-            AddSpecificError(115, "Накопление меньше суммы возврата или аннулирования");
-            AddSpecificError(117, "Переполнение суммы платежей");
-            AddSpecificError(122, "Данная модель ККМ не может выполнить команду");
-            AddSpecificError(123, "Неверная величина скидки / надбавки");
-            AddSpecificError(124, "Операция после скидки / надбавки невозможна");
-            AddSpecificError(125, "Неверная секция");
-            AddSpecificError(126, "Неверный вид оплаты");
-            AddSpecificError(127, "Переполнение при умножении");
-            AddSpecificError(128, "Операция запрещена в таблице настроек");
-            AddSpecificError(129, "Переполнение итога чека");
-            AddSpecificError(130, "Открыт чек аннулирования – операция невозможна");
-            AddSpecificError(132, "Переполнение буфера контрольной ленты");
-            AddSpecificError(134, "Вносимая клиентом сумма меньше суммы чека");
-            AddSpecificError(135, "Открыт чек возврата – операция невозможна");
-            AddSpecificError(136, "Смена превысила 24 часа");
-            AddSpecificError(137, "Открыт чек продажи – операция невозможна");
-            AddSpecificError(138, "Переполнение ФП");
-            AddSpecificError(140, "Неверный пароль");
-            AddSpecificError(141, "Буфер контрольной ленты не переполнен");
-            AddSpecificError(142, "Идет обработка контрольной ленты");
-            AddSpecificError(143, "Обнуленная касса (повторное гашение невозможно)");
-            AddSpecificError(145, "Неверный номер таблицы");
-            AddSpecificError(146, "Неверный номер ряда");
-            AddSpecificError(147, "Неверный номер поля");
-            AddSpecificError(148, "Неверная дата");
-            AddSpecificError(149, "Неверное время");
-            AddSpecificError(150, "Сумма чека по секции меньше суммы сторно");
-            AddSpecificError(151, "Подсчет суммы сдачи невозможен");
-            AddSpecificError(152, "В ККМ нет денег для выплаты");
-            AddSpecificError(154, "Чек закрыт – операция невозможна");
-            AddSpecificError(155, "Чек открыт – операция невозможна");
-            AddSpecificError(156, "Смена открыта, операция невозможна");
-            AddSpecificError(157, "ККМ заблокирована, ждет ввода пароля налогового инспектора");
-            AddSpecificError(158, "Заводской номер уже задан");
-            AddSpecificError(159, "Количество перерегистраций не может быть более 4");
-            AddSpecificError(160, "Ошибка Ф.П.");
-            AddSpecificError(162, "Неверная смена");
-            AddSpecificError(163, "Неверный тип отчета");
-            AddSpecificError(164, "Недопустимый пароль");
-            AddSpecificError(165, "Недопустимый заводской номер ККМ");
-            AddSpecificError(166, "Недопустимый РНМ");
-            AddSpecificError(167, "Недопустимый ИНН");
-            AddSpecificError(168, "ККМ не фискализирована");
-            AddSpecificError(169, "Не задан заводской номер");
-            AddSpecificError(170, "Нет отчетов");
-            AddSpecificError(171, "Режим не активизирован");
-            AddSpecificError(172, "Нет указанного чека в КЛ");
-            AddSpecificError(173, "Нет больше записей КЛ");
-            AddSpecificError(174, "Некорректный код или номер кода защиты ККМ");
-            AddSpecificError(176, "Требуется выполнение общего гашения");
-            AddSpecificError(177, "Команда не разрешена введенными кодами защиты ККМ");
-            AddSpecificError(178, "Невозможна отмена скидки/надбавки");
-            AddSpecificError(179, "Невозможно закрыть чек данным типом оплаты (в чеке присутствуют операции без контроля наличных)");
-            AddSpecificError(180, "Неверный номер маршрута");
-            AddSpecificError(181, "Неверный номер начальной зоны");
-            AddSpecificError(182, "Неверный номер конечной зоны");
-            AddSpecificError(183, "Неверный тип тарифа");
-            AddSpecificError(184, "Неверный тариф");
-            AddSpecificError(186, "Ошибка обмена с фискальным модулем");
-            AddSpecificError(190, "Необходимо провести профилактические работы");
-            AddSpecificError(200, "Нет устройства, обрабатывающего данную команду");
-            AddSpecificError(201, "Нет связи с внешним устройством");
-            AddSpecificError(202, "Неверное состояние пульта ТРК");
-            AddSpecificError(203, "В чеке продажи топлива возможна только одна регистрация");
-            AddSpecificError(204, "Неверный номер пульта ТРК");
-            AddSpecificError(205, "Неверный делитель");
-            AddSpecificError(206, "Недопустимое целевое устройство");
-            AddSpecificError(207, "В ККМ произведено 20 активизаций");
-            AddSpecificError(208, "Активизация данной ЭКЛЗ в составе данной ККМ невозможна");
-            AddSpecificError(209, "Недопустимое межстрочие");
-            AddSpecificError(210, "Ошибка обмена с ЭКЛЗ на уровне интерфейса I2C");
-            AddSpecificError(211, "Ошибка формата передачи ЭКЛЗ");
-            AddSpecificError(212, "Неверное состояние ЭКЛЗ");
-            AddSpecificError(213, "Неисправимая ошибка ЭКЛЗ");
-            AddSpecificError(214, "Авария крипто-процессора ЭКЛЗ");
-            AddSpecificError(215, "Исчерпан временной ресурс ЭКЛЗ");
-            AddSpecificError(216, "ЭКЛЗ переполнена");
-            AddSpecificError(217, "В ЭКЛЗ переданы неверная дата или время");
-            AddSpecificError(218, "В ЭКЛЗ нет запрошенных данных");
-            AddSpecificError(219, "Переполнение ЭКЛЗ (итог чека)");
-            AddSpecificError(254, "Снятие отчета прервалось");
-            AddSpecificError(255, "Более одной клавиши ККМ нажаты одновременно");
-            AddSpecificError(-1, "Неизвестная ошибка");
+            AddSpecificError(1, "РљРѕРЅС‚СЂРѕР»СЊРЅР°СЏ Р»РµРЅС‚Р° РѕР±СЂР°Р±РѕС‚Р°РЅР° Р±РµР· РѕС€РёР±РѕРє");
+            AddSpecificError(8, "РќРµРІРµСЂРЅР°СЏ С†РµРЅР° (СЃСѓРјРјР°)");
+            AddSpecificError(10, "РќРµРІРµСЂРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ");
+            AddSpecificError(11, "РџРµСЂРµРїРѕР»РЅРµРЅРёРµ СЃС‡РµС‚С‡РёРєР° РЅР°Р»РёС‡РЅРѕСЃС‚Рё");
+            AddSpecificError(12, "РќРµРІРѕР·РјРѕР¶РЅРѕ СЃС‚РѕСЂРЅРѕ РїРѕСЃР»РµРґРЅРµР№ РѕРїРµСЂР°С†РёРё");
+            AddSpecificError(13, "РЎС‚РѕСЂРЅРѕ РїРѕ РєРѕРґСѓ РЅРµРІРѕР·РјРѕР¶РЅРѕ (РІ С‡РµРєРµ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРѕ РјРµРЅСЊС€РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ С‚РѕРІР°СЂРѕРІ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РєРѕРґРѕРј)");
+            AddSpecificError(14, "РќРµРІРѕР·РјРѕР¶РµРЅ РїРѕРІС‚РѕСЂ РїРѕСЃР»РµРґРЅРµР№ РѕРїРµСЂР°С†РёРё");
+            AddSpecificError(15, "РџРѕРІС‚РѕСЂРЅР°СЏ СЃРєРёРґРєР° РЅР° РѕРїРµСЂР°С†РёСЋ РЅРµРІРѕР·РјРѕР¶РЅР°");
+            AddSpecificError(16, "РЎРєРёРґРєР°/РЅР°РґР±Р°РІРєР° РЅР° РїСЂРµРґС‹РґСѓС‰СѓСЋ РѕРїРµСЂР°С†РёСЋ РЅРµРІРѕР·РјРѕР¶РЅР°");
+            AddSpecificError(17, "РќРµРІРµСЂРЅС‹Р№ РєРѕРґ С‚РѕРІР°СЂР°");
+            AddSpecificError(18, "РќРµРІРµСЂРЅС‹Р№ С€С‚СЂРёС…-РєРѕРґ С‚РѕРІР°СЂР°");
+            AddSpecificError(19, "РќРµРІРµСЂРЅС‹Р№ С„РѕСЂРјР°С‚");
+            AddSpecificError(20, "РќРµРІРµСЂРЅР°СЏ РґР»РёРЅР°");
+            AddSpecificError(21, "РљРљРњ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅР° РІ СЂРµР¶РёРјРµ РІРІРѕРґР° РґР°С‚С‹");
+            AddSpecificError(22, "РўСЂРµР±СѓРµС‚СЃСЏ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ РІРІРѕРґР° РґР°С‚С‹");
+            AddSpecificError(24, "РќРµС‚ Р±РѕР»СЊС€Рµ РґР°РЅРЅС‹С… РґР»СЏ РїРµСЂРµРґР°С‡Рё РџРћ РљРљРњ");
+            AddSpecificError(25, "РќРµС‚ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ РёР»Рё РѕС‚РјРµРЅС‹ РїСЂРѕРґР°Р¶Рё");
+            AddSpecificError(26, "РћС‚С‡РµС‚ СЃ РіР°С€РµРЅРёРµРј РїСЂРµСЂРІР°РЅ. Р’С…РѕРґ РІ СЂРµР¶РёРј РЅРµРІРѕР·РјРѕР¶РµРЅ");
+            AddSpecificError(27, "РћС‚РєР»СЋС‡РµРЅРёРµ РєРѕРЅС‚СЂРѕР»СЏ РЅР°Р»РёС‡РЅРѕСЃС‚Рё РЅРµРІРѕР·РјРѕР¶РЅРѕ (РЅРµ РЅР°СЃС‚СЂРѕРµРЅС‹ РЅРµРѕР±С…РѕРґРёРјС‹Рµ С‚РёРїС‹ РѕРїР»Р°С‚С‹)");
+            AddSpecificError(30, "Р’С…РѕРґ РІ СЂРµР¶РёРј Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ");
+            AddSpecificError(31, "РџСЂРѕРІРµСЂСЊС‚Рµ РґР°С‚Сѓ Рё РІСЂРµРјСЏ");
+            AddSpecificError(32, "Р”Р°С‚Р° Рё РІСЂРµРјСЏ РљРљРњ РјРµРЅСЊС€Рµ, С‡РµРј РІ Р­РљР›Р—");
+            AddSpecificError(33, "РќРµРІРѕР·РјРѕР¶РЅРѕ Р·Р°РєСЂС‹С‚СЊ Р°СЂС…РёРІ");
+            AddSpecificError(50, "РџРµСЂРµРїРѕР»РЅРµРЅРёРµ С‚Р°Р±Р»РёС†С‹ Р·Р°РєР°Р·РѕРІ");
+            AddSpecificError(51, "РќРµРІРѕР·РјРѕР¶РµРЅ РІРѕР·РІСЂР°С‚ С‚РѕРІР°СЂР°");
+            AddSpecificError(61, "РўРѕРІР°СЂ РЅРµ РЅР°Р№РґРµРЅ");
+            AddSpecificError(62, "Р’РµСЃРѕРІРѕР№ С€С‚СЂРёС…-РєРѕРґ СЃ РєРѕР»РёС‡РµСЃС‚РІРѕРј <>1.000");
+            AddSpecificError(63, "РџРµСЂРµРїРѕР»РЅРµРЅРёРµ Р±СѓС„РµСЂР° С‡РµРєР°");
+            AddSpecificError(64, "РќРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ С‚РѕРІР°СЂР°");
+            AddSpecificError(65, "РЎС‚РѕСЂРЅРёСЂСѓРµРјРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ Р±РѕР»СЊС€Рµ РїСЂРѕРґР°РЅРЅРѕРіРѕ");
+            AddSpecificError(66, "Р—Р°Р±Р»РѕРєРёСЂРѕРІР°РЅРЅС‹Р№ С‚РѕРІР°СЂ РЅРµ РЅР°Р№РґРµРЅ РІ Р±СѓС„РµСЂРµ С‡РµРєР°");
+            AddSpecificError(67, "Р”Р°РЅРЅС‹Р№ С‚РѕРІР°СЂ РЅРµ РїСЂРѕРґР°РІР°Р»СЃСЏ РІ С‡РµРєРµ, СЃС‚РѕСЂРЅРѕ РЅРµРІРѕР·РјРѕР¶РЅРѕ");
+            AddSpecificError(68, "Memo Plus 3 Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅРѕ СЃ РџРљ");
+            AddSpecificError(69, "РћС€РёР±РєР° РєРѕРЅС‚СЂРѕР»СЊРЅРѕР№ СЃСѓРјРјС‹ С‚Р°Р±Р»РёС†С‹ РЅР°СЃС‚СЂРѕРµРє Memo Plus 3");
+            AddSpecificError(70, "РќРµРІРµСЂРЅР°СЏ РєРѕРјР°РЅРґР° РѕС‚ РљРљРњ");
+            AddSpecificError(102, "РљРѕРјР°РЅРґР° РЅРµ СЂРµР°Р»РёР·СѓРµС‚СЃСЏ РІ РґР°РЅРЅРѕРј СЂРµР¶РёРјРµ РљРљРњ");
+            AddSpecificError(103, "РќРµС‚ Р±СѓРјР°РіРё");
+            AddSpecificError(104, "РќРµС‚ СЃРІСЏР·Рё СЃ РїСЂРёРЅС‚РµСЂРѕРј С‡РµРєРѕРІ");
+            AddSpecificError(105, "РњРµС…Р°РЅРёС‡РµСЃРєР°СЏ РѕС€РёР±РєР° РїРµС‡Р°С‚Р°СЋС‰РµРіРѕ СѓСЃС‚СЂРѕР№СЃС‚РІР°");
+            AddSpecificError(106, "РќРµРІРµСЂРЅС‹Р№ С‚РёРї С‡РµРєР°");
+            AddSpecificError(107, "РќРµС‚ Р±РѕР»СЊС€Рµ СЃС‚СЂРѕРє РєР°СЂС‚РёРЅРєРё");
+            AddSpecificError(108, "РќРµРІРµСЂРЅС‹Р№ РЅРѕРјРµСЂ СЂРµРіРёСЃС‚СЂР°");
+            AddSpecificError(109, "РќРµРґРѕРїСѓСЃС‚РёРјРѕРµ С†РµР»РµРІРѕРµ СѓСЃС‚СЂРѕР№СЃС‚РІРѕ");
+            AddSpecificError(110, "РќРµС‚ РјРµСЃС‚Р° РІ РјР°СЃСЃРёРІРµ РєР°СЂС‚РёРЅРѕРє");
+            AddSpecificError(111, "РќРµРІРµСЂРЅС‹Р№ РЅРѕРјРµСЂ РєР°СЂС‚РёРЅРєРё / РєР°СЂС‚РёРЅРєР° РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚");
+            AddSpecificError(112, "РЎСѓРјРјР° СЃС‚РѕСЂРЅРѕ Р±РѕР»СЊС€Рµ, С‡РµРј Р±С‹Р»Рѕ РїРѕР»СѓС‡РµРЅРѕ РґР°РЅРЅС‹Рј С‚РёРїРѕРј РѕРїР»Р°С‚С‹");
+            AddSpecificError(113, "РЎСѓРјРјР° РЅРµ РЅР°Р»РёС‡РЅС‹С… РїР»Р°С‚РµР¶РµР№ РїСЂРµРІС‹С€Р°РµС‚ СЃСѓРјРјСѓ С‡РµРєР°");
+            AddSpecificError(114, "РЎСѓРјРјР° РїР»Р°С‚РµР¶РµР№ РјРµРЅСЊС€Рµ СЃСѓРјРјС‹ С‡РµРєР°");
+            AddSpecificError(115, "РќР°РєРѕРїР»РµРЅРёРµ РјРµРЅСЊС€Рµ СЃСѓРјРјС‹ РІРѕР·РІСЂР°С‚Р° РёР»Рё Р°РЅРЅСѓР»РёСЂРѕРІР°РЅРёСЏ");
+            AddSpecificError(117, "РџРµСЂРµРїРѕР»РЅРµРЅРёРµ СЃСѓРјРјС‹ РїР»Р°С‚РµР¶РµР№");
+            AddSpecificError(122, "Р”Р°РЅРЅР°СЏ РјРѕРґРµР»СЊ РљРљРњ РЅРµ РјРѕР¶РµС‚ РІС‹РїРѕР»РЅРёС‚СЊ РєРѕРјР°РЅРґСѓ");
+            AddSpecificError(123, "РќРµРІРµСЂРЅР°СЏ РІРµР»РёС‡РёРЅР° СЃРєРёРґРєРё / РЅР°РґР±Р°РІРєРё");
+            AddSpecificError(124, "РћРїРµСЂР°С†РёСЏ РїРѕСЃР»Рµ СЃРєРёРґРєРё / РЅР°РґР±Р°РІРєРё РЅРµРІРѕР·РјРѕР¶РЅР°");
+            AddSpecificError(125, "РќРµРІРµСЂРЅР°СЏ СЃРµРєС†РёСЏ");
+            AddSpecificError(126, "РќРµРІРµСЂРЅС‹Р№ РІРёРґ РѕРїР»Р°С‚С‹");
+            AddSpecificError(127, "РџРµСЂРµРїРѕР»РЅРµРЅРёРµ РїСЂРё СѓРјРЅРѕР¶РµРЅРёРё");
+            AddSpecificError(128, "РћРїРµСЂР°С†РёСЏ Р·Р°РїСЂРµС‰РµРЅР° РІ С‚Р°Р±Р»РёС†Рµ РЅР°СЃС‚СЂРѕРµРє");
+            AddSpecificError(129, "РџРµСЂРµРїРѕР»РЅРµРЅРёРµ РёС‚РѕРіР° С‡РµРєР°");
+            AddSpecificError(130, "РћС‚РєСЂС‹С‚ С‡РµРє Р°РЅРЅСѓР»РёСЂРѕРІР°РЅРёСЏ вЂ“ РѕРїРµСЂР°С†РёСЏ РЅРµРІРѕР·РјРѕР¶РЅР°");
+            AddSpecificError(132, "РџРµСЂРµРїРѕР»РЅРµРЅРёРµ Р±СѓС„РµСЂР° РєРѕРЅС‚СЂРѕР»СЊРЅРѕР№ Р»РµРЅС‚С‹");
+            AddSpecificError(134, "Р’РЅРѕСЃРёРјР°СЏ РєР»РёРµРЅС‚РѕРј СЃСѓРјРјР° РјРµРЅСЊС€Рµ СЃСѓРјРјС‹ С‡РµРєР°");
+            AddSpecificError(135, "РћС‚РєСЂС‹С‚ С‡РµРє РІРѕР·РІСЂР°С‚Р° вЂ“ РѕРїРµСЂР°С†РёСЏ РЅРµРІРѕР·РјРѕР¶РЅР°");
+            AddSpecificError(136, "РЎРјРµРЅР° РїСЂРµРІС‹СЃРёР»Р° 24 С‡Р°СЃР°");
+            AddSpecificError(137, "РћС‚РєСЂС‹С‚ С‡РµРє РїСЂРѕРґР°Р¶Рё вЂ“ РѕРїРµСЂР°С†РёСЏ РЅРµРІРѕР·РјРѕР¶РЅР°");
+            AddSpecificError(138, "РџРµСЂРµРїРѕР»РЅРµРЅРёРµ Р¤Рџ");
+            AddSpecificError(140, "РќРµРІРµСЂРЅС‹Р№ РїР°СЂРѕР»СЊ");
+            AddSpecificError(141, "Р‘СѓС„РµСЂ РєРѕРЅС‚СЂРѕР»СЊРЅРѕР№ Р»РµРЅС‚С‹ РЅРµ РїРµСЂРµРїРѕР»РЅРµРЅ");
+            AddSpecificError(142, "РРґРµС‚ РѕР±СЂР°Р±РѕС‚РєР° РєРѕРЅС‚СЂРѕР»СЊРЅРѕР№ Р»РµРЅС‚С‹");
+            AddSpecificError(143, "РћР±РЅСѓР»РµРЅРЅР°СЏ РєР°СЃСЃР° (РїРѕРІС‚РѕСЂРЅРѕРµ РіР°С€РµРЅРёРµ РЅРµРІРѕР·РјРѕР¶РЅРѕ)");
+            AddSpecificError(145, "РќРµРІРµСЂРЅС‹Р№ РЅРѕРјРµСЂ С‚Р°Р±Р»РёС†С‹");
+            AddSpecificError(146, "РќРµРІРµСЂРЅС‹Р№ РЅРѕРјРµСЂ СЂСЏРґР°");
+            AddSpecificError(147, "РќРµРІРµСЂРЅС‹Р№ РЅРѕРјРµСЂ РїРѕР»СЏ");
+            AddSpecificError(148, "РќРµРІРµСЂРЅР°СЏ РґР°С‚Р°");
+            AddSpecificError(149, "РќРµРІРµСЂРЅРѕРµ РІСЂРµРјСЏ");
+            AddSpecificError(150, "РЎСѓРјРјР° С‡РµРєР° РїРѕ СЃРµРєС†РёРё РјРµРЅСЊС€Рµ СЃСѓРјРјС‹ СЃС‚РѕСЂРЅРѕ");
+            AddSpecificError(151, "РџРѕРґСЃС‡РµС‚ СЃСѓРјРјС‹ СЃРґР°С‡Рё РЅРµРІРѕР·РјРѕР¶РµРЅ");
+            AddSpecificError(152, "Р’ РљРљРњ РЅРµС‚ РґРµРЅРµРі РґР»СЏ РІС‹РїР»Р°С‚С‹");
+            AddSpecificError(154, "Р§РµРє Р·Р°РєСЂС‹С‚ вЂ“ РѕРїРµСЂР°С†РёСЏ РЅРµРІРѕР·РјРѕР¶РЅР°");
+            AddSpecificError(155, "Р§РµРє РѕС‚РєСЂС‹С‚ вЂ“ РѕРїРµСЂР°С†РёСЏ РЅРµРІРѕР·РјРѕР¶РЅР°");
+            AddSpecificError(156, "РЎРјРµРЅР° РѕС‚РєСЂС‹С‚Р°, РѕРїРµСЂР°С†РёСЏ РЅРµРІРѕР·РјРѕР¶РЅР°");
+            AddSpecificError(157, "РљРљРњ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅР°, Р¶РґРµС‚ РІРІРѕРґР° РїР°СЂРѕР»СЏ РЅР°Р»РѕРіРѕРІРѕРіРѕ РёРЅСЃРїРµРєС‚РѕСЂР°");
+            AddSpecificError(158, "Р—Р°РІРѕРґСЃРєРѕР№ РЅРѕРјРµСЂ СѓР¶Рµ Р·Р°РґР°РЅ");
+            AddSpecificError(159, "РљРѕР»РёС‡РµСЃС‚РІРѕ РїРµСЂРµСЂРµРіРёСЃС‚СЂР°С†РёР№ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р±РѕР»РµРµ 4");
+            AddSpecificError(160, "РћС€РёР±РєР° Р¤.Рџ.");
+            AddSpecificError(162, "РќРµРІРµСЂРЅР°СЏ СЃРјРµРЅР°");
+            AddSpecificError(163, "РќРµРІРµСЂРЅС‹Р№ С‚РёРї РѕС‚С‡РµС‚Р°");
+            AddSpecificError(164, "РќРµРґРѕРїСѓСЃС‚РёРјС‹Р№ РїР°СЂРѕР»СЊ");
+            AddSpecificError(165, "РќРµРґРѕРїСѓСЃС‚РёРјС‹Р№ Р·Р°РІРѕРґСЃРєРѕР№ РЅРѕРјРµСЂ РљРљРњ");
+            AddSpecificError(166, "РќРµРґРѕРїСѓСЃС‚РёРјС‹Р№ Р РќРњ");
+            AddSpecificError(167, "РќРµРґРѕРїСѓСЃС‚РёРјС‹Р№ РРќРќ");
+            AddSpecificError(168, "РљРљРњ РЅРµ С„РёСЃРєР°Р»РёР·РёСЂРѕРІР°РЅР°");
+            AddSpecificError(169, "РќРµ Р·Р°РґР°РЅ Р·Р°РІРѕРґСЃРєРѕР№ РЅРѕРјРµСЂ");
+            AddSpecificError(170, "РќРµС‚ РѕС‚С‡РµС‚РѕРІ");
+            AddSpecificError(171, "Р РµР¶РёРј РЅРµ Р°РєС‚РёРІРёР·РёСЂРѕРІР°РЅ");
+            AddSpecificError(172, "РќРµС‚ СѓРєР°Р·Р°РЅРЅРѕРіРѕ С‡РµРєР° РІ РљР›");
+            AddSpecificError(173, "РќРµС‚ Р±РѕР»СЊС€Рµ Р·Р°РїРёСЃРµР№ РљР›");
+            AddSpecificError(174, "РќРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ РєРѕРґ РёР»Рё РЅРѕРјРµСЂ РєРѕРґР° Р·Р°С‰РёС‚С‹ РљРљРњ");
+            AddSpecificError(176, "РўСЂРµР±СѓРµС‚СЃСЏ РІС‹РїРѕР»РЅРµРЅРёРµ РѕР±С‰РµРіРѕ РіР°С€РµРЅРёСЏ");
+            AddSpecificError(177, "РљРѕРјР°РЅРґР° РЅРµ СЂР°Р·СЂРµС€РµРЅР° РІРІРµРґРµРЅРЅС‹РјРё РєРѕРґР°РјРё Р·Р°С‰РёС‚С‹ РљРљРњ");
+            AddSpecificError(178, "РќРµРІРѕР·РјРѕР¶РЅР° РѕС‚РјРµРЅР° СЃРєРёРґРєРё/РЅР°РґР±Р°РІРєРё");
+            AddSpecificError(179, "РќРµРІРѕР·РјРѕР¶РЅРѕ Р·Р°РєСЂС‹С‚СЊ С‡РµРє РґР°РЅРЅС‹Рј С‚РёРїРѕРј РѕРїР»Р°С‚С‹ (РІ С‡РµРєРµ РїСЂРёСЃСѓС‚СЃС‚РІСѓСЋС‚ РѕРїРµСЂР°С†РёРё Р±РµР· РєРѕРЅС‚СЂРѕР»СЏ РЅР°Р»РёС‡РЅС‹С…)");
+            AddSpecificError(180, "РќРµРІРµСЂРЅС‹Р№ РЅРѕРјРµСЂ РјР°СЂС€СЂСѓС‚Р°");
+            AddSpecificError(181, "РќРµРІРµСЂРЅС‹Р№ РЅРѕРјРµСЂ РЅР°С‡Р°Р»СЊРЅРѕР№ Р·РѕРЅС‹");
+            AddSpecificError(182, "РќРµРІРµСЂРЅС‹Р№ РЅРѕРјРµСЂ РєРѕРЅРµС‡РЅРѕР№ Р·РѕРЅС‹");
+            AddSpecificError(183, "РќРµРІРµСЂРЅС‹Р№ С‚РёРї С‚Р°СЂРёС„Р°");
+            AddSpecificError(184, "РќРµРІРµСЂРЅС‹Р№ С‚Р°СЂРёС„");
+            AddSpecificError(186, "РћС€РёР±РєР° РѕР±РјРµРЅР° СЃ С„РёСЃРєР°Р»СЊРЅС‹Рј РјРѕРґСѓР»РµРј");
+            AddSpecificError(190, "РќРµРѕР±С…РѕРґРёРјРѕ РїСЂРѕРІРµСЃС‚Рё РїСЂРѕС„РёР»Р°РєС‚РёС‡РµСЃРєРёРµ СЂР°Р±РѕС‚С‹");
+            AddSpecificError(200, "РќРµС‚ СѓСЃС‚СЂРѕР№СЃС‚РІР°, РѕР±СЂР°Р±Р°С‚С‹РІР°СЋС‰РµРіРѕ РґР°РЅРЅСѓСЋ РєРѕРјР°РЅРґСѓ");
+            AddSpecificError(201, "РќРµС‚ СЃРІСЏР·Рё СЃ РІРЅРµС€РЅРёРј СѓСЃС‚СЂРѕР№СЃС‚РІРѕРј");
+            AddSpecificError(202, "РќРµРІРµСЂРЅРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РїСѓР»СЊС‚Р° РўР Рљ");
+            AddSpecificError(203, "Р’ С‡РµРєРµ РїСЂРѕРґР°Р¶Рё С‚РѕРїР»РёРІР° РІРѕР·РјРѕР¶РЅР° С‚РѕР»СЊРєРѕ РѕРґРЅР° СЂРµРіРёСЃС‚СЂР°С†РёСЏ");
+            AddSpecificError(204, "РќРµРІРµСЂРЅС‹Р№ РЅРѕРјРµСЂ РїСѓР»СЊС‚Р° РўР Рљ");
+            AddSpecificError(205, "РќРµРІРµСЂРЅС‹Р№ РґРµР»РёС‚РµР»СЊ");
+            AddSpecificError(206, "РќРµРґРѕРїСѓСЃС‚РёРјРѕРµ С†РµР»РµРІРѕРµ СѓСЃС‚СЂРѕР№СЃС‚РІРѕ");
+            AddSpecificError(207, "Р’ РљРљРњ РїСЂРѕРёР·РІРµРґРµРЅРѕ 20 Р°РєС‚РёРІРёР·Р°С†РёР№");
+            AddSpecificError(208, "РђРєС‚РёРІРёР·Р°С†РёСЏ РґР°РЅРЅРѕР№ Р­РљР›Р— РІ СЃРѕСЃС‚Р°РІРµ РґР°РЅРЅРѕР№ РљРљРњ РЅРµРІРѕР·РјРѕР¶РЅР°");
+            AddSpecificError(209, "РќРµРґРѕРїСѓСЃС‚РёРјРѕРµ РјРµР¶СЃС‚СЂРѕС‡РёРµ");
+            AddSpecificError(210, "РћС€РёР±РєР° РѕР±РјРµРЅР° СЃ Р­РљР›Р— РЅР° СѓСЂРѕРІРЅРµ РёРЅС‚РµСЂС„РµР№СЃР° I2C");
+            AddSpecificError(211, "РћС€РёР±РєР° С„РѕСЂРјР°С‚Р° РїРµСЂРµРґР°С‡Рё Р­РљР›Р—");
+            AddSpecificError(212, "РќРµРІРµСЂРЅРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ Р­РљР›Р—");
+            AddSpecificError(213, "РќРµРёСЃРїСЂР°РІРёРјР°СЏ РѕС€РёР±РєР° Р­РљР›Р—");
+            AddSpecificError(214, "РђРІР°СЂРёСЏ РєСЂРёРїС‚Рѕ-РїСЂРѕС†РµСЃСЃРѕСЂР° Р­РљР›Р—");
+            AddSpecificError(215, "РСЃС‡РµСЂРїР°РЅ РІСЂРµРјРµРЅРЅРѕР№ СЂРµСЃСѓСЂСЃ Р­РљР›Р—");
+            AddSpecificError(216, "Р­РљР›Р— РїРµСЂРµРїРѕР»РЅРµРЅР°");
+            AddSpecificError(217, "Р’ Р­РљР›Р— РїРµСЂРµРґР°РЅС‹ РЅРµРІРµСЂРЅР°СЏ РґР°С‚Р° РёР»Рё РІСЂРµРјСЏ");
+            AddSpecificError(218, "Р’ Р­РљР›Р— РЅРµС‚ Р·Р°РїСЂРѕС€РµРЅРЅС‹С… РґР°РЅРЅС‹С…");
+            AddSpecificError(219, "РџРµСЂРµРїРѕР»РЅРµРЅРёРµ Р­РљР›Р— (РёС‚РѕРі С‡РµРєР°)");
+            AddSpecificError(254, "РЎРЅСЏС‚РёРµ РѕС‚С‡РµС‚Р° РїСЂРµСЂРІР°Р»РѕСЃСЊ");
+            AddSpecificError(255, "Р‘РѕР»РµРµ РѕРґРЅРѕР№ РєР»Р°РІРёС€Рё РљРљРњ РЅР°Р¶Р°С‚С‹ РѕРґРЅРѕРІСЂРµРјРµРЅРЅРѕ");
+            AddSpecificError(-1, "РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕС€РёР±РєР°");
 
             _atolProtocol = new AtolProtocol(this, OPERATOR_PASSWD);
         }
 
         #endregion
 
-        private delegate void ExecuteCommandDelegate();
-
-        #region Внутренние методы
+        #region Р’РЅСѓС‚СЂРµРЅРЅРёРµ РјРµС‚РѕРґС‹
 
         private bool IsSlipMode()
         {
@@ -341,7 +339,7 @@ namespace Atol
             return devParams;
         }
 
-        // ожидание завершения команды
+        // РѕР¶РёРґР°РЅРёРµ Р·Р°РІРµСЂС€РµРЅРёСЏ РєРѕРјР°РЅРґС‹
         private bool WaitForStateChange(ref byte nMode, ref byte nSubMode, ref byte nFlags)
         {
             byte nCurrentMode = 0;
@@ -372,14 +370,14 @@ namespace Atol
             return true;
         }
 
-        // определение модели устройства и установка значения ширины ленты
+        // РѕРїСЂРµРґРµР»РµРЅРёРµ РјРѕРґРµР»Рё СѓСЃС‚СЂРѕР№СЃС‚РІР° Рё СѓСЃС‚Р°РЅРѕРІРєР° Р·РЅР°С‡РµРЅРёСЏ С€РёСЂРёРЅС‹ Р»РµРЅС‚С‹
         private void SetDeviceType()
         {
             _atolProtocol.ExecuteCommand(0xA5);
             _deviceModel = (AtolModel)_atolProtocol.Response[4];
         }
 
-        // установка подвала документа
+        // СѓСЃС‚Р°РЅРѕРІРєР° РїРѕРґРІР°Р»Р° РґРѕРєСѓРјРµРЅС‚Р°
         private void SetFooter()
         {
             _atolProtocol.SwitchToMode(4, MODE_PASSWD);
@@ -400,21 +398,21 @@ namespace Atol
                 }
             }
 
-            // загрузка графического подвала
+            // Р·Р°РіСЂСѓР·РєР° РіСЂР°С„РёС‡РµСЃРєРѕРіРѕ РїРѕРґРІР°Р»Р°
             if (PrintGraphicFooter && GraphicFooter != null)
             {
                 if (!PrintGraphicHeader || GraphicHeader == null)
                 {
-                    // очистка массива картинок
+                    // РѕС‡РёСЃС‚РєР° РјР°СЃСЃРёРІР° РєР°СЂС‚РёРЅРѕРє
                     _atolProtocol.CreateCommand(0x8A);
                     _atolProtocol.AddByte(0);
                     _atolProtocol.Execute();
                 }
 
-                // передача строк картинки
+                // РїРµСЂРµРґР°С‡Р° СЃС‚СЂРѕРє РєР°СЂС‚РёРЅРєРё
                 int imageNo = LoadImage(GraphicFooter);
 
-                // запись строки клише с картинкой
+                // Р·Р°РїРёСЃСЊ СЃС‚СЂРѕРєРё РєР»РёС€Рµ СЃ РєР°СЂС‚РёРЅРєРѕР№
                 _atolProtocol.CreateCommand(0x50);
                 _atolProtocol.AddByte(6);
                 _atolProtocol.AddBCD(1, 2);
@@ -422,21 +420,21 @@ namespace Atol
                 var line = new byte[GetDeviceParams().MaxStringLen];
                 line[0] = 0x0A;
                 line[1] = (byte)imageNo;
-                line[2] = 0x00; // смещение
-                line[3] = (byte)((GetDeviceParams().TapeWidth - GraphicFooter.Width) / 2); // смещение
+                line[2] = 0x00; // СЃРјРµС‰РµРЅРёРµ
+                line[3] = (byte)((GetDeviceParams().TapeWidth - GraphicFooter.Width) / 2); // СЃРјРµС‰РµРЅРёРµ
 
                 _atolProtocol.AddBytes(line);
                 _atolProtocol.Execute();
             }
         }
 
-        // установка заголовка документа
+        // СѓСЃС‚Р°РЅРѕРІРєР° Р·Р°РіРѕР»РѕРІРєР° РґРѕРєСѓРјРµРЅС‚Р°
         private void SetHeader()
         {
             _atolProtocol.SwitchToMode(4, MODE_PASSWD);
             int nRow = 6;
 
-            // установка строк клише
+            // СѓСЃС‚Р°РЅРѕРІРєР° СЃС‚СЂРѕРє РєР»РёС€Рµ
             if (PrintHeader && DocumentHeader != null)
             {
                 foreach (string s in DocumentHeader)
@@ -452,11 +450,11 @@ namespace Atol
                 }
             }
 
-            // загрузка графического клише
+            // Р·Р°РіСЂСѓР·РєР° РіСЂР°С„РёС‡РµСЃРєРѕРіРѕ РєР»РёС€Рµ
             if (PrintGraphicHeader && GraphicHeader != null)
             {
-                // установка волшебного флага в таблице для возможности загрузки графики
-                // таблица 2, ряд 1, поле 21, значение 30h
+                // СѓСЃС‚Р°РЅРѕРІРєР° РІРѕР»С€РµР±РЅРѕРіРѕ С„Р»Р°РіР° РІ С‚Р°Р±Р»РёС†Рµ РґР»СЏ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё Р·Р°РіСЂСѓР·РєРё РіСЂР°С„РёРєРё
+                // С‚Р°Р±Р»РёС†Р° 2, СЂСЏРґ 1, РїРѕР»Рµ 21, Р·РЅР°С‡РµРЅРёРµ 30h
                 _atolProtocol.CreateCommand(0x50);
                 _atolProtocol.AddByte(2);
                 _atolProtocol.AddBCD(1, 2);
@@ -464,14 +462,14 @@ namespace Atol
                 _atolProtocol.AddBCD(48, 1);
                 _atolProtocol.Execute();
 
-                // очистка массива картинок
+                // РѕС‡РёСЃС‚РєР° РјР°СЃСЃРёРІР° РєР°СЂС‚РёРЅРѕРє
                 _atolProtocol.CreateCommand(0x8A);
                 _atolProtocol.AddByte(0);
                 _atolProtocol.Execute();
 
                 int imageNo = LoadImage(GraphicHeader);
 
-                // запись строки клише с картинкой
+                // Р·Р°РїРёСЃСЊ СЃС‚СЂРѕРєРё РєР»РёС€Рµ СЃ РєР°СЂС‚РёРЅРєРѕР№
                 _atolProtocol.CreateCommand(0x50);
                 _atolProtocol.AddByte(6);
                 _atolProtocol.AddBCD(8, 2);
@@ -479,8 +477,8 @@ namespace Atol
                 var line = new byte[GetDeviceParams().MaxStringLen];
                 line[0] = 0x0A;
                 line[1] = (byte)imageNo;
-                line[2] = 0x00; // смещение
-                line[3] = (byte)((GetDeviceParams().TapeWidth - GraphicHeader.Width) / 2); // смещение
+                line[2] = 0x00; // СЃРјРµС‰РµРЅРёРµ
+                line[3] = (byte)((GetDeviceParams().TapeWidth - GraphicHeader.Width) / 2); // СЃРјРµС‰РµРЅРёРµ
 
                 _atolProtocol.AddBytes(line);
                 _atolProtocol.Execute();
@@ -490,27 +488,27 @@ namespace Atol
 
         private void SetTapeWidth()
         {
-            // установка кол-ва символов в строке
+            // СѓСЃС‚Р°РЅРѕРІРєР° РєРѕР»-РІР° СЃРёРјРІРѕР»РѕРІ РІ СЃС‚СЂРѕРєРµ
             _atolProtocol.SwitchToMode(4, MODE_PASSWD);
             _atolProtocol.CreateCommand(0x50);
-            _atolProtocol.AddByte(2);       // таблица
-            _atolProtocol.AddBCD(1, 2);// ряд
-            _atolProtocol.AddByte(55);       // поле
+            _atolProtocol.AddByte(2);       // С‚Р°Р±Р»РёС†Р°
+            _atolProtocol.AddBCD(1, 2);// СЂСЏРґ
+            _atolProtocol.AddByte(55);       // РїРѕР»Рµ
             _atolProtocol.AddBCD(GetDeviceParams().StringLen, 1);
             _atolProtocol.Execute();
 
-            // установка сжатого по горизонтали шрифта
+            // СѓСЃС‚Р°РЅРѕРІРєР° СЃР¶Р°С‚РѕРіРѕ РїРѕ РіРѕСЂРёР·РѕРЅС‚Р°Р»Рё С€СЂРёС„С‚Р°
             _atolProtocol.SwitchToMode(4, MODE_PASSWD);
             _atolProtocol.CreateCommand(0x50);
-            _atolProtocol.AddByte(2);       // таблица
-            _atolProtocol.AddBCD(1, 2);// ряд
-            _atolProtocol.AddByte(56);       // поле
+            _atolProtocol.AddByte(2);       // С‚Р°Р±Р»РёС†Р°
+            _atolProtocol.AddBCD(1, 2);// СЂСЏРґ
+            _atolProtocol.AddByte(56);       // РїРѕР»Рµ
             _atolProtocol.AddBCD(2, 1);
             _atolProtocol.Execute();
         }
 
 
-        // печать отчетов
+        // РїРµС‡Р°С‚СЊ РѕС‚С‡РµС‚РѕРІ
         private void PrintReport(DocumentType docType)
         {
             byte nMode = 0;
@@ -555,39 +553,39 @@ namespace Atol
                 if (nMode == 3 && nSubMode == 0)
                 {
                     if ((nFlags & 0x01) == 0x01)
-                        throw new DeviceErrorException(103);// нет бумаги
+                        throw new DeviceErrorException(103);// РЅРµС‚ Р±СѓРјР°РіРё
                     else
                     {
                         if ((nFlags & 0x02) == 0x02)
-                            throw new DeviceErrorException(104);// нет связи с принтером
+                            throw new DeviceErrorException(104);// РЅРµС‚ СЃРІСЏР·Рё СЃ РїСЂРёРЅС‚РµСЂРѕРј
                     }
                 }
                 else
-                    throw new DeviceErrorException(254); // снятие отчета прервалось
+                    throw new DeviceErrorException(254); // СЃРЅСЏС‚РёРµ РѕС‚С‡РµС‚Р° РїСЂРµСЂРІР°Р»РѕСЃСЊ
             }
             else
             {
                 if (nMode == 2 && nSubMode == 0)
                 {
                     if ((nFlags & 0x01) == 0x01)
-                        throw new DeviceErrorException(103);// нет бумаги
+                        throw new DeviceErrorException(103);// РЅРµС‚ Р±СѓРјР°РіРё
                     else
                     {
                         if ((nFlags & 0x02) == 0x02)
-                            throw new DeviceErrorException(104);// нет связи с принтером
+                            throw new DeviceErrorException(104);// РЅРµС‚ СЃРІСЏР·Рё СЃ РїСЂРёРЅС‚РµСЂРѕРј
                     }
                 }
                 else
-                    throw new DeviceErrorException(254);// снятие отчета прервалось
+                    throw new DeviceErrorException(254);// СЃРЅСЏС‚РёРµ РѕС‚С‡РµС‚Р° РїСЂРµСЂРІР°Р»РѕСЃСЊ
             }
         }
 
-        // отмена документа
+        // РѕС‚РјРµРЅР° РґРѕРєСѓРјРµРЅС‚Р°
         private void CancelDocument()
         {
             if (!DocOpened())
             {
-                PrintStringInternal("ЧЕК АННУЛИРОВАН", FontStyle.Regular);
+                PrintStringInternal("Р§Р•Рљ РђРќРќРЈР›РР РћР’РђРќ", FontStyle.Regular);
                 _atolProtocol.ExecuteCommand(0x6C);
             }
             else
@@ -596,44 +594,44 @@ namespace Atol
             _docAmount = 0;
         }
 
-        // получить состояние документа
+        // РїРѕР»СѓС‡РёС‚СЊ СЃРѕСЃС‚РѕСЏРЅРёРµ РґРѕРєСѓРјРµРЅС‚Р°
         private bool DocOpened()
         {
-            // запрос состояния
+            // Р·Р°РїСЂРѕСЃ СЃРѕСЃС‚РѕСЏРЅРёСЏ
             _atolProtocol.ExecuteCommand(0x3F);
             return ((_atolProtocol.Response[18] & 1) == 1) && (_atolProtocol.Response[23] != 0);
         }
 
-        // печать строки
+        // РїРµС‡Р°С‚СЊ СЃС‚СЂРѕРєРё
         private void PrintStringInternal(string source, FontStyle style)
         {
             _atolProtocol.CreateCommand(0x87);
-            _atolProtocol.AddByte(0); // режим проверки
-            _atolProtocol.AddByte(1); // печать на чековой ленте
-            _atolProtocol.AddByte(0); // шрифт
+            _atolProtocol.AddByte(0); // СЂРµР¶РёРј РїСЂРѕРІРµСЂРєРё
+            _atolProtocol.AddByte(1); // РїРµС‡Р°С‚СЊ РЅР° С‡РµРєРѕРІРѕР№ Р»РµРЅС‚Рµ
+            _atolProtocol.AddByte(0); // С€СЂРёС„С‚
 
-            // множитель по вертикали
+            // РјРЅРѕР¶РёС‚РµР»СЊ РїРѕ РІРµСЂС‚РёРєР°Р»Рё
             if (style == FontStyle.DoubleHeight || style == FontStyle.DoubleAll)
                 _atolProtocol.AddByte(1);
             else
                 _atolProtocol.AddByte(0);
 
-            _atolProtocol.AddByte(0); // межстрочие                
-            _atolProtocol.AddByte(0); // яркость
-            _atolProtocol.AddByte(1); // режим ЧЛ
-            _atolProtocol.AddByte(1); // режим КЛ
-            _atolProtocol.AddByte(0); // форматирование
-            _atolProtocol.AddByte(0); // резерв
-            _atolProtocol.AddByte(0); // резерв
-            //                Cmd.AddByte(0); // резерв
-            _atolProtocol.AddString(source, source.Length, (style == FontStyle.DoubleWidth || style == FontStyle.DoubleAll)); // строка
+            _atolProtocol.AddByte(0); // РјРµР¶СЃС‚СЂРѕС‡РёРµ                
+            _atolProtocol.AddByte(0); // СЏСЂРєРѕСЃС‚СЊ
+            _atolProtocol.AddByte(1); // СЂРµР¶РёРј Р§Р›
+            _atolProtocol.AddByte(1); // СЂРµР¶РёРј РљР›
+            _atolProtocol.AddByte(0); // С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ
+            _atolProtocol.AddByte(0); // СЂРµР·РµСЂРІ
+            _atolProtocol.AddByte(0); // СЂРµР·РµСЂРІ
+            //                Cmd.AddByte(0); // СЂРµР·РµСЂРІ
+            _atolProtocol.AddString(source, source.Length, (style == FontStyle.DoubleWidth || style == FontStyle.DoubleAll)); // СЃС‚СЂРѕРєР°
             _atolProtocol.Execute();
         }
 
-        // преобразование строки штрих-кода в массив байт для печати картинки
+        // РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СЃС‚СЂРѕРєРё С€С‚СЂРёС…-РєРѕРґР° РІ РјР°СЃСЃРёРІ Р±Р°Р№С‚ РґР»СЏ РїРµС‡Р°С‚Рё РєР°СЂС‚РёРЅРєРё
         private byte[] GetBarcodeData(ref string barcode, int nWidth)
         {
-            // рассчет контрольной суммы            
+            // СЂР°СЃСЃС‡РµС‚ РєРѕРЅС‚СЂРѕР»СЊРЅРѕР№ СЃСѓРјРјС‹            
             char[] barcodeChars = barcode.ToCharArray(0, 12);
             int nChecksum = 0;
             for (int i = 0; i < 12; i+=2)
@@ -677,7 +675,7 @@ namespace Atol
             return barcodeData;
         }
 
-        private void ExecuteDriverCommand(ExecuteCommandDelegate executeCommandDelegate)
+        private void ExecuteDriverCommand(Action executeCommandAction)
         {
             ErrorCode = new ServerErrorCode(this, GeneralError.Success);
             try
@@ -688,7 +686,7 @@ namespace Atol
                     return;
                 }
 
-                executeCommandDelegate();
+                executeCommandAction();
             }
             catch (TimeoutException)
             {
@@ -733,7 +731,7 @@ namespace Atol
             try
             {
                 System.Runtime.InteropServices.Marshal.Copy(bmpData.Scan0, imageBytes, 0, bmpData.Height * stride);
-                // инвертируем цвета
+                // РёРЅРІРµСЂС‚РёСЂСѓРµРј С†РІРµС‚Р°
                 if (image.Palette.Entries[0].Name == "ff000000")
                 {
                     byte invertor = 0xFF;
@@ -756,13 +754,13 @@ namespace Atol
         }
 
         /// <summary>
-        /// Загрузка картинки в память устройства
+        /// Р—Р°РіСЂСѓР·РєР° РєР°СЂС‚РёРЅРєРё РІ РїР°РјСЏС‚СЊ СѓСЃС‚СЂРѕР№СЃС‚РІР°
         /// </summary>
-        /// <param name="image">Картинка</param>
-        /// <param name="index">Номер картинки</param>
+        /// <param name="image">РљР°СЂС‚РёРЅРєР°</param>
+        /// <param name="index">РќРѕРјРµСЂ РєР°СЂС‚РёРЅРєРё</param>
         private int LoadImage(System.Drawing.Bitmap image)
         {
-            // передача строк картинки
+            // РїРµСЂРµРґР°С‡Р° СЃС‚СЂРѕРє РєР°СЂС‚РёРЅРєРё
             int stride;
             var imageBytes = GetImageBytes(GraphicHeader, out stride);
             int bytesRead = 0;
@@ -775,30 +773,30 @@ namespace Atol
                 _atolProtocol.Execute();
                 bytesRead += stride;
             }
-            // закрытие картинки
+            // Р·Р°РєСЂС‹С‚РёРµ РєР°СЂС‚РёРЅРєРё
             _atolProtocol.ExecuteCommand(0x9E);
 
-            // возвращаем номер новой картинки
+            // РІРѕР·РІСЂР°С‰Р°РµРј РЅРѕРјРµСЂ РЅРѕРІРѕР№ РєР°СЂС‚РёРЅРєРё
             return _atolProtocol.Response[3];
         }
 
         /// <summary>
-        /// Печать картинки из памяти устройства по номеру
+        /// РџРµС‡Р°С‚СЊ РєР°СЂС‚РёРЅРєРё РёР· РїР°РјСЏС‚Рё СѓСЃС‚СЂРѕР№СЃС‚РІР° РїРѕ РЅРѕРјРµСЂСѓ
         /// </summary>
-        /// <param name="index">Номер картинки</param>
+        /// <param name="index">РќРѕРјРµСЂ РєР°СЂС‚РёРЅРєРё</param>
         private void PrintImage(int index)
         {
             _atolProtocol.CreateCommand(0x8D);
-            _atolProtocol.AddByte(1); // печать на чековой ленте
-            _atolProtocol.AddByte((byte)index); // номер картинки
-            _atolProtocol.AddBCD(0, 2); // смещение
+            _atolProtocol.AddByte(1); // РїРµС‡Р°С‚СЊ РЅР° С‡РµРєРѕРІРѕР№ Р»РµРЅС‚Рµ
+            _atolProtocol.AddByte((byte)index); // РЅРѕРјРµСЂ РєР°СЂС‚РёРЅРєРё
+            _atolProtocol.AddBCD(0, 2); // СЃРјРµС‰РµРЅРёРµ
             _atolProtocol.Execute();
         }
 
 
         #endregion
 
-        #region Виртуальные методы
+        #region Р’РёСЂС‚СѓР°Р»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 
         protected override void OnAfterActivate()
         {
@@ -807,9 +805,9 @@ namespace Atol
 
             ExecuteDriverCommand(delegate()
            {
-               // определяем модель устройства
+               // РѕРїСЂРµРґРµР»СЏРµРј РјРѕРґРµР»СЊ СѓСЃС‚СЂРѕР№СЃС‚РІР°
                SetDeviceType();
-               // установка длины строки (только для Феликс-3СК)
+               // СѓСЃС‚Р°РЅРѕРІРєР° РґР»РёРЅС‹ СЃС‚СЂРѕРєРё (С‚РѕР»СЊРєРѕ РґР»СЏ Р¤РµР»РёРєСЃ-3РЎРљ)
                if (_deviceModel == AtolModel.Felix3SK)
                    SetTapeWidth();
                SetHeader();
@@ -817,8 +815,7 @@ namespace Atol
            });
         }
 
-        protected override void OnOpenDocument(DocumentType docType,
-            string cashierName)
+        protected override void OnOpenDocument(DocumentType docType, string cashierName)
         {
             ExecuteDriverCommand(delegate()
             {
@@ -841,9 +838,9 @@ namespace Atol
                     default:
                         if (IsSlipMode())
                         {
-                            // переключение в режим регистрации
+                            // РїРµСЂРµРєР»СЋС‡РµРЅРёРµ РІ СЂРµР¶РёРј СЂРµРіРёСЃС‚СЂР°С†РёРё
                             _atolProtocol.SwitchToMode(1, MODE_PASSWD);
-                            // установка фискальной станции
+                            // СѓСЃС‚Р°РЅРѕРІРєР° С„РёСЃРєР°Р»СЊРЅРѕР№ СЃС‚Р°РЅС†РёРё
                             _atolProtocol.IsSlipMode = true;
                         }
                         break;
@@ -854,96 +851,177 @@ namespace Atol
             });
         }
 
-        protected override void OnCloseDocument(bool cutPaper)
+        protected override void OnOpenDocument(DocumentType docType, string cashierName, string customerPhoneOrEmail)
         {
-            
-            ExecuteDriverCommand(delegate()
+            // РѕС‚РєСЂС‹РІР°РµРј РґРѕРєСѓРјРµРЅС‚
+            OnOpenDocument(docType, cashierName);
+
+            // С‚РµРїРµСЂСЊ Р·Р°РїРёСЃС‹РІР°РµРј СЂРµРєРІРёР·РёС‚ "РђРґСЂРµСЃ РїРѕРєСѓРїР°С‚РµР»СЏ"
+            SetCustomerPhoneOrEmail(customerPhoneOrEmail);
+        }
+
+        protected override void OnCloseDocument(bool cutPaper)
+        {            
+            if (_currDocType == DocumentType.Sale || _currDocType == DocumentType.Refund)
             {
-                switch (_currDocType)
+                CloseSaleOrRefundDocument();
+            }
+            else
+            {
+                ExecuteDriverCommand(() =>
                 {
-                    case DocumentType.Sale:
-                    case DocumentType.Refund:
-                        if (HasNonzeroRegistrations)
-                        {
-                            _atolProtocol.CreateCommand(0x4A);
+                    switch (_currDocType)
+                    {
+                        case DocumentType.PayingIn:
+                            _atolProtocol.SwitchToMode(1, MODE_PASSWD);
+                            _atolProtocol.CreateCommand(0x49);
                             _atolProtocol.AddByte(0);
-                            _atolProtocol.AddByte(1);
-                            _atolProtocol.AddBCD(0, 5);
+                            _atolProtocol.AddBCD(_docAmount, 5);
                             _atolProtocol.Execute();
-                        }
-                        else
-                        {
-                            _atolProtocol.SwitchToMode(2, MODE_PASSWD);
-                            _atolProtocol.ExecuteCommand(0x73);
-                        }
-                        break;
-                    case DocumentType.PayingIn:
-                        _atolProtocol.SwitchToMode(1, MODE_PASSWD);
-                        _atolProtocol.CreateCommand(0x49);
-                        _atolProtocol.AddByte(0);
-                        _atolProtocol.AddBCD(_docAmount, 5);
-                        _atolProtocol.Execute();
-                        break;
-                    case DocumentType.PayingOut:
-                        _atolProtocol.SwitchToMode(1, MODE_PASSWD);
-                        _atolProtocol.CreateCommand(0x4F);
-                        _atolProtocol.AddByte(0);
-                        _atolProtocol.AddBCD(_docAmount, 5);
-                        _atolProtocol.Execute();
-                        break;
-                    case DocumentType.Other:
-                        if (IsSlipMode())
-                        {
-                            // возврат документа
-                            _atolProtocol.CreateCommand(0x8F);
-                            _atolProtocol.AddByte(2);
-                            _atolProtocol.AddBytes(new byte[] { 0x1B, 0x0C, 3});
+                            break;
+                        case DocumentType.PayingOut:
+                            _atolProtocol.SwitchToMode(1, MODE_PASSWD);
+                            _atolProtocol.CreateCommand(0x4F);
+                            _atolProtocol.AddByte(0);
+                            _atolProtocol.AddBCD(_docAmount, 5);
                             _atolProtocol.Execute();
-
-                            // установка фискальной станции
-                            _atolProtocol.IsSlipMode = false;
-                        }
-                        else
-                        {
-                            // печать подвала
-                            _atolProtocol.SwitchToMode(2, MODE_PASSWD);
-                            _atolProtocol.ExecuteCommand(0x73);
-
-                            // промотка и обрезка
-                            if (cutPaper && _deviceModel == AtolModel.FPrint22K)
+                            break;
+                        case DocumentType.Other:
+                            if (IsSlipMode())
                             {
-                                _atolProtocol.CreateCommand(0x75);
-                                _atolProtocol.AddByte(1);
+                                // РІРѕР·РІСЂР°С‚ РґРѕРєСѓРјРµРЅС‚Р°
+                                _atolProtocol.CreateCommand(0x8F);
+                                _atolProtocol.AddByte(2);
+                                _atolProtocol.AddBytes(new byte[] { 0x1B, 0x0C, 3 });
                                 _atolProtocol.Execute();
+
+                                // СѓСЃС‚Р°РЅРѕРІРєР° С„РёСЃРєР°Р»СЊРЅРѕР№ СЃС‚Р°РЅС†РёРё
+                                _atolProtocol.IsSlipMode = false;
                             }
-                        }
-                        break;
-                    case DocumentType.XReport:
-                    case DocumentType.ZReport:
-                    case DocumentType.SectionsReport:
-                        PrintReport(_currDocType);
-                        break;
+                            else
+                            {
+                                // РїРµС‡Р°С‚СЊ РїРѕРґРІР°Р»Р°
+                                _atolProtocol.SwitchToMode(2, MODE_PASSWD);
+                                _atolProtocol.ExecuteCommand(0x73);
+
+                                // РїСЂРѕРјРѕС‚РєР° Рё РѕР±СЂРµР·РєР°
+                                if (cutPaper && _deviceModel == AtolModel.FPrint22K)
+                                {
+                                    _atolProtocol.CreateCommand(0x75);
+                                    _atolProtocol.AddByte(1);
+                                    _atolProtocol.Execute();
+                                }
+                            }
+                            break;
+                        case DocumentType.XReport:
+                        case DocumentType.ZReport:
+                        case DocumentType.SectionsReport:
+                            PrintReport(_currDocType);
+                            break;
+                    }
+                    _docAmount = 0;
+                });
+            }
+        }
+
+        private void CloseSaleOrRefundDocument()
+        {
+            if (HasNonzeroRegistrations)
+            {
+                // СЃРЅР°С‡Р°Р»Р° РІС‹СЂР°РІРЅРёРІР°РµРј СЃСѓРјРј С‡РµРєР° (Р±РѕСЂСЊР±Р° СЃ РѕРєСЂСѓРіР»РµРЅРёРµРј);
+                // РґР»СЏ СЌС‚РѕРіРѕ РїРѕСЃС‡РёС‚Р°РµРј СЂР°Р·РЅРёС†Сѓ РјРµР¶РґСѓ СЃСѓРјРјРѕР№ РѕРїР»Р°С‚ Рё СЃСѓРјРјРѕР№ РґРѕРєСѓРјРµРЅС‚Р° РїРѕ РґР°РЅРЅС‹Рј Р¤Р 
+                var amountDelta = (long)Status.DocumentAmount - _docAmount;
+                if (amountDelta > 0 && amountDelta < 100)
+                {
+                    // СЃСѓРјРјР° С‡РµРєР° РІ Р¤Р  Р±РѕР»СЊС€Рµ, С‡РµРј СЃСѓРјРјР° РїР»Р°С‚РµР¶РµР№ РїРѕ С‡РµРєСѓ, Рё СЂР°Р·РЅРёС†Р° РЅРµ РїСЂРµРІС‹С€Р°РµС‚ 1 СЂСѓР±Р»СЊ;
+                    // СЃС‡РёС‚Р°РµРј СЌС‚Рѕ РѕС€РёР±РєРѕР№ РѕРєСЂСѓРіР»РµРЅРёСЏ Рё РґРµР»Р°РµРј СЃРєРёРґРєСѓ
+                    TrimEcrDocumentAmount(amountDelta);
                 }
-                _docAmount = 0;
+
+                // Р·Р°РєСЂС‹РІР°РµРј С‡РµРє
+                ExecuteDriverCommand(() =>
+                {
+                    _atolProtocol.CreateCommand(0x4A);
+                    _atolProtocol.AddByte(0);
+                    _atolProtocol.AddByte(1);
+                    _atolProtocol.AddBCD(0, 5);
+                    _atolProtocol.Execute();
+                });
+            }
+            else
+            {
+                ExecuteDriverCommand(() =>
+                {
+                    _atolProtocol.SwitchToMode(2, MODE_PASSWD);
+                    _atolProtocol.ExecuteCommand(0x73);
+                });
+            }
+        }
+
+        private void TrimEcrDocumentAmount(long amountDelta)
+        {
+            ExecuteDriverCommand(() =>
+            {
+                _atolProtocol.CreateCommand(0x43);
+
+                // С„Р»Р°РіРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ (РІС‹РїРѕР»РЅРёС‚СЊ РѕРїРµСЂР°С†РёСЋ)
+                _atolProtocol.AddByte(0);
+
+                // РѕР±Р»Р°СЃС‚СЊ РїСЂРёРјРµРЅРµРЅРёСЏ (РЅР° РІРµСЃСЊ С‡РµРє)
+                _atolProtocol.AddByte(0);
+
+                // С‚РёРї (СЃСѓРјРјРѕРІР°СЏ СЃРєРёРґРєР°)
+                _atolProtocol.AddByte(1);
+
+                // Р·РЅР°Рє (СЃРєРёРґРєР°)
+                _atolProtocol.AddByte(0);
+
+                // СЂР°Р·РјРµСЂ СЃРєРёРґРєРё
+                _atolProtocol.AddBCD(amountDelta, 5);
+
+                _atolProtocol.Execute();
+            });
+        }
+
+        private void SetCustomerPhoneOrEmail(string customerPhoneOrEmail)
+        {
+            ExecuteDriverCommand(() =>
+            {
+                _atolProtocol.CreateCommand(0xE8);
+
+                // С„Р»Р°РіРё (РІС‹РІРѕРґРёРј СЂРµРєРІРёР·РёС‚ РЅР° РїРµС‡Р°С‚СЊ)
+                _atolProtocol.AddByte(1);
+
+                // РєРѕР»РёС‡РµСЃС‚РІРѕ Р±Р»РѕРєРѕРІ (РІСЃРµРіРґР° 1)
+                _atolProtocol.AddByte(1);
+
+                // РЅРѕРјРµСЂ Р±Р»РѕРєР° (РЅСѓР»РµРІРѕР№)
+                _atolProtocol.AddByte(0);
+
+                // РґР°РЅРЅС‹Рµ СЂРµРєРІРёР·РёС‚Р° (TLV)
+                // С‚СЌРі
+                var tagBytes = BitConverter.GetBytes((ushort)1008);
+
+                _atolProtocol.AddByte(tagBytes[0]);
+                _atolProtocol.AddByte(tagBytes[1]);
+
+                // РґР»РёРЅР°
+                var lengthToCopy = customerPhoneOrEmail.Length > 64 ? 64 : customerPhoneOrEmail.Length;
+                var lengthToCopyBytes = BitConverter.GetBytes((ushort)lengthToCopy);
+
+                _atolProtocol.AddByte(lengthToCopyBytes[0]);
+                _atolProtocol.AddByte(lengthToCopyBytes[1]);
+
+                // Р·РЅР°С‡РµРЅРёРµ
+                _atolProtocol.AddString(customerPhoneOrEmail, lengthToCopy);
+
+                _atolProtocol.Execute();
             });
         }
 
         protected override void OnOpenDrawer()
         {
-            ExecuteDriverCommand(delegate()
-            {
-                _atolProtocol.ExecuteCommand(0x80);
-
-                /*
-                // чтение таблицы
-                _atolProtocol.SwitchToMode(4, MODE_PASSWD);
-                _atolProtocol.CreateCommand(0x46);
-                _atolProtocol.AddByte(2);       // таблица
-                _atolProtocol.AddBCD(1, 2);// ряд
-                _atolProtocol.AddByte(56);       // поле
-                _atolProtocol.Execute();
-                 */ 
-            });
+            ExecuteDriverCommand(() => _atolProtocol.ExecuteCommand(0x80));
         }
 
         protected override void OnPrintString(string source, FontStyle style)
@@ -964,7 +1042,7 @@ namespace Atol
                     _atolProtocol.AddBytes(new byte[] { 0x1B, 0x0C, 3 });
                     _atolProtocol.Execute();
 
-                    // проверка состояния бумаги
+                    // РїСЂРѕРІРµСЂРєР° СЃРѕСЃС‚РѕСЏРЅРёСЏ Р±СѓРјР°РіРё
                     do
                     {
                         if (PrinterStatus.PaperOut == PaperOutStatus.Present)
@@ -984,22 +1062,22 @@ namespace Atol
             {
                 byte[] nRaster = GetBarcodeData(ref barcode, GetDeviceParams().BarcodeWidth);
                 _atolProtocol.CreateCommand(0x8E);
-                _atolProtocol.AddByte(1);     // печатать на чековой ленте
-                _atolProtocol.AddBCD(25 * GetDeviceParams().BarcodeWidth, 2);  // количество повторов строки
+                _atolProtocol.AddByte(1);     // РїРµС‡Р°С‚Р°С‚СЊ РЅР° С‡РµРєРѕРІРѕР№ Р»РµРЅС‚Рµ
+                _atolProtocol.AddBCD(25 * GetDeviceParams().BarcodeWidth, 2);  // РєРѕР»РёС‡РµСЃС‚РІРѕ РїРѕРІС‚РѕСЂРѕРІ СЃС‚СЂРѕРєРё
                 switch (align)
                 {
                     case AlignOptions.Left:
-                        _atolProtocol.AddBCD(0, 2);   // смещение
+                        _atolProtocol.AddBCD(0, 2);   // СЃРјРµС‰РµРЅРёРµ
                         break;
                     case AlignOptions.Center:
-                        _atolProtocol.AddBCD((GetDeviceParams().TapeWidth - 95 * GetDeviceParams().BarcodeWidth) / 2 - 1, 2);   // смещение
+                        _atolProtocol.AddBCD((GetDeviceParams().TapeWidth - 95 * GetDeviceParams().BarcodeWidth) / 2 - 1, 2);   // СЃРјРµС‰РµРЅРёРµ
                         break;
                     case AlignOptions.Right:
-                        _atolProtocol.AddBCD(GetDeviceParams().TapeWidth - 95 * GetDeviceParams().BarcodeWidth - 1, 2);   // смещение
+                        _atolProtocol.AddBCD(GetDeviceParams().TapeWidth - 95 * GetDeviceParams().BarcodeWidth - 1, 2);   // СЃРјРµС‰РµРЅРёРµ
                         break;
                 }
 
-                _atolProtocol.AddBytes(nRaster);// растр
+                _atolProtocol.AddBytes(nRaster);// СЂР°СЃС‚СЂ
                 _atolProtocol.Execute();
 
                 if (readable)
@@ -1034,38 +1112,89 @@ namespace Atol
 
         protected override void OnRegistration(string commentary, uint quantity, uint amount, byte section)
         {
-            ExecuteDriverCommand(delegate()
+            if (!HasNonzeroRegistrations)
             {
-                if (HasNonzeroRegistrations)
-                    switch (_currDocType)
-                    {
-                        case DocumentType.Sale:
-                            _atolProtocol.CreateCommand(0x52);
-                            _atolProtocol.AddByte(0);
-                            _atolProtocol.AddBCD(amount, 5);
-                            _atolProtocol.AddBCD(quantity, 5);
-                            _atolProtocol.AddBCD(section, 1);
-                            _atolProtocol.Execute();
-                            break;
-                        case DocumentType.Refund:
-                            _atolProtocol.CreateCommand(0x57);
-                            _atolProtocol.AddByte(2);
-                            _atolProtocol.AddBCD(amount, 5);
-                            _atolProtocol.AddBCD(quantity, 5);
-                            _atolProtocol.Execute();
-                            break;
-                        default:
-                            break;
-                    }
+                return;
+            }
+
+            ExecuteDriverCommand(() =>
+            {
+                switch (_currDocType)
+                {
+                    case DocumentType.Sale:
+                        _atolProtocol.CreateCommand(0x52);
+                        _atolProtocol.AddByte(0);
+                        _atolProtocol.AddBCD(amount, 5);
+                        _atolProtocol.AddBCD(quantity, 5);
+                        _atolProtocol.AddBCD(section, 1);
+                        _atolProtocol.Execute();
+                        break;
+                    case DocumentType.Refund:
+                        _atolProtocol.CreateCommand(0x57);
+                        _atolProtocol.AddByte(2);
+                        _atolProtocol.AddBCD(amount, 5);
+                        _atolProtocol.AddBCD(quantity, 5);
+                        _atolProtocol.Execute();
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
+
+        protected override void OnRegistration(string positionName, uint quantity, uint price, uint amount, byte section, byte vatRateId)
+        {
+            if (!HasNonzeroRegistrations)
+            {
+                return;
+            }
+
+            ExecuteDriverCommand(() =>
+            {
+                _atolProtocol.CreateCommand(0xE6);
+                
+                // С„Р»Р°РіРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ (РІС‹РїРѕР»РЅРёС‚СЊ РѕРїРµСЂР°С†РёСЋ, РєРѕРЅС‚СЂРѕР»СЊ РЅР°Р»РёС‡РЅРѕСЃС‚Рё)
+                _atolProtocol.AddByte(0);
+
+                // РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РїРѕР·РёС†РёРё
+                _atolProtocol.AddString(positionName.PadRight(64, (char)0x20), 64);
+
+                // С†РµРЅР°
+                _atolProtocol.AddBCD(price, 6);
+
+                // РєРѕР»РёС‡РµСЃС‚РІРѕ
+                _atolProtocol.AddBCD(quantity, 5);
+
+                // С‚РёРї СЃРєРёРґРєРё (РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ)
+                _atolProtocol.AddByte(0);
+
+                // Р·РЅР°Рє СЃРєРёРґРєРё (РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ)
+                _atolProtocol.AddByte(0);
+
+                // СЂР°Р·РјРµСЂ СЃРєРёРґРєРё (РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ)
+                _atolProtocol.AddBytes(new byte[6]);
+
+                // РЅР°Р»РѕРі
+                _atolProtocol.AddByte(vatRateId);
+
+                // СЃРµРєС†РёСЏ
+                _atolProtocol.AddBCD(section, 1);
+
+                // С€С‚СЂРёС…РєРѕРґ (РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ)
+                _atolProtocol.AddBytes(new byte[16]);
+
+                // СЂРµР·РµСЂРІ
+                _atolProtocol.AddByte(0);
+
+                _atolProtocol.Execute();
             });
         }
 
         protected override void OnPayment(uint amount, FiscalPaymentType paymentType)
         {
-            ExecuteDriverCommand(delegate()
+            ExecuteDriverCommand(() =>
             {
-                if (HasNonzeroRegistrations && (_currDocType == DocumentType.Sale || 
-                    _currDocType == DocumentType.Refund))
+                if (HasNonzeroRegistrations && (_currDocType == DocumentType.Sale || _currDocType == DocumentType.Refund))
                 {
                     _atolProtocol.CreateCommand(0x99);
                     _atolProtocol.AddByte(0);
@@ -1106,7 +1235,7 @@ namespace Atol
 
         #endregion
 
-        #region События
+        #region РЎРѕР±С‹С‚РёСЏ
 
         public override event EventHandler<FiscalBreakEventArgs> FiscalBreak;
 
@@ -1114,7 +1243,7 @@ namespace Atol
 
         #endregion
 
-        #region Свойства
+        #region РЎРІРѕР№СЃС‚РІР°
 
         public override DateTime CurrentTimestamp
         {
@@ -1123,7 +1252,7 @@ namespace Atol
                 DateTime dateTime = DateTime.Now;
                 ExecuteDriverCommand(delegate()
                 {
-                    // запрос состояния
+                    // Р·Р°РїСЂРѕСЃ СЃРѕСЃС‚РѕСЏРЅРёСЏ
                     _atolProtocol.ExecuteCommand(0x3F);
                     dateTime = new DateTime((int)_atolProtocol.GetFromBCD(4, 1) + 2000,
                         (int)_atolProtocol.GetFromBCD(5, 1),
@@ -1138,7 +1267,7 @@ namespace Atol
             {
                 ExecuteDriverCommand(delegate()
                 {
-                    // программирование даты
+                    // РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёРµ РґР°С‚С‹
                     _atolProtocol.CreateCommand(0x64);
                     _atolProtocol.AddBCD(value.Day, 1);
                     _atolProtocol.AddBCD(value.Month, 1);
@@ -1148,7 +1277,7 @@ namespace Atol
                         _atolProtocol.AddBCD(value.Year - 2000, 1);
                     _atolProtocol.Execute();
 
-                    // программирование времени
+                    // РїСЂРѕРіСЂР°РјРјРёСЂРѕРІР°РЅРёРµ РІСЂРµРјРµРЅРё
                     _atolProtocol.CreateCommand(0x4B);
                     _atolProtocol.AddBCD(value.Hour, 1);
                     _atolProtocol.AddBCD(value.Minute, 1);
@@ -1166,7 +1295,7 @@ namespace Atol
                 string serialNo = "";
                 ExecuteDriverCommand(delegate()
                 {
-                    // запрос состояния
+                    // Р·Р°РїСЂРѕСЃ СЃРѕСЃС‚РѕСЏРЅРёСЏ
                     _atolProtocol.ExecuteCommand(0x3F);
                     long sNo = _atolProtocol.GetFromBCD(11, 4);
                     serialNo = sNo.ToString();
@@ -1188,7 +1317,7 @@ namespace Atol
 
                 ExecuteDriverCommand(delegate()
                 {
-                    // запрос состояния
+                    // Р·Р°РїСЂРѕСЃ СЃРѕСЃС‚РѕСЏРЅРёСЏ
                     _atolProtocol.ExecuteCommand(0x3F);
 
                     bOpenedShift = (_atolProtocol.Response[10] & 2) == 2;
@@ -1196,11 +1325,11 @@ namespace Atol
                     bLocked = ((_atolProtocol.Response[18] & 0x0F) == 5) && ((_atolProtocol.Response[18] >> 4) == 1);
                     bOverShift = false;
 
-                    // наличность в ДЯ
+                    // РЅР°Р»РёС‡РЅРѕСЃС‚СЊ РІ Р”РЇ
                     _atolProtocol.ExecuteCommand(0x4D);
                     nCashInDrawer = (int)_atolProtocol.GetFromBCD(2, 7);
 
-                    // сумма документа
+                    // СЃСѓРјРјР° РґРѕРєСѓРјРµРЅС‚Р°
                     if (_currDocType == DocumentType.PayingIn || _currDocType == DocumentType.PayingOut)
                         nDocAmount = (int)_docAmount;
                     else
@@ -1236,7 +1365,7 @@ namespace Atol
 
                 ExecuteDriverCommand(delegate()
                 {
-                    // запрос кода состояния
+                    // Р·Р°РїСЂРѕСЃ РєРѕРґР° СЃРѕСЃС‚РѕСЏРЅРёСЏ
                     _atolProtocol.ExecuteCommand(0x45);
 
                     if ((_atolProtocol.Response[3] & 0x01) == 0)
@@ -1244,7 +1373,7 @@ namespace Atol
                     else
                         poStatus = PaperOutStatus.OutActive;
 
-                    // запрос состояния
+                    // Р·Р°РїСЂРѕСЃ СЃРѕСЃС‚РѕСЏРЅРёСЏ
                     _atolProtocol.ExecuteCommand(0x3F);
 
                     bDrawerOpened = (_atolProtocol.Response[10] & 4) == 4;
@@ -1259,7 +1388,7 @@ namespace Atol
 
         #endregion
 
-        #region Методы
+        #region РњРµС‚РѕРґС‹
 
         public override void FiscalReport(FiscalReportType reportType, bool full, params object[] reportParams)
         {
@@ -1315,12 +1444,12 @@ namespace Atol
                     if ((nMode == 5) && (nSubMode == 0))
                     {
                         if ((nFlags & 0x01) == 0x01)
-                            throw new DeviceErrorException(103);            // нет бумаги
+                            throw new DeviceErrorException(103);            // РЅРµС‚ Р±СѓРјР°РіРё
                         else if ((nFlags & 0x02) == 0x02)
-                            throw new DeviceErrorException(104);            // нет связи с принтером
+                            throw new DeviceErrorException(104);            // РЅРµС‚ СЃРІСЏР·Рё СЃ РїСЂРёРЅС‚РµСЂРѕРј
                     }
                     else
-                        throw new DeviceErrorException(254);                // снятие отчета прервалось
+                        throw new DeviceErrorException(254);                // СЃРЅСЏС‚РёРµ РѕС‚С‡РµС‚Р° РїСЂРµСЂРІР°Р»РѕСЃСЊ
 
                 }
             });
@@ -1373,7 +1502,7 @@ namespace Atol
 
         #endregion
 
-        #region Рализация ICommunicationPortProvider
+        #region Р Р°Р»РёР·Р°С†РёСЏ ICommunicationPortProvider
 
         public EasyCommunicationPort GetCommunicationPort()
         {

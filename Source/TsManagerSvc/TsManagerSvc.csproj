@@ -35,14 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ERPService.SharedLibs.Eventlog, Version=1.0.0.30618, Culture=neutral, PublicKeyToken=081cb29e9151b772, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\trunk\Release\ERPService.SharedLibs.Eventlog.dll</HintPath>
-    </Reference>
-    <Reference Include="ERPService.SharedLibs.Helpers, Version=1.0.0.30607, Culture=neutral, PublicKeyToken=b0fa05ad2b4b08b5, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SharedLibs\trunk\Release\ERPService.SharedLibs.Helpers.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core">
@@ -80,6 +72,14 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ERPService.SharedLibs.Eventlog\ERPService.SharedLibs.Eventlog.csproj">
+      <Project>{f3ee037c-8d18-477b-a39a-4de71f46f992}</Project>
+      <Name>ERPService.SharedLibs.Eventlog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ERPService.SharedLibs.Helpers\ERPService.SharedLibs.Helpers.csproj">
+      <Project>{5e459a85-669c-408d-85f1-d99427d34c6b}</Project>
+      <Name>ERPService.SharedLibs.Helpers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TsManager\TsManager.csproj">
       <Project>{0201B6C7-C39E-42E7-92BD-8F1E79E6DE51}</Project>
       <Name>TsManager</Name>
