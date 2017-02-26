@@ -170,6 +170,7 @@ namespace Atol
                     _commPort.ReadTimeout = 120000;
                     break;
                 case 0x91:
+                case 0x67:
                     _commPort.ReadTimeout = 45000;
                     break;
                 default:
@@ -190,6 +191,7 @@ namespace Atol
             {
                 nRetries++;
                 _rspLen = 0;
+                Array.Clear(_rspBuffer, 0, _rspBuffer.Length);
 
                 bool masked = false;
                 bool lastByte = false;

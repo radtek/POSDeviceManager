@@ -13,7 +13,8 @@ namespace DevmanConfig
     {
         #region Константы и перечисления
 
-        private string[] docTypes = new string[] { 
+        private static readonly string[] docTypes = new[] 
+        { 
             "sale", 
             "refund", 
             "other", 
@@ -21,7 +22,9 @@ namespace DevmanConfig
             "payOut", 
             "reportX", 
             "reportZ", 
-            "reportSections" };
+            "reportSections",
+            "reportFdoExchangeState"
+        };
 
         private enum Align { left, right, center };
 

@@ -479,6 +479,8 @@ namespace DevicesBase
                     return DocumentType.ZReport;
                 case "reportSections":
                     return DocumentType.SectionsReport;
+                case "reportFdoExchangeState":
+                    return DocumentType.FDOExchangeStateReport;
                 default:
                     return DocumentType.Other;
             }

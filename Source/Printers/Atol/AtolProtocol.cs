@@ -71,7 +71,7 @@ namespace Atol
         private string[][] EAN_CHARSET = new string[][] {
             new string[] {"0001101", "0100111", "1110010"},
             new string[] {"0011001", "0110011", "1100110"},
-            new string[] {"0010011", "0011011", "1101100"}, 
+            new string[] {"0010011", "0011011", "1101100"},
             new string[] {"0111101", "0100001", "1000010"},
             new string[] {"0100011", "0011101", "1011100"},
             new string[] {"0110001", "0111001", "1001110"},
@@ -356,7 +356,7 @@ namespace Atol
                     nFlags = _atolProtocol.Response[3];
                     bSuccess = (nCurrentMode != nMode) || (nCurrentSubMode != nSubMode);
                 }
-                catch(TimeoutException)
+                catch (TimeoutException)
                 {
                     bSuccess = false;
                 }
@@ -517,12 +517,7 @@ namespace Atol
             switch (docType)
             {
                 case DocumentType.XReport:
-                    nMode = 2;
-                    nSubMode = 2;
-                    _atolProtocol.SwitchToMode(2, MODE_PASSWD);
-                    _atolProtocol.CreateCommand(0x67);
-                    _atolProtocol.AddBCD(1, 1);
-                    _atolProtocol.Execute();
+                    PrintXReport(1, out nMode, out nSubMode);
                     break;
                 case DocumentType.ZReport:
                     nMode = 3;
@@ -531,12 +526,10 @@ namespace Atol
                     _atolProtocol.ExecuteCommand(0x5A);
                     break;
                 case DocumentType.SectionsReport:
-                    nMode = 2;
-                    nSubMode = 2;
-                    _atolProtocol.SwitchToMode(2, MODE_PASSWD);
-                    _atolProtocol.CreateCommand(0x67);
-                    _atolProtocol.AddBCD(2, 1);
-                    _atolProtocol.Execute();
+                    PrintXReport(2, out nMode, out nSubMode);
+                    break;
+                case DocumentType.FDOExchangeStateReport:
+                    PrintXReport(9, out nMode, out nSubMode);
                     break;
             }
 
@@ -578,6 +571,16 @@ namespace Atol
                 else
                     throw new DeviceErrorException(254);// снятие отчета прервалось
             }
+        }
+
+        private void PrintXReport(int reportNumber, out byte nMode, out byte nSubMode)
+        {
+            nMode = 2;
+            nSubMode = 2;
+            _atolProtocol.SwitchToMode(2, MODE_PASSWD);
+            _atolProtocol.CreateCommand(0x67);
+            _atolProtocol.AddBCD(reportNumber, 1);
+            _atolProtocol.Execute();
         }
 
         // отмена документа
@@ -793,6 +796,100 @@ namespace Atol
             _atolProtocol.Execute();
         }
 
+        private void CloseSaleOrRefundDocument()
+        {
+            if (HasNonzeroRegistrations)
+            {
+                // сначала выравниваем сумм чека (борьба с округлением);
+                // для этого посчитаем разницу между суммой оплат и суммой документа по данным ФР
+                var amountDelta = (long)Status.DocumentAmount - _docAmount;
+                if (amountDelta > 0 && amountDelta < 100)
+                {
+                    // сумма чека в ФР больше, чем сумма платежей по чеку, и разница не превышает 1 рубль;
+                    // считаем это ошибкой округления и делаем скидку
+                    TrimEcrDocumentAmount(amountDelta);
+                }
+
+                // закрываем чек
+                ExecuteDriverCommand(() =>
+                {
+                    _atolProtocol.CreateCommand(0x4A);
+                    _atolProtocol.AddByte(0);
+                    _atolProtocol.AddByte(1);
+                    _atolProtocol.AddBCD(0, 5);
+                    _atolProtocol.Execute();
+                });
+            }
+            else
+            {
+                ExecuteDriverCommand(() =>
+                {
+                    _atolProtocol.SwitchToMode(2, MODE_PASSWD);
+                    _atolProtocol.ExecuteCommand(0x73);
+                });
+            }
+        }
+
+        private void TrimEcrDocumentAmount(long amountDelta)
+        {
+            ExecuteDriverCommand(() =>
+            {
+                _atolProtocol.CreateCommand(0x43);
+
+                // флаги по умолчанию (выполнить операцию)
+                _atolProtocol.AddByte(0);
+
+                // область применения (на весь чек)
+                _atolProtocol.AddByte(0);
+
+                // тип (суммовая скидка)
+                _atolProtocol.AddByte(1);
+
+                // знак (скидка)
+                _atolProtocol.AddByte(0);
+
+                // размер скидки
+                _atolProtocol.AddBCD(amountDelta, 5);
+
+                _atolProtocol.Execute();
+            });
+        }
+
+        private void SetCustomerPhoneOrEmail(string customerPhoneOrEmail)
+        {
+            ExecuteDriverCommand(() =>
+            {
+                _atolProtocol.CreateCommand(0xE8);
+
+                // флаги (выводим реквизит на печать)
+                _atolProtocol.AddByte(1);
+
+                // количество блоков (всегда 1)
+                _atolProtocol.AddByte(1);
+
+                // номер блока (нулевой)
+                _atolProtocol.AddByte(0);
+
+                // данные реквизита (TLV)
+                // тэг
+                var tagBytes = BitConverter.GetBytes((ushort)1008);
+
+                _atolProtocol.AddByte(tagBytes[0]);
+                _atolProtocol.AddByte(tagBytes[1]);
+
+                // длина
+                var lengthToCopy = customerPhoneOrEmail.Length > 64 ? 64 : customerPhoneOrEmail.Length;
+                var lengthToCopyBytes = BitConverter.GetBytes((ushort)lengthToCopy);
+
+                _atolProtocol.AddByte(lengthToCopyBytes[0]);
+                _atolProtocol.AddByte(lengthToCopyBytes[1]);
+
+                // значение
+                _atolProtocol.AddString(customerPhoneOrEmail, lengthToCopy);
+
+                _atolProtocol.Execute();
+            });
+        }
 
         #endregion
 
@@ -916,107 +1013,13 @@ namespace Atol
                         case DocumentType.XReport:
                         case DocumentType.ZReport:
                         case DocumentType.SectionsReport:
+                        case DocumentType.FDOExchangeStateReport:
                             PrintReport(_currDocType);
                             break;
                     }
                     _docAmount = 0;
                 });
             }
-        }
-
-        private void CloseSaleOrRefundDocument()
-        {
-            if (HasNonzeroRegistrations)
-            {
-                // сначала выравниваем сумм чека (борьба с округлением);
-                // для этого посчитаем разницу между суммой оплат и суммой документа по данным ФР
-                var amountDelta = (long)Status.DocumentAmount - _docAmount;
-                if (amountDelta > 0 && amountDelta < 100)
-                {
-                    // сумма чека в ФР больше, чем сумма платежей по чеку, и разница не превышает 1 рубль;
-                    // считаем это ошибкой округления и делаем скидку
-                    TrimEcrDocumentAmount(amountDelta);
-                }
-
-                // закрываем чек
-                ExecuteDriverCommand(() =>
-                {
-                    _atolProtocol.CreateCommand(0x4A);
-                    _atolProtocol.AddByte(0);
-                    _atolProtocol.AddByte(1);
-                    _atolProtocol.AddBCD(0, 5);
-                    _atolProtocol.Execute();
-                });
-            }
-            else
-            {
-                ExecuteDriverCommand(() =>
-                {
-                    _atolProtocol.SwitchToMode(2, MODE_PASSWD);
-                    _atolProtocol.ExecuteCommand(0x73);
-                });
-            }
-        }
-
-        private void TrimEcrDocumentAmount(long amountDelta)
-        {
-            ExecuteDriverCommand(() =>
-            {
-                _atolProtocol.CreateCommand(0x43);
-
-                // флаги по умолчанию (выполнить операцию)
-                _atolProtocol.AddByte(0);
-
-                // область применения (на весь чек)
-                _atolProtocol.AddByte(0);
-
-                // тип (суммовая скидка)
-                _atolProtocol.AddByte(1);
-
-                // знак (скидка)
-                _atolProtocol.AddByte(0);
-
-                // размер скидки
-                _atolProtocol.AddBCD(amountDelta, 5);
-
-                _atolProtocol.Execute();
-            });
-        }
-
-        private void SetCustomerPhoneOrEmail(string customerPhoneOrEmail)
-        {
-            ExecuteDriverCommand(() =>
-            {
-                _atolProtocol.CreateCommand(0xE8);
-
-                // флаги (выводим реквизит на печать)
-                _atolProtocol.AddByte(1);
-
-                // количество блоков (всегда 1)
-                _atolProtocol.AddByte(1);
-
-                // номер блока (нулевой)
-                _atolProtocol.AddByte(0);
-
-                // данные реквизита (TLV)
-                // тэг
-                var tagBytes = BitConverter.GetBytes((ushort)1008);
-
-                _atolProtocol.AddByte(tagBytes[0]);
-                _atolProtocol.AddByte(tagBytes[1]);
-
-                // длина
-                var lengthToCopy = customerPhoneOrEmail.Length > 64 ? 64 : customerPhoneOrEmail.Length;
-                var lengthToCopyBytes = BitConverter.GetBytes((ushort)lengthToCopy);
-
-                _atolProtocol.AddByte(lengthToCopyBytes[0]);
-                _atolProtocol.AddByte(lengthToCopyBytes[1]);
-
-                // значение
-                _atolProtocol.AddString(customerPhoneOrEmail, lengthToCopy);
-
-                _atolProtocol.Execute();
-            });
         }
 
         protected override void OnOpenDrawer()
