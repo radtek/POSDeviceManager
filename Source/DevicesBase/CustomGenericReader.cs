@@ -18,8 +18,8 @@ namespace DevicesBase
 
         private Parity _parity;
         private Byte _stopChar;
-        private Queue<String> _data;
-        private Object _syncObject;
+        private Queue<string> _data;
+        private object _syncObject;
         private Thread _readerThread;
         private Boolean _terminated;
         private Byte[] _buffer;
@@ -37,9 +37,9 @@ namespace DevicesBase
         {
             _parity = Parity.None;
             _terminated = false;
-            _syncObject = new Object();
+            _syncObject = new object();
             _stopChar = 0x0A;
-            _data = new Queue<String>();
+            _data = new Queue<string>();
             _readerThread = new Thread(ReadData);
             _buffer = new Byte[1024];
             _tempData = new StringBuilder();
@@ -79,7 +79,7 @@ namespace DevicesBase
         /// ѕодготовка полученных от сканера данных
         /// </summary>
         /// <param name="rawData">"—ырые" данные</param>
-        protected abstract String Prepare(String rawData);
+        protected abstract string Prepare(string rawData);
 
         /// <summary>
         /// ѕосле активации устройства
@@ -124,8 +124,8 @@ namespace DevicesBase
                             {
                                 // завершена очередна€ строка данных
                                 // разбор строки
-                                String preparedData = Prepare(_tempData.ToString());
-                                if (!String.IsNullOrEmpty(preparedData))
+                                string preparedData = Prepare(_tempData.ToString());
+                                if (!string.IsNullOrEmpty(preparedData))
                                 {
                                     lock (_syncObject)
                                     {
@@ -184,11 +184,11 @@ namespace DevicesBase
         /// <summary>
         /// ќчередной блок данных
         /// </summary>
-        public String Data
+        public string Data
         {
             get 
             {
-                String nextData;
+                string nextData;
                 lock (_syncObject)
                 {
                     // извлекаем очередную строку данных из очереди

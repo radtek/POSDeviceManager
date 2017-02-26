@@ -20,7 +20,7 @@ namespace DevicesBase.Communicators
         /// </summary>
         /// <param name="portName">Имя порта</param>
         /// <param name="baudRate">Скорость обмена</param>
-        public SerialCommunicator(String portName, Int32 baudRate)
+        public SerialCommunicator(string portName, Int32 baudRate)
             : base()
         {
             _port = new EasyCommunicationPort();
@@ -59,7 +59,7 @@ namespace DevicesBase.Communicators
             catch (Win32Exception e)
             {
                 throw new CommunicationException(
-                    String.Format("Не удалось открыть порт {0}", _port.PortName), e);
+                    string.Format("Не удалось открыть порт {0}", _port.PortName), e);
             }
         }
 
@@ -75,7 +75,7 @@ namespace DevicesBase.Communicators
             catch (Win32Exception e)
             {
                 throw new CommunicationException(
-                    String.Format("Не удалось закрыть порт {0}", _port.PortName), e);
+                    string.Format("Не удалось закрыть порт {0}", _port.PortName), e);
             }
         }
 
@@ -98,7 +98,7 @@ namespace DevicesBase.Communicators
             catch (Win32Exception e)
             {
                 throw new CommunicationException(
-                    String.Format("Ошибка чтения из порта {0}", _port.PortName), e);
+                    string.Format("Ошибка чтения из порта {0}", _port.PortName), e);
             }
         }
 
@@ -121,7 +121,7 @@ namespace DevicesBase.Communicators
             catch (Win32Exception e)
             {
                 throw new CommunicationException(
-                    String.Format("Ошибка чтения из порта {0}", _port.PortName), e);
+                    string.Format("Ошибка чтения из порта {0}", _port.PortName), e);
             }
         }
     }

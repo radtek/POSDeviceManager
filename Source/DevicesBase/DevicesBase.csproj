@@ -110,6 +110,7 @@
     <Compile Include="Helpers\SessionHelper.cs" />
     <Compile Include="ISerialPortsPool.cs" />
     <Compile Include="Managers\DeviceManager.cs" />
+    <Compile Include="Managers\DeviceTypeHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -10,7 +10,7 @@ namespace DevicesBase.Helpers
     internal class SessionHelper
     {
         private DateTime accessDateTime;
-        private String sessionID;
+        private string sessionID;
         private Int32 sessionTimeout;
 
         /// <summary>
@@ -18,7 +18,7 @@ namespace DevicesBase.Helpers
         /// </summary>
         /// <param name="sessionID">Идентификатор сессии</param>
         /// <param name="sessionTimeout">Таймаут сессии</param>
-        public SessionHelper(String sessionID, Int32 sessionTimeout)
+        public SessionHelper(string sessionID, Int32 sessionTimeout)
         {
             this.sessionID = sessionID;
             this.sessionTimeout = sessionTimeout;
@@ -43,7 +43,7 @@ namespace DevicesBase.Helpers
         /// <summary>
         /// Идентификатор сесии
         /// </summary>
-        public String SessionID
+        public string SessionID
         {
             get
             {

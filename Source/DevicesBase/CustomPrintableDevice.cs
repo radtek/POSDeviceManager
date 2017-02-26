@@ -84,8 +84,8 @@ namespace DevicesBase
 	public abstract class CustomPrintableDevice : CustomSerialDevice, IPrintableDevice
 	{
         // заголовки и подвалы
-		private List<String> documentFooter;
-		private List<String> documentHeader;
+		private List<string> documentFooter;
+		private List<string> documentHeader;
         private System.Drawing.Bitmap _graphicHeader;
         private System.Drawing.Bitmap _graphicFooter;
 
@@ -98,9 +98,9 @@ namespace DevicesBase
 		// символ-разделитель
 		private Char separator;
         // предыдущий принятый к печати документ
-        private String previousXmlData;
+        private string previousXmlData;
         // используется для функции прогона строки
-        private const String LineFeedString = " ";
+        private const string LineFeedString = " ";
         // есть ли в документе строки типа "registration" с ненулевой суммой
         private Boolean hasNonzeroRegistrations;
         // номер принтера для документа
@@ -129,11 +129,11 @@ namespace DevicesBase
 		protected CustomPrintableDevice() : base()
 		{
 			separator = '=';
-            previousXmlData = String.Empty;
+            previousXmlData = string.Empty;
             hasNonzeroRegistrations = false;
             printerNumber = PrinterNumber.MainPrinter;
-            documentFooter = new List<String>();
-            documentHeader = new List<String>();
+            documentFooter = new List<string>();
+            documentHeader = new List<string>();
 		}
 
 		#endregion
@@ -161,7 +161,7 @@ namespace DevicesBase
 		/// <param name="docType">Тип документа</param>
 		/// <param name="cashierName">Имя кассира, открывающего документ</param>
 		protected virtual void OnOpenDocument(DocumentType docType,
-            String cashierName)
+            string cashierName)
 		{
 		}
 
@@ -185,7 +185,7 @@ namespace DevicesBase
 		/// </summary>
 		/// <param name="source">Строка для печати</param>
 		/// <param name="style">Стиль текста строки</param>
-		protected virtual void OnPrintString(String source, FontStyle style)
+		protected virtual void OnPrintString(string source, FontStyle style)
 		{
 		}
 
@@ -195,7 +195,7 @@ namespace DevicesBase
 		/// <param name="align">Выравнивание штрихкода</param>
 		/// <param name="barcode">Данные штрихкода</param>
 		/// <param name="readable">Печатать или не печатать текст</param>
-		protected virtual void OnPrintBarcode(String barcode, AlignOptions align, 
+		protected virtual void OnPrintBarcode(string barcode, AlignOptions align, 
 			bool readable)
 		{
 
@@ -217,7 +217,7 @@ namespace DevicesBase
 		/// <param name="commentary">Комментарий</param>
 		/// <param name="quantity">Количество позиции</param>
 		/// <param name="section">Секция для регистрации</param>
-		protected virtual void OnRegistration(String commentary, UInt32 quantity, UInt32 amount, 
+		protected virtual void OnRegistration(string commentary, UInt32 quantity, UInt32 amount, 
 			Byte section)
 		{
 		}
@@ -259,12 +259,12 @@ namespace DevicesBase
 		/// </summary>
 		/// <param name="lines">Строки</param>
 		/// <param name="style">Стиль строк</param>
-		protected void PrintStrings(String[] lines, FontStyle style)
+		protected void PrintStrings(string[] lines, FontStyle style)
 		{
 			if (lines == null || lines.Length == 0)
 				return;
 
-			foreach (String line in lines)
+			foreach (string line in lines)
             {
                 OnPrintString(line, style);
                 if (ErrorCode.Failed)
@@ -364,10 +364,10 @@ namespace DevicesBase
 
 		#region Закрытые поля и методы
 
-		private const String badDocumentStructure = "Нарушена структура документа. Ожидалось \"{0}\", найдено \"{1}\"";
-		private const String badTableStructure = "Нарушение структуры таблицы. Количество столбцов в тэге \"columns\" - {0}, обнаружено в строке - {1}";
-        private const String attributeIsNotANumber = "Значение \"{0}\" атрибута {1} не является числом";
-        private const String attributeIsOutOfRange = "Значение \"{0}\" атрибута {1} выходит за пределы диапазона. Ожидалось System.UInt32";
+		private const string badDocumentStructure = "Нарушена структура документа. Ожидалось \"{0}\", найдено \"{1}\"";
+		private const string badTableStructure = "Нарушение структуры таблицы. Количество столбцов в тэге \"columns\" - {0}, обнаружено в строке - {1}";
+        private const string attributeIsNotANumber = "Значение \"{0}\" атрибута {1} не является числом";
+        private const string attributeIsOutOfRange = "Значение \"{0}\" атрибута {1} выходит за пределы диапазона. Ожидалось System.UInt32";
 
         /// <summary>
         /// Текущая ширина ленты
@@ -393,17 +393,17 @@ namespace DevicesBase
 		/// </summary>
 		/// <param name="node">Элемент</param>
 		/// <param name="expectedValue">Ожидаемое имя элемента</param>
-		private void ValidateElement(XmlElement node, String expectedValue)
+		private void ValidateElement(XmlElement node, string expectedValue)
 		{
-			if (String.Compare(node.Name, expectedValue, true) != 0)
-				throw new XmlException(String.Format(badDocumentStructure, expectedValue, node.Name));
+			if (string.Compare(node.Name, expectedValue, true) != 0)
+				throw new XmlException(string.Format(badDocumentStructure, expectedValue, node.Name));
 		}
 
 		/// <summary>
 		/// Возвращает тип документа по значению атрибута
 		/// </summary>
 		/// <param name="xmlValue">Значение атрибута</param>
-		private DocumentType DocTypeFromXml(String xmlValue)
+		private DocumentType DocTypeFromXml(string xmlValue)
 		{
 			switch(xmlValue)
 			{
@@ -430,7 +430,7 @@ namespace DevicesBase
 		/// Возвращает тип работы документа с ДЯ
 		/// </summary>
 		/// <param name="drawerValue">Значение атрибута</param>
-		private DrawerOption DrawerOptionFromXml(String drawerValue)
+		private DrawerOption DrawerOptionFromXml(string drawerValue)
 		{
 			switch(drawerValue)
 			{
@@ -447,7 +447,7 @@ namespace DevicesBase
 		/// Возвращает выравнивание элемента
 		/// </summary>
 		/// <param name="alignOption">Значение атрибута</param>
-		private AlignOptions AlignFromXml(String alignOption)
+		private AlignOptions AlignFromXml(string alignOption)
 		{
 			switch(alignOption)
 			{
@@ -466,10 +466,10 @@ namespace DevicesBase
         /// <param name="fmtMessage">Шаблон сообщения об ошибке</param>
         /// <param name="xmlAttribute">Имя атрибута</param>
         /// <param name="value">Значение атрибута</param>
-        private void ThrowIntArgumentException(String fmtMessage, String xmlAttribute, String value)
+        private void ThrowIntArgumentException(string fmtMessage, string xmlAttribute, string value)
         {
             // пишем в лог
-            String message = String.Format(fmtMessage, value, xmlAttribute);
+            string message = string.Format(fmtMessage, value, xmlAttribute);
             Logger.WriteEntry(message, EventLogEntryType.Error);
 
             // бросаем исключение
@@ -482,13 +482,13 @@ namespace DevicesBase
         /// <param name="lineEntry">Строка документа</param>
         /// <param name="xmlAttribute">Атрибут, значение которого будет преобразовано в целое</param>
         /// <param name="defaultValue">Значение по умолчанию, если атрибут не найден</param>
-		private UInt32 IntFromXml(XmlElement lineEntry, String xmlAttribute, UInt32 defaultValue)
+		private UInt32 IntFromXml(XmlElement lineEntry, string xmlAttribute, UInt32 defaultValue)
 		{
             // получаем значение атрибута
-            String intValue = lineEntry.GetAttribute(xmlAttribute);
+            string intValue = lineEntry.GetAttribute(xmlAttribute);
 
             // если атрибут отсутствует, либо его значение - пустая строка
-            if (String.IsNullOrEmpty(intValue))
+            if (string.IsNullOrEmpty(intValue))
                 // возвращаем значение по умолчанию
                 return defaultValue;
             else
@@ -516,9 +516,9 @@ namespace DevicesBase
 		/// </summary>
 		/// <param name="sectionValue"></param>
 		/// <returns></returns>
-		private Byte SectionFromXml(String sectionValue)
+		private Byte SectionFromXml(string sectionValue)
 		{
-            if (String.IsNullOrEmpty(sectionValue))
+            if (string.IsNullOrEmpty(sectionValue))
                 return 1;
             else
             {
@@ -526,7 +526,7 @@ namespace DevicesBase
                 if (section > 0 && section < 99)
                     return section;
                 else
-                    throw new DeviceManagerException(String.Format("Номер секции вне диапазона", section));
+                    throw new DeviceManagerException(string.Format("Номер секции вне диапазона", section));
             }
 		}
 
@@ -535,7 +535,7 @@ namespace DevicesBase
 		/// </summary>
 		/// <param name="paymentTypeValue"></param>
 		/// <returns></returns>
-		private FiscalPaymentType PaymentTypeFromXml(String paymentTypeValue)
+		private FiscalPaymentType PaymentTypeFromXml(string paymentTypeValue)
 		{
 			switch(paymentTypeValue)
 			{
@@ -560,10 +560,10 @@ namespace DevicesBase
         /// <param name="source">Исходная строка</param>
         /// <param name="parts">Левая и правая части amp-строки</param>
         /// <returns>True, если исходная строка является amp-строкой</returns>
-        private Boolean IsAmpString(String source, out String[] parts)
+        private Boolean IsAmpString(string source, out string[] parts)
         {
-            String amp = "##";
-            if (String.IsNullOrEmpty(source))
+            string amp = "##";
+            if (string.IsNullOrEmpty(source))
             {
                 parts = null;
                 return false;
@@ -581,7 +581,7 @@ namespace DevicesBase
                 else
                 {
                     // исходная строка возмонжо является amp-строкой
-                    parts = source.Split(new String[] { amp }, 
+                    parts = source.Split(new string[] { amp }, 
                         StringSplitOptions.RemoveEmptyEntries);
                     return parts.Length > 1;
                 }
@@ -596,7 +596,7 @@ namespace DevicesBase
 		/// <param name="width">Ширина отрезка</param>
 		/// <param name="isBold">Жирный шрифт</param>
 		/// <param name="lastSpace">Заменить последний символ на пробел</param>
-		private String PrepareString(String source, AlignOptions align, Int32 width, 
+		private string PrepareString(string source, AlignOptions align, Int32 width, 
             bool isBold, bool lastSpace)
 		{
 			StringBuilder dest = new StringBuilder();
@@ -608,7 +608,7 @@ namespace DevicesBase
 			if (lastSpace)
 				width--;
 
-            String[] ampStrParts;
+            string[] ampStrParts;
             if (IsAmpString(source, out ampStrParts))
             {
                 // amp-строка
@@ -618,7 +618,7 @@ namespace DevicesBase
                 if (spacesCount <= 0)
                 {
                     // слишком длинная строка для заданной ширины чековой ленты
-                    var longStr = String.Concat(ampStrParts[0], Space, ampStrParts[1]);
+                    var longStr = string.Concat(ampStrParts[0], Space, ampStrParts[1]);
 
                     switch (align)
                     {
@@ -636,7 +636,7 @@ namespace DevicesBase
                 {
                     // первая часть
                     dest.Append(ampStrParts[0]);
-                    dest.Append(new String(Space, spacesCount));
+                    dest.Append(new string(Space, spacesCount));
                     dest.Append(ampStrParts[1]);
                 }
             }
@@ -660,7 +660,7 @@ namespace DevicesBase
                             dest.Append(source);
                             dest.Append(Space, spacesCount);
                             if (dest.Length < width)
-                                dest.Append(new String(Space, width - dest.Length));
+                                dest.Append(new string(Space, width - dest.Length));
                             break;
                         case AlignOptions.Right:
                             // выравнивание по правому краю
@@ -686,7 +686,7 @@ namespace DevicesBase
 		/// Возращает стиль шрифта по значению атрибута
 		/// </summary>
 		/// <param name="fontStyleValue">Значение атрибута</param>
-		private FontStyle FontStyleFromXml(String fontStyleValue)
+		private FontStyle FontStyleFromXml(string fontStyleValue)
 		{
 			switch(fontStyleValue)
 			{
@@ -786,7 +786,7 @@ namespace DevicesBase
 
 			// сетка таблицы
 			GridOption grid = GridOption.None;
-			String gridLine = String.Empty;
+            string gridLine = string.Empty;
 			if (tableEntry.HasAttribute("grid"))
 			{
 				// сетка есть
@@ -802,8 +802,8 @@ namespace DevicesBase
                 }
 			}
 
-            String phAttr = tableEntry.GetAttribute("printHeader");
-            if (String.IsNullOrEmpty(phAttr) || String.Compare(phAttr, "true", true) == 0)
+            string phAttr = tableEntry.GetAttribute("printHeader");
+            if (string.IsNullOrEmpty(phAttr) || string.Compare(phAttr, "true", true) == 0)
             {
 			    // печатем заголовок таблицы
                 if (!PrintCurrentLine(currentLine, tableStyle))
@@ -823,7 +823,7 @@ namespace DevicesBase
 			{
 				// проверяем количество полей в очередной записи таблицы
 				if (row.ChildNodes.Count != columns.ChildNodes.Count)
-					throw new XmlException(String.Format(badTableStructure, 
+					throw new XmlException(string.Format(badTableStructure, 
 						columns.ChildNodes.Count, row.ChildNodes.Count));
 
 				// формируем очередную строку
@@ -849,14 +849,14 @@ namespace DevicesBase
 		/// </summary>
 		/// <param name="gridOptionValue"></param>
 		/// <returns></returns>
-		private GridOption GridOptionFromXml(String gridOptionValue)
+		private GridOption GridOptionFromXml(string gridOptionValue)
 		{
-			if (String.IsNullOrEmpty(gridOptionValue))
+			if (string.IsNullOrEmpty(gridOptionValue))
 				return GridOption.All;
 
-			String[] options = gridOptionValue.Split('|');
+            string[] options = gridOptionValue.Split('|');
 			GridOption result = GridOption.None;
-			foreach (String option in options)
+			foreach (string option in options)
 			{
 				switch(option)
 				{
@@ -896,11 +896,11 @@ namespace DevicesBase
 		/// Возвращает строку-разделитель, сформированную по заданному шаблону
 		/// </summary>
 		/// <param name="source">Шаблон</param>
-		private String BuildCustomSeparator(String source)
+		private string BuildCustomSeparator(string source)
 		{
-			if (String.IsNullOrEmpty(source))
+			if (string.IsNullOrEmpty(source))
 				// разделитель формируется из параметров устройства
-                return new String(Separator, CurrentTapeWidth);
+                return new string(Separator, CurrentTapeWidth);
 
 			// разделитель задан шаблоном
             if (source.Length >= CurrentTapeWidth)
@@ -958,8 +958,8 @@ namespace DevicesBase
 			// идем по всем строкам документа
 			foreach(XmlElement lineEntry in docEntry)
 			{
-				// получаем данные строки
-				String lineData = lineEntry.InnerText;
+                // получаем данные строки
+                string lineData = lineEntry.InnerText;
 
 				// определяем тип строки
 				switch (lineEntry.GetAttribute("type"))
@@ -970,10 +970,10 @@ namespace DevicesBase
 						break;
 
 					case "barcode":
-						// штрих-код
-						String isReadable = lineEntry.GetAttribute("readable");
+                        // штрих-код
+                        string isReadable = lineEntry.GetAttribute("readable");
 						OnPrintBarcode(lineData, AlignFromXml(lineEntry.GetAttribute("align")),
-							isReadable == "true" || String.IsNullOrEmpty(isReadable));
+							isReadable == "true" || string.IsNullOrEmpty(isReadable));
 						break;
 
 					case "image":
@@ -1013,8 +1013,8 @@ namespace DevicesBase
 					default:
 						// просто текст
 						FontStyle style = FontStyleFromXml(lineEntry.GetAttribute("style"));
-                        
-                        String s = PrepareString(
+
+                        string s = PrepareString(
                             lineData, 
                             AlignFromXml(lineEntry.GetAttribute("align")),
                             CurrentTapeWidth, 
@@ -1067,7 +1067,7 @@ namespace DevicesBase
         /// Инициализиция поля "номер принтера"
         /// </summary>
         /// <param name="xmlValue">Значение атрибута, загруженное из XML-документа</param>
-        private void InitPrinterNumber(String xmlValue)
+        private void InitPrinterNumber(string xmlValue)
         {
             switch (xmlValue)
             {
@@ -1092,7 +1092,7 @@ namespace DevicesBase
         /// <summary>
         /// Заголовок документа
         /// </summary>
-        public String[] DocumentHeader
+        public string[] DocumentHeader
         {
             get
             {
@@ -1109,7 +1109,7 @@ namespace DevicesBase
         /// <summary>
         /// Подвал документа
         /// </summary>
-        public String[] DocumentFooter		
+        public string[] DocumentFooter		
         {
             get
             {
@@ -1183,7 +1183,7 @@ namespace DevicesBase
 		/// Печать документа
 		/// </summary>
 		/// <param name="xmlData">Данные XML-документа</param>
-		public virtual void Print(String xmlData)
+		public virtual void Print(string xmlData)
 		{
 			DrawerOption drwOption;
             DocumentType docType;
@@ -1207,7 +1207,7 @@ namespace DevicesBase
 
             // проверим, не совпадает ли наш текущий документ с предыдущим,
             // отправленным на печать
-            if (String.Compare(xmlData, previousXmlData, false) == 0 && 
+            if (string.Compare(xmlData, previousXmlData, false) == 0 && 
                 PrinterStatus.PaperOut == PaperOutStatus.OutAfterActive)
             {
                 // подаем команду продолжения печати
@@ -1277,8 +1277,8 @@ namespace DevicesBase
                     if (printResult)
                     {
                         // определяем, нужно ли произвести отрезку чека
-                        String cutAttribute = docEntry.GetAttribute("cut");
-                        OnCloseDocument(cutAttribute == "true" || String.IsNullOrEmpty(cutAttribute));
+                        string cutAttribute = docEntry.GetAttribute("cut");
+                        OnCloseDocument(cutAttribute == "true" || string.IsNullOrEmpty(cutAttribute));
                     }
 				}
                 Logger.WriteEntry(this, "Печать документа успешно завершена", EventLogEntryType.Information);

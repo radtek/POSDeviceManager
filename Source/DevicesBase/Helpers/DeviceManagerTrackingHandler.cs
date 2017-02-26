@@ -11,9 +11,9 @@ namespace DevicesBase.Helpers
     /// </summary>
     internal class DeviceManagerTrackingHandler : ITrackingHandler
     {
-        private const String _objDisconnected = "Объект отсоединен от прокси.\nТип объекта: {0}";
-        private const String _objMarshalled = "Объект опубликован.\nТип объекта: {0}\nURI: {1}";
-        private const String _objUnMarshalled = "Публикация объекта отменена.\nТип объекта: {0}\nURI: {1}";
+        private const string _objDisconnected = "Объект отсоединен от прокси.\nТип объекта: {0}";
+        private const string _objMarshalled = "Объект опубликован.\nТип объекта: {0}\nURI: {1}";
+        private const string _objUnMarshalled = "Публикация объекта отменена.\nТип объекта: {0}\nURI: {1}";
 
         IEventLink _eventLink;
         Boolean _debugInfo;
@@ -35,8 +35,8 @@ namespace DevicesBase.Helpers
         {
             if (_debugInfo)
             {
-                _eventLink.Post(DeviceManager.EventSource, 
-                    String.Format(_objDisconnected, obj.GetType()));
+                _eventLink.Post(DeviceManager.EventSource,
+                    string.Format(_objDisconnected, obj.GetType()));
             }
         }
 
@@ -49,8 +49,8 @@ namespace DevicesBase.Helpers
         {
             if (_debugInfo)
             {
-                _eventLink.Post(DeviceManager.EventSource, 
-                    String.Format(_objMarshalled, obj.GetType(), or.URI));
+                _eventLink.Post(DeviceManager.EventSource,
+                    string.Format(_objMarshalled, obj.GetType(), or.URI));
             }
         }
 
@@ -63,8 +63,8 @@ namespace DevicesBase.Helpers
         {
             if (_debugInfo)
             {
-                _eventLink.Post(DeviceManager.EventSource, 
-                    String.Format(_objUnMarshalled, obj.GetType(), or.URI));
+                _eventLink.Post(DeviceManager.EventSource,
+                    string.Format(_objUnMarshalled, obj.GetType(), or.URI));
             }
         }
 

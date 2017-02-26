@@ -134,7 +134,7 @@ namespace DevicesBase
         /// Печать документа
         /// </summary>
         /// <param name="xmlData">Данные документа</param>
-        public override void Print(String xmlData)
+        public override void Print(string xmlData)
         {
             try
             {

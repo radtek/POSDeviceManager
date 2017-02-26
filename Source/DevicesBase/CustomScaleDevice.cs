@@ -30,9 +30,9 @@ namespace DevicesBase
     /// </summary>
     public abstract class CustomScaleDevice : CustomDevice, IScaleDevice
     {
-        private String _connectionString;
+        private string _connectionString;
         private ICommunicator _communicator;
-        private Dictionary<String, Int32> _dataRecordsCount;
+        private Dictionary<string, Int32> _dataRecordsCount;
 
         /// <summary>
         /// Создает устройство-весы
@@ -40,7 +40,7 @@ namespace DevicesBase
         protected CustomScaleDevice()
             : base()
         {
-            _dataRecordsCount = new Dictionary<String, Int32>();
+            _dataRecordsCount = new Dictionary<string, Int32>();
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace DevicesBase
                         break;
                     default:
                         throw new InvalidOperationException(
-                            String.Format("Протокол {0} не поддерживается.",
+                            string.Format("Протокол {0} не поддерживается.",
                             connStrHelper[1]));
                 }
 
@@ -107,7 +107,7 @@ namespace DevicesBase
         /// <param name="box">Вес тары в граммах</param>
         /// <param name="shelfLife">Срок годности в днях</param>
         /// <param name="message">Номер сообщения (экстра-текста)</param>
-        protected virtual Boolean OnArticleUpload(String articleName, Int32 articleCode, Int32 PLU,
+        protected virtual Boolean OnArticleUpload(string articleName, Int32 articleCode, Int32 PLU,
             Int32 price, Int32 units, Int32 box, Int32 shelfLife, Int32 message)
         {
             return true;
@@ -118,7 +118,7 @@ namespace DevicesBase
         /// </summary>
         /// <param name="messageText">Текст сообщения</param>
         /// <param name="messageNumber">Номер сообщения в памяти весов</param>
-        protected virtual Boolean OnMessageUpload(String messageText, Int32 messageNumber)
+        protected virtual Boolean OnMessageUpload(string messageText, Int32 messageNumber)
         {
             return true;
         }
@@ -128,7 +128,7 @@ namespace DevicesBase
         /// </summary>
         /// <param name="advertisingText">Текст рекламной информации</param>
         /// <param name="advertisingType">Тип рекламной информации <see cref="AdvertisingType"/></param>
-        protected virtual Boolean OnAdvertisingUpload(String advertisingText,
+        protected virtual Boolean OnAdvertisingUpload(string advertisingText,
             AdvertisingType advertisingType)
         {
             return true;
@@ -145,13 +145,13 @@ namespace DevicesBase
         /// <param name="attributeName">Имя атрибута</param>
         /// <param name="required">Обязательный или нет</param>
         /// <param name="defaultValue">Значение по умолчанию</param>
-        private Int32 GetInt32AttributeValue(XmlElement element, String attributeName,
+        private Int32 GetInt32AttributeValue(XmlElement element, string attributeName,
             Boolean required, Int32 defaultValue)
         {
             if (!element.HasAttribute(attributeName))
             {
                 if (required)
-                    throw new Exception(String.Format("Не задан обязательный атрибут \"{0}\"", attributeName));
+                    throw new Exception(string.Format("Не задан обязательный атрибут \"{0}\"", attributeName));
                 else
                     return defaultValue;
             }
@@ -266,7 +266,7 @@ namespace DevicesBase
         /// <summary>
         /// Строка подключения к весам
         /// </summary>
-        public String ConnectionString
+        public string ConnectionString
         {
             get { return _connectionString; }
             set 
@@ -301,7 +301,7 @@ namespace DevicesBase
                     // создаем xml-документ
                     XmlDocument uploadData = new XmlDocument();
                     uploadData.LoadXml(xmlData);
-                    if (String.Compare(uploadData.DocumentElement.Name, "scale", true) != 0)
+                    if (string.Compare(uploadData.DocumentElement.Name, "scale", true) != 0)
                         throw new CommunicationException("Данные не предназначены для выгрузки в весы");
 
                     // для всех наборов данных
@@ -311,7 +311,7 @@ namespace DevicesBase
                         Int32 startIndex = GetInt32AttributeValue(uploadTag, "startIndex", false, 1);
 
                         // поиск набора данных
-                        if (String.Compare(uploadTag.Name, "articles") == 0)
+                        if (string.Compare(uploadTag.Name, "articles") == 0)
                         {
                             // товары
                             _dataRecordsCount["articles"] = startIndex;
@@ -320,7 +320,7 @@ namespace DevicesBase
                             continue;
                         }
 
-                        if (String.Compare(uploadTag.Name, "messages") == 0)
+                        if (string.Compare(uploadTag.Name, "messages") == 0)
                         {
                             // сообщения
                             _dataRecordsCount["messages"] = startIndex;
@@ -329,7 +329,7 @@ namespace DevicesBase
                             continue;
                         }
 
-                        if (String.Compare(uploadTag.Name, "advertisings") == 0)
+                        if (string.Compare(uploadTag.Name, "advertisings") == 0)
                         {
                             // реклама
                             _dataRecordsCount["advertisings"] = startIndex;

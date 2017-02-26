@@ -20,14 +20,14 @@ namespace DevicesBase
         private const Int32 ShortSleep = 100;
         private const Int32 PassWatchSleep = 10;
         private const Int32 MaxZeroRead = 25;
-        private const String OperationCancelled = "Операция прервана устройством. Ответ: {0}";
+        private const string OperationCancelled = "Операция прервана устройством. Ответ: {0}";
 
         #endregion
 
         #region Поля
 
         private TurnstileDirection _direction;
-        private Object _syncObject;
+        private object _syncObject;
         private Int32 _timeout;
         
         #endregion
@@ -91,7 +91,7 @@ namespace DevicesBase
         /// Чтение идентификационных данных
         /// </summary>
         /// <returns>Данные, подготовленные для обработки</returns>
-        protected abstract String OnReadIdData();
+        protected abstract string OnReadIdData();
 
         /// <summary>
         /// Управление красным индикатором
@@ -162,7 +162,7 @@ namespace DevicesBase
             : base()
         {
             _direction = TurnstileDirection.Entry;
-            _syncObject = new Object();
+            _syncObject = new object();
             _timeout = 15;
         }
 
@@ -250,15 +250,15 @@ namespace DevicesBase
         /// <summary>
         /// Очередной блок идентификационных данных от устройства
         /// </summary>
-        public String IdentificationData 
+        public string IdentificationData 
         { 
             get
             {
-                String data = String.Empty;
+                string data = string.Empty;
                 lock (_syncObject)
                 {
                     data = OnReadIdData();
-                    if (!String.IsNullOrEmpty(data))
+                    if (!string.IsNullOrEmpty(data))
                     {
                         FlashRed(1, true);
                         OnRed(true);

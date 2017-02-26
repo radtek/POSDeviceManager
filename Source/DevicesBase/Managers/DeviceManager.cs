@@ -1,143 +1,118 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
-using System.Text;
-using DevicesCommon;
-using DevicesCommon.Helpers;
-using System.Threading;
-using System.Collections;
-using System.Linq;
-using System.Xml;
-using System.IO;
-using System.Reflection;
-using System.Security.Permissions;
 using System.Diagnostics;
-using DevicesCommon.Connectors;
-using DevmanConfig;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading;
+using System.Xml;
 using DevicesBase.Helpers;
-using ERPService.SharedLibs.Remoting;
+using DevicesCommon;
+using DevicesCommon.Connectors;
+using DevicesCommon.Helpers;
+using DevmanConfig;
+using ERPService.SharedLibs.Eventlog;
 using ERPService.SharedLibs.Helpers;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
-using ERPService.SharedLibs.Eventlog;
+using ERPService.SharedLibs.Remoting;
 
 namespace DevicesBase
 {
     /// <summary>
-    /// Аргументы события активации/деактивации устройства
+    /// РђСЂРіСѓРјРµРЅС‚С‹ СЃРѕР±С‹С‚РёСЏ Р°РєС‚РёРІР°С†РёРё/РґРµР°РєС‚РёРІР°С†РёРё СѓСЃС‚СЂРѕР№СЃС‚РІР°
     /// </summary>
     public class DeviceStatusEventArgs : EventArgs
     {
-        private String deviceId;
-        private bool onActivate;
-        private bool success;
-
         /// <summary>
-        /// Конструктор
+        /// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
         /// </summary>
-        /// <param name="deviceId">Идентификатор устройства</param>
-        /// <param name="onActivate">Когда возникло событие, во время активации или во время
-        /// декативации</param>
-        /// <param name="success">Признак успешного выполения</param>
-        public DeviceStatusEventArgs(String deviceId, bool onActivate, bool success)
+        /// <param name="deviceId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СѓСЃС‚СЂРѕР№СЃС‚РІР°</param>
+        /// <param name="onActivate">РљРѕРіРґР° РІРѕР·РЅРёРєР»Рѕ СЃРѕР±С‹С‚РёРµ, РІРѕ РІСЂРµРјСЏ Р°РєС‚РёРІР°С†РёРё РёР»Рё РІРѕ РІСЂРµРјСЏ
+        /// РґРµРєР°С‚РёРІР°С†РёРё</param>
+        /// <param name="success">РџСЂРёР·РЅР°Рє СѓСЃРїРµС€РЅРѕРіРѕ РІС‹РїРѕР»РµРЅРёСЏ</param>
+        public DeviceStatusEventArgs(string deviceId, bool onActivate, bool success)
             : base()
         {
-            this.deviceId = deviceId;
-            this.onActivate = onActivate;
-            this.success = success;
+            DeviceId = deviceId;
+            OnActivate = onActivate;
+            Success = success;
         }
 
         /// <summary>
-        /// Идентификатор устройства
+        /// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СѓСЃС‚СЂРѕР№СЃС‚РІР°
         /// </summary>
-        public String DeviceId
-        {
-            get
-            {
-                return deviceId;
-            }
-        }
+        public string DeviceId { get; }
 
         /// <summary>
-        /// Когда возникло событие
+        /// РљРѕРіРґР° РІРѕР·РЅРёРєР»Рѕ СЃРѕР±С‹С‚РёРµ
         /// </summary>
-        public bool OnActivate
-        {
-            get
-            {
-                return onActivate;
-            }
-        }
+        public bool OnActivate { get; }
 
         /// <summary>
-        /// Признак успешного выполнения
+        /// РџСЂРёР·РЅР°Рє СѓСЃРїРµС€РЅРѕРіРѕ РІС‹РїРѕР»РЅРµРЅРёСЏ
         /// </summary>
-        public bool Success
-        {
-            get
-            {
-                return success;
-            }
-        }
+        public bool Success { get; }
     }
 
     /// <summary>
-    /// Диспечтер устройств
+    /// Р”РёСЃРїРµС‡С‚РµСЂ СѓСЃС‚СЂРѕР№СЃС‚РІ
     /// </summary>
-    public sealed class DeviceManager : EternalHostingTarget, IDeviceManager, ILogger,
-        ISerialPortsPool
+    public sealed class DeviceManager : EternalHostingTarget, IDeviceManager, ILogger, ISerialPortsPool
     {
-        #region Константы
+        #region РљРѕРЅСЃС‚Р°РЅС‚С‹
 
-        private const String driverNotFoundMessage = 
-            "Не найден драйвер для устройства \"{0}\\{1}\", тип устройства \"{2}\"";
-        private const String deviceStatusSucceeded = "Успешное изменение статуса устройства \"{0}\". Текущий статус: \"{1}\"";
-        private const String deviceStatusFailed = "Ошибка изменения статуса устройства \"{0}\". Текущий статус: \"{1}\". Текст ошибки: {2}";
-        private const String deviceStatusActive = "Активно";
-        private const String deviceStatusInactive = "Неактивно";
-        private const String printerParamNotSet = "Параметр \"{0}\" устройства \"{1}\" не задан";
-        private const String deviceTimeoutAfterActivate = "Таймаут после активации устройства";
+        private const string driverNotFoundMessage = 
+            "РќРµ РЅР°Р№РґРµРЅ РґСЂР°Р№РІРµСЂ РґР»СЏ СѓСЃС‚СЂРѕР№СЃС‚РІР° \"{0}\\{1}\", С‚РёРї СѓСЃС‚СЂРѕР№СЃС‚РІР° \"{2}\"";
+        private const string deviceStatusSucceeded = "РЈСЃРїРµС€РЅРѕРµ РёР·РјРµРЅРµРЅРёРµ СЃС‚Р°С‚СѓСЃР° СѓСЃС‚СЂРѕР№СЃС‚РІР° \"{0}\". РўРµРєСѓС‰РёР№ СЃС‚Р°С‚СѓСЃ: \"{1}\"";
+        private const string deviceStatusFailed = "РћС€РёР±РєР° РёР·РјРµРЅРµРЅРёСЏ СЃС‚Р°С‚СѓСЃР° СѓСЃС‚СЂРѕР№СЃС‚РІР° \"{0}\". РўРµРєСѓС‰РёР№ СЃС‚Р°С‚СѓСЃ: \"{1}\". РўРµРєСЃС‚ РѕС€РёР±РєРё: {2}";
+        private const string deviceStatusActive = "РђРєС‚РёРІРЅРѕ";
+        private const string deviceStatusInactive = "РќРµР°РєС‚РёРІРЅРѕ";
+        private const string printerParamNotSet = "РџР°СЂР°РјРµС‚СЂ \"{0}\" СѓСЃС‚СЂРѕР№СЃС‚РІР° \"{1}\" РЅРµ Р·Р°РґР°РЅ";
+        private const string deviceTimeoutAfterActivate = "РўР°Р№РјР°СѓС‚ РїРѕСЃР»Рµ Р°РєС‚РёРІР°С†РёРё СѓСЃС‚СЂРѕР№СЃС‚РІР°";
 
         /// <summary>
-        /// Источник событий
+        /// РСЃС‚РѕС‡РЅРёРє СЃРѕР±С‹С‚РёР№
         /// </summary>
-        public const String EventSource = "Диспетчер устройств";
+        public const string EventSource = "Р”РёСЃРїРµС‚С‡РµСЂ СѓСЃС‚СЂРѕР№СЃС‚РІ";
 
         #endregion
 
-        #region Поля
+        #region РџРѕР»СЏ
 
-        // список типов во всех драйверных сборках
-        List<Type> deviceTypes;
-        // таблица устройств
-        Dictionary<String, DeviceHelper> devicesTable;
-        // таблица клиентских сессий
-        Dictionary<String, SessionHelper> sessionsTable;
-        // обеспечивает потокобезопасный доступ к таблице устройств и таблице клиентов
-        Object dataLocker;
-        // конфигурация диспетчера
-        DevmanProperties _props;
-        // пул портов
-        Dictionary<String, SerialPortsHelper> _serialPortsPool;
-        // обеспечивает потокобезопасный доступ к пулу портов
-        Object _portsLocker;
-        // ведение журнала событий
-        IEventLink _eventLink;
-        // трэкер
-        DeviceManagerTrackingHandler _tracker;
+        // СЃРїРёСЃРѕРє С‚РёРїРѕРІ РІРѕ РІСЃРµС… РґСЂР°Р№РІРµСЂРЅС‹С… СЃР±РѕСЂРєР°С…
+        private readonly ILookup<string, DeviceTypeHelper> deviceTypes;
+        // С‚Р°Р±Р»РёС†Р° СѓСЃС‚СЂРѕР№СЃС‚РІ
+        private readonly Dictionary<string, DeviceHelper> devicesTable;
+        // С‚Р°Р±Р»РёС†Р° РєР»РёРµРЅС‚СЃРєРёС… СЃРµСЃСЃРёР№
+        private readonly Dictionary<string, SessionHelper> sessionsTable;
+        // РѕР±РµСЃРїРµС‡РёРІР°РµС‚ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Р№ РґРѕСЃС‚СѓРї Рє С‚Р°Р±Р»РёС†Рµ СѓСЃС‚СЂРѕР№СЃС‚РІ Рё С‚Р°Р±Р»РёС†Рµ РєР»РёРµРЅС‚РѕРІ
+        private readonly object dataLocker;
+        // РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ РґРёСЃРїРµС‚С‡РµСЂР°
+        private DevmanProperties _props;
+        // РїСѓР» РїРѕСЂС‚РѕРІ
+        private Dictionary<string, SerialPortsHelper> _serialPortsPool;
+        // РѕР±РµСЃРїРµС‡РёРІР°РµС‚ РїРѕС‚РѕРєРѕР±РµР·РѕРїР°СЃРЅС‹Р№ РґРѕСЃС‚СѓРї Рє РїСѓР»Сѓ РїРѕСЂС‚РѕРІ
+        private object _portsLocker;
+        // РІРµРґРµРЅРёРµ Р¶СѓСЂРЅР°Р»Р° СЃРѕР±С‹С‚РёР№
+        private readonly IEventLink _eventLink;
+        // С‚СЂСЌРєРµСЂ
+        private DeviceManagerTrackingHandler _tracker;
 
         #endregion
 
-        #region Перегрузка методов базового класса
+        #region РџРµСЂРµРіСЂСѓР·РєР° РјРµС‚РѕРґРѕРІ Р±Р°Р·РѕРІРѕРіРѕ РєР»Р°СЃСЃР°
 
         /// <summary>
-        /// Имя ремоутинг-объекта
+        /// РРјСЏ СЂРµРјРѕСѓС‚РёРЅРі-РѕР±СЉРµРєС‚Р°
         /// </summary>
-        public override String Name
+        public override string Name
         {
             get { return "devicemanager"; }
         }
 
         /// <summary>
-        /// Порт по умолчанию
+        /// РџРѕСЂС‚ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
         /// </summary>
         public override Int32 Port
         {
@@ -145,7 +120,7 @@ namespace DevicesBase
         }
 
         /// <summary>
-        /// Освобождение ресурсов
+        /// РћСЃРІРѕР±РѕР¶РґРµРЅРёРµ СЂРµСЃСѓСЂСЃРѕРІ
         /// </summary>
         public override void  Dispose()
         {
@@ -156,81 +131,80 @@ namespace DevicesBase
 
         #endregion
 
-        #region Статические методы
+        #region РЎС‚Р°С‚РёС‡РµСЃРєРёРµ РјРµС‚РѕРґС‹
 
         /// <summary>
-        /// Возвращает имя папки, в которой находится диспетчер устройств
+        /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ РїР°РїРєРё, РІ РєРѕС‚РѕСЂРѕР№ РЅР°С…РѕРґРёС‚СЃСЏ РґРёСЃРїРµС‚С‡РµСЂ СѓСЃС‚СЂРѕР№СЃС‚РІ
         /// </summary>
-        public static String GetDeviceManagerDirectory()
+        public static string GetDeviceManagerDirectory()
         {
             return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         }
 
         /// <summary>
-        /// Возвращает имя папки, в которой находится журнал событий диспетчера устройств
+        /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ РїР°РїРєРё, РІ РєРѕС‚РѕСЂРѕР№ РЅР°С…РѕРґРёС‚СЃСЏ Р¶СѓСЂРЅР°Р» СЃРѕР±С‹С‚РёР№ РґРёСЃРїРµС‚С‡РµСЂР° СѓСЃС‚СЂРѕР№СЃС‚РІ
         /// </summary>
-        public static String GetDeviceManagerLogDirectory()
+        public static string GetDeviceManagerLogDirectory()
         {
             return FileSystemHelper.GetSubDirectory(GetDeviceManagerDirectory(), "DeviceManagerLog");
         }
 
         /// <summary>
-        /// Возвращает имя файла настроек диспетчера устройств
+        /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ С„Р°Р№Р»Р° РЅР°СЃС‚СЂРѕРµРє РґРёСЃРїРµС‚С‡РµСЂР° СѓСЃС‚СЂРѕР№СЃС‚РІ
         /// </summary>
-        public static String GetDeviceManagerSettingsFile()
+        public static string GetDeviceManagerSettingsFile()
         {
-            return String.Format("{0}\\DeviceManager.xml", GetDeviceManagerDirectory());
+            return string.Format("{0}\\DeviceManager.xml", GetDeviceManagerDirectory());
         }
 
         /// <summary>
-        /// Возвращает имя папки, в которой находится отладочная информация диспетчера устройств
+        /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ РїР°РїРєРё, РІ РєРѕС‚РѕСЂРѕР№ РЅР°С…РѕРґРёС‚СЃСЏ РѕС‚Р»Р°РґРѕС‡РЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ РґРёСЃРїРµС‚С‡РµСЂР° СѓСЃС‚СЂРѕР№СЃС‚РІ
         /// </summary>
-        public static String GetDeviceManagerDebugDirectory()
+        public static string GetDeviceManagerDebugDirectory()
         {
             return FileSystemHelper.GetSubDirectory(GetDeviceManagerDirectory(), "DeviceManagerDebugInfo");
         }
 
         #endregion
 
-        #region Конструктор
+        #region РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 
         /// <summary>
-        /// Конструктор
+        /// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
         /// </summary>
-        /// <param name="eventLink">Журнал событий</param>
+        /// <param name="eventLink">Р–СѓСЂРЅР°Р» СЃРѕР±С‹С‚РёР№</param>
         public DeviceManager(IEventLink eventLink)
         {
             if (eventLink == null)
                 throw new ArgumentNullException("eventLink");
 
-            // инициализация диспетчера
+            // РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РґРёСЃРїРµС‚С‡РµСЂР°
             _eventLink = eventLink;
-            deviceTypes = new List<Type>();
-            devicesTable = new Dictionary<String, DeviceHelper>();
-            dataLocker = new Object();
-            sessionsTable = new Dictionary<String, SessionHelper>();
+            devicesTable = new Dictionary<string, DeviceHelper>();
+            dataLocker = new object();
+            sessionsTable = new Dictionary<string, SessionHelper>();
 
-            // создание пула портов
+            // СЃРѕР·РґР°РЅРёРµ РїСѓР»Р° РїРѕСЂС‚РѕРІ
             CreateSerialPortsPool();
-            // загрузка драйверных сборок
-            LoadAssemblies(GetDeviceManagerDirectory());
-            // загрузка конфигурации устройств
+            // Р·Р°РіСЂСѓР·РєР° РґСЂР°Р№РІРµСЂРЅС‹С… СЃР±РѕСЂРѕРє
+            deviceTypes = LoadDeviceTypes(GetDeviceManagerDirectory());
+            // Р·Р°РіСЂСѓР·РєР° РєРѕРЅС„РёРіСѓСЂР°С†РёРё СѓСЃС‚СЂРѕР№СЃС‚РІ
             LoadDevices(GetDeviceManagerSettingsFile());
-            // атктивация устройств
+            // Р°С‚РєС‚РёРІР°С†РёСЏ СѓСЃС‚СЂРѕР№СЃС‚РІ
             ActivateDevices();
         }
 
         #endregion
 
-        #region Прочие методы
+        #region РџСЂРѕС‡РёРµ РјРµС‚РѕРґС‹
 
         /// <summary>
-        /// Проверка имени последовательного порта
+        /// РџСЂРѕРІРµСЂРєР° РёРјРµРЅРё РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕРіРѕ РїРѕСЂС‚Р°
         /// </summary>
         /// <param name="portName"></param>
-        private void CheckSerialPortName(String portName)
+        private void CheckSerialPortName(string portName)
         {
-            if (String.IsNullOrEmpty(portName))
+            if (string.IsNullOrEmpty(portName))
                 throw new ArgumentNullException("portName");
 
             if (!_serialPortsPool.ContainsKey(portName))
@@ -240,39 +214,39 @@ namespace DevicesBase
                 {
                     string ports = string.Join("; ", _serialPortsPool.Keys.ToArray());
                     throw new InvalidOperationException(
-                        String.Format("Последовательный порт \"{0}\" в системе не найден\n{1}", portName, ports));
+                        string.Format("РџРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅС‹Р№ РїРѕСЂС‚ \"{0}\" РІ СЃРёСЃС‚РµРјРµ РЅРµ РЅР°Р№РґРµРЅ\n{1}", portName, ports));
                 }
             }
         }
 
-        private void ThrowPortIsBusy(String portName, String deviceName)
+        private void ThrowPortIsBusy(string portName, string deviceName)
         {
-            throw new InvalidOperationException(String.Format("Порт \"{0}\" занят устройством \"{1}\"",
+            throw new InvalidOperationException(string.Format("РџРѕСЂС‚ \"{0}\" Р·Р°РЅСЏС‚ СѓСЃС‚СЂРѕР№СЃС‚РІРѕРј \"{1}\"",
                 portName, deviceName));
         }
 
         /// <summary>
-        /// Создание пула последовательных портов
+        /// РЎРѕР·РґР°РЅРёРµ РїСѓР»Р° РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅС‹С… РїРѕСЂС‚РѕРІ
         /// </summary>
         private void CreateSerialPortsPool()
         {
-            _portsLocker = new Object();
-            _serialPortsPool = new Dictionary<String, SerialPortsHelper>();
+            _portsLocker = new object();
+            _serialPortsPool = new Dictionary<string, SerialPortsHelper>();
             
-            // заполняем пул портов
+            // Р·Р°РїРѕР»РЅСЏРµРј РїСѓР» РїРѕСЂС‚РѕРІ
             UpdateSerialPortsPool();
         }
 
         /// <summary>
-        /// Заполнение пула портов
+        /// Р—Р°РїРѕР»РЅРµРЅРёРµ РїСѓР»Р° РїРѕСЂС‚РѕРІ
         /// </summary>
         private void UpdateSerialPortsPool()
         {
-            // заполняем пул портов
-            var names = new List<String>();
+            // Р·Р°РїРѕР»РЅСЏРµРј РїСѓР» РїРѕСЂС‚РѕРІ
+            var names = new List<string>();
             names.AddRange(SerialPortsEnumerator.Enumerate());
             names.AddRange(SerialPortsEnumerator.EnumerateLPT());
-            foreach (String portName in names)
+            foreach (string portName in names)
             {
                 if (!_serialPortsPool.ContainsKey(portName))
                 {
@@ -283,142 +257,116 @@ namespace DevicesBase
         }
 
         /// <summary>
-        /// Уничтожение пула последовательных портов
+        /// РЈРЅРёС‡С‚РѕР¶РµРЅРёРµ РїСѓР»Р° РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅС‹С… РїРѕСЂС‚РѕРІ
         /// </summary>
         private void DestroySerialPortsPool()
         {
             if (_serialPortsPool == null)
                 return;
 
-            foreach (KeyValuePair<String, SerialPortsHelper> kvp in _serialPortsPool)
+            foreach (KeyValuePair<string, SerialPortsHelper> kvp in _serialPortsPool)
             {
                 kvp.Value.Dispose();
             }
         }
 
         /// <summary>
-        /// Загрузка драйверных сборок
+        /// Р—Р°РіСЂСѓР·РєР° РґСЂР°Р№РІРµСЂРЅС‹С… СЃР±РѕСЂРѕРє
         /// </summary>
-        /// <param name="directoryName">Имя папки со сборками</param>
-        private void LoadAssemblies(String directoryName)
+        /// <param name="directoryName">РРјСЏ РїР°РїРєРё СЃРѕ СЃР±РѕСЂРєР°РјРё</param>
+        private ILookup<string, DeviceTypeHelper> LoadDeviceTypes(string directoryName)
         {
-            String[] fileNames = Directory.GetFiles(directoryName, "*.dll", SearchOption.AllDirectories);
-            String thisName = Assembly.GetExecutingAssembly().Location;
-            foreach (String fileName in fileNames)
+            var fileNamePrefixesToSkip = new[]
             {
-                // имя файла не совпадает с текущим и имеет расширение "dll"
-                // предположительно это - сборка, пытаемся ее загрузить
-                if (String.Compare(thisName, fileName, true) != 0)
+                "ERPService.SharedLibs",
+                "DevicesBase",
+                "DevicesCommon",
+                "DevmanConfig"
+            };
+
+            return Directory.GetFiles(directoryName, "*.dll", SearchOption.AllDirectories)
+                .Select(fileName =>
                 {
+                    // РѕРїСЂРµРґРµР»СЏРµРј РёРјСЏ С„Р°Р№Р»Р° Р±РµР· РїСѓС‚Рё
+                    var pureFileName = Path.GetFileName(fileName);
+
+                    // РµСЃР»Рё РёРјСЏ С„Р°Р№Р»Р° РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ РѕРґРЅРѕРіРѕ РёР· РїСЂРµС„РёРєСЃРѕРІ, РїСЂРѕСѓСЃРєР°РµРј РµРіРѕ Рё СЃР±РѕСЂРєСѓ РЅРµ Р·Р°РіСЂСѓР¶Р°РµРј
+                    if (fileNamePrefixesToSkip.Any(prefix => pureFileName.StartsWith(prefix)))
+                    {
+                        return null;
+                    }
+
+                    // РїС‹С‚Р°РµРјСЃСЏ Р·Р°РіСЂСѓР·РёС‚СЊ СЃР±РѕСЂРєСѓ СЃ Р·Р°РґР°РЅРЅС‹Рј РёРјРµРЅРµРј С„Р°Р№Р»Р°
                     try
                     {
-                        // загружаем сборку
-                        Assembly a = Assembly.LoadFrom(fileName);
-                        // получаем список типов, определенных в сборке
-                        Type[] types = a.GetTypes();
-                        foreach (Type t in types)
-                        {
-                            // получаем список атрибутов, определенных для типа
-                            Attribute[] attribs = Attribute.GetCustomAttributes(t);
-                            // если тип отмечен атрибутами
-                            if (attribs.Length > 0)
-                                // просматриваем список атрибутов
-                                foreach (Attribute attrib in attribs)
-                                {
-                                    if (attrib is DeviceAttribute)
-                                    {
-                                        // добавляем тип в список типов
-                                        deviceTypes.Add(t);
-                                        // переходим к другому типу
-                                        break;
-                                    }
-                                }
-                        }
+                        return Assembly.LoadFrom(fileName);
                     }
-                    catch
+                    catch (FileLoadException)
                     {
-                        // не удалось загрузить сборку по каким-то причинам
-                        // просто игнорируем исключение
+                        return null;
                     }
-                }
-            }
+                    catch (BadImageFormatException)
+                    {
+                        return null;
+                    }
+                })
+                .Where(assembly => assembly != null)
+                .SelectMany(assembly => assembly.GetExportedTypes())
+                .Where(type => typeof(IDevice).IsAssignableFrom(type))
+                .Select(type => new
+                {
+                    DeviceType = type,
+                    DeviceAttribute = (DeviceAttribute)type.GetCustomAttributes(typeof(DeviceAttribute), false).FirstOrDefault()
+                })
+                .Where(projection => projection.DeviceAttribute != null)
+                .ToLookup(projection => projection.DeviceAttribute.DeviceType, projection => new DeviceTypeHelper
+                {
+                    DeviceType = projection.DeviceType,
+                    DeviceAttributeType = projection.DeviceAttribute.GetType()
+                });
         }
 
-        private void ThrowOnInvalidSession(String sessionId)
+        private void ThrowOnInvalidSession(string sessionId)
         {
-            throw new DeviceManagerException(String.Format("Сессия {0} не зарегистрирована", sessionId));
+            throw new DeviceManagerException(string.Format("РЎРµСЃСЃРёСЏ {0} РЅРµ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅР°", sessionId));
         }
 
         /// <summary>
-        /// Проверка существоавания сессии с заданным идентификатором
+        /// РџСЂРѕРІРµСЂРєР° СЃСѓС‰РµСЃС‚РІРѕР°РІР°РЅРёСЏ СЃРµСЃСЃРёРё СЃ Р·Р°РґР°РЅРЅС‹Рј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј
         /// </summary>
-        /// <param name="sessionId">Идентификатор сессии</param>
-        /// <param name="throwIfNotValid">Бросать исключение, если сессия не существует</param>
-        private void ValidateSession(String sessionId, bool throwIfNotValid)
+        /// <param name="sessionId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЃРµСЃСЃРёРё</param>
+        /// <param name="throwIfNotValid">Р‘СЂРѕСЃР°С‚СЊ РёСЃРєР»СЋС‡РµРЅРёРµ, РµСЃР»Рё СЃРµСЃСЃРёСЏ РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚</param>
+        private void ValidateSession(string sessionId, bool throwIfNotValid)
         {
             if (sessionsTable.ContainsKey(sessionId))
             {
-                // сессия найдена
+                // СЃРµСЃСЃРёСЏ РЅР°Р№РґРµРЅР°
                 SessionHelper helper = sessionsTable[sessionId];
-                // фискируем время последнего обращения к диспетчеру из этой сессии
+                // С„РёСЃРєРёСЂСѓРµРј РІСЂРµРјСЏ РїРѕСЃР»РµРґРЅРµРіРѕ РѕР±СЂР°С‰РµРЅРёСЏ Рє РґРёСЃРїРµС‚С‡РµСЂСѓ РёР· СЌС‚РѕР№ СЃРµСЃСЃРёРё
                 helper.AccessDateTime = DateTime.Now;
             }
             else
             {
                 if (throwIfNotValid)
-                    // сессия не найдена и при этом задано сгенерировать исключение
+                    // СЃРµСЃСЃРёСЏ РЅРµ РЅР°Р№РґРµРЅР° Рё РїСЂРё СЌС‚РѕРј Р·Р°РґР°РЅРѕ СЃРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РёСЃРєР»СЋС‡РµРЅРёРµ
                     ThrowOnInvalidSession(sessionId);
             }
         }
 
         /// <summary>
-        /// Проверка актуальности клиентской сессии
+        /// РџСЂРѕРІРµСЂРєР° Р°РєС‚СѓР°Р»СЊРЅРѕСЃС‚Рё РєР»РёРµРЅС‚СЃРєРѕР№ СЃРµСЃСЃРёРё
         /// </summary>
-        /// <param name="sessionId">Идентификатор сессии</param>
-        private bool SessionAlive(String sessionId)
+        /// <param name="sessionId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЃРµСЃСЃРёРё</param>
+        private bool SessionAlive(string sessionId)
         {
             return sessionsTable.ContainsKey(sessionId) ? sessionsTable[sessionId].Alive : false;
         }
 
-        #region Методы, возвращающие метаданные для создания ссылок на интерфейсы устройств
-
         /// <summary>
-        /// Возвращает метаданные для создания ссылки на интерфейс драйвера устройства
+        /// Р’РѕР·РІСЂР°С‰Р°РµС‚ РёРЅС‚РµСЂС„РµР№СЃ СѓСЃС‚СЂРѕР№СЃС‚РІР° РїРѕ РµРіРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂСѓ
         /// </summary>
-        /// <param name="deviceType">Тип устройства из конфигурации (например, "ШТРИХ")</param>
-        /// <param name="requiredTypes">Список-фильтр типов-атрибутов, которыми должны быть отмечены
-        /// типы-реализации драйверов устройств</param>
-        private Type FindDeviceType(String deviceType, Type[] requiredTypes)
-        {
-            // просматриваем весь список типов-драйверов устройств, 
-            // определенных в загруженных сборках
-            foreach (Type t in deviceTypes)
-            {
-                // просматриваем список-фильтр атрибутов
-                foreach (Type attribType in requiredTypes)
-                {
-                    // для типа определен атрибут из списка-фильтра
-                    if (Attribute.IsDefined(t, attribType))
-                    {
-                        DeviceAttribute attrib = (DeviceAttribute)Attribute.GetCustomAttribute(t, attribType);
-                        if (String.Compare(attrib.DeviceType, deviceType, true) == 0)
-                            // найден нужный драйвер
-                            return t;
-                    }
-                }
-            }
-
-            // в списке драйверов нет нужного драйвера устройства
-            return null;
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Возвращает интерфейс устройства по его идентификатору
-        /// </summary>
-        /// <param name="deviceID">Идентификатор устройства</param>
-        private DeviceHelper GetDeviceByID(String deviceID)
+        /// <param name="deviceID">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СѓСЃС‚СЂРѕР№СЃС‚РІР°</param>
+        private DeviceHelper GetDeviceByID(string deviceID)
         {
             try
             {
@@ -431,14 +379,14 @@ namespace DevicesBase
             }
         }
 
-        private Boolean GetParamValue(XmlElement root, String paramName, Object defaultValue, out String value)
+        private Boolean GetParamValue(XmlElement root, string paramName, object defaultValue, out string value)
         {
             XmlElement param = root[paramName];
-            value = param != null ? param.InnerText : String.Empty;
-            if (String.IsNullOrEmpty(value))
+            value = param != null ? param.InnerText : string.Empty;
+            if (string.IsNullOrEmpty(value))
             {
                 WriteEntry(
-                    String.Format("Параметр \"{0}\" не найден в конфигурации.\nБудет использовано значение {1}.",
+                    string.Format("РџР°СЂР°РјРµС‚СЂ \"{0}\" РЅРµ РЅР°Р№РґРµРЅ РІ РєРѕРЅС„РёРіСѓСЂР°С†РёРё.\nР‘СѓРґРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°РЅРѕ Р·РЅР°С‡РµРЅРёРµ {1}.",
                         paramName, defaultValue),
                     EventLogEntryType.Warning);
                 return false;
@@ -448,36 +396,36 @@ namespace DevicesBase
         }
 
         /// <summary>
-        /// Инициализация параметров подключаемого устройства
+        /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РїР°СЂР°РјРµС‚СЂРѕРІ РїРѕРґРєР»СЋС‡Р°РµРјРѕРіРѕ СѓСЃС‚СЂРѕР№СЃС‚РІР°
         /// </summary>
-        /// <param name="deviceProps">Контейнер параметров устройства</param>
-        /// <param name="device">Интерфейс устройства</param>
+        /// <param name="deviceProps">РљРѕРЅС‚РµР№РЅРµСЂ РїР°СЂР°РјРµС‚СЂРѕРІ СѓСЃС‚СЂРѕР№СЃС‚РІР°</param>
+        /// <param name="device">РРЅС‚РµСЂС„РµР№СЃ СѓСЃС‚СЂРѕР№СЃС‚РІР°</param>
         private void InitConnectableDevice(ConnectableDeviceProperties deviceProps,
             ISerialDevice device)
         {
-            // параметры связи
+            // РїР°СЂР°РјРµС‚СЂС‹ СЃРІСЏР·Рё
             device.PortName = deviceProps.Port;
             device.Baud = deviceProps.BaudRate;
         }
 
         /// <summary>
-        /// Инициализация параметров подключаемого устройства
+        /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РїР°СЂР°РјРµС‚СЂРѕРІ РїРѕРґРєР»СЋС‡Р°РµРјРѕРіРѕ СѓСЃС‚СЂРѕР№СЃС‚РІР°
         /// </summary>
-        /// <param name="deviceProps">Контейнер параметров устройства</param>
-        /// <param name="device">Интерфейс устройства</param>
+        /// <param name="deviceProps">РљРѕРЅС‚РµР№РЅРµСЂ РїР°СЂР°РјРµС‚СЂРѕРІ СѓСЃС‚СЂРѕР№СЃС‚РІР°</param>
+        /// <param name="device">РРЅС‚РµСЂС„РµР№СЃ СѓСЃС‚СЂРѕР№СЃС‚РІР°</param>
         private void InitPrintableDevice(PrintableDeviceProperties deviceProps, 
             IPrintableDevice device)
         {
             InitConnectableDevice(deviceProps, device);
 
-            // прочие
+            // РїСЂРѕС‡РёРµ
             device.PrinterInfo.TapeWidth = deviceProps.TapeWidth;
             device.PrinterInfo.TopMargin = deviceProps.TopMargin;
             device.PrinterInfo.SlipFormLength = deviceProps.SlipHeight;
             device.PrinterInfo.Kind = deviceProps.PaperType;
             device.PrinterInfo.DsrFlowControl = deviceProps.DtrEnabled;
 
-            // заголовок и подвал чека
+            // Р·Р°РіРѕР»РѕРІРѕРє Рё РїРѕРґРІР°Р» С‡РµРєР°
             device.PrintFooter = deviceProps.PrintFooter;
             if (device.PrintFooter)
                 device.DocumentFooter = deviceProps.Footer;
@@ -496,98 +444,79 @@ namespace DevicesBase
         }
 
         /// <summary>
-        /// Делегат для инициализации параметров устройства определенного типа
+        /// РЎРѕР·РґР°РЅРёРµ СЃСЃС‹Р»РѕРє РґР»СЏ РІСЃРµС… СѓСЃС‚СЂРѕР№СЃС‚РІ Р·Р°РґР°РЅРЅРѕРіРѕ С‚РёРїР°
         /// </summary>
-        /// <typeparam name="TProps">Тип контейнера параметров</typeparam>
-        /// <typeparam name="TIntf">Тип интерфейса устройства</typeparam>
-        /// <param name="deviceProps">Контейнер параметров</param>
-        /// <param name="device">Интерфейс устройства</param>
-        private delegate void InitDevice<TProps, TIntf>(TProps deviceProps, TIntf device)
-            where TProps : BaseDeviceProperties
-            where TIntf : IDevice;
-
-        /// <summary>
-        /// Создание ссылок для всех устройств заданного типа
-        /// </summary>
-        /// <typeparam name="TProps">Тип контейнера параметров</typeparam>
-        /// <typeparam name="TIntf">Тип интерфейса устройства</typeparam>
-        /// <param name="propsList">Список контейнеров параметров</param>
-        /// <param name="attrFilter">Фильтр атрибутов реализации интерфейса устройства</param>
-        /// <param name="initDeviceCallback">Делегат для инициализации заданного типа устройств</param>
-        /// <param name="category">Категория устройств</param>
-        private void LoadDevices<TProps, TIntf>(IList<TProps> propsList, Type[] attrFilter,
-            InitDevice<TProps, TIntf> initDeviceCallback, String category)
+        /// <typeparam name="TProps">РўРёРї РєРѕРЅС‚РµР№РЅРµСЂР° РїР°СЂР°РјРµС‚СЂРѕРІ</typeparam>
+        /// <typeparam name="TIntf">РўРёРї РёРЅС‚РµСЂС„РµР№СЃР° СѓСЃС‚СЂРѕР№СЃС‚РІР°</typeparam>
+        /// <param name="propsList">РЎРїРёСЃРѕРє РєРѕРЅС‚РµР№РЅРµСЂРѕРІ РїР°СЂР°РјРµС‚СЂРѕРІ</param>
+        /// <param name="attrFilter">Р¤РёР»СЊС‚СЂ Р°С‚СЂРёР±СѓС‚РѕРІ СЂРµР°Р»РёР·Р°С†РёРё РёРЅС‚РµСЂС„РµР№СЃР° СѓСЃС‚СЂРѕР№СЃС‚РІР°</param>
+        /// <param name="initDeviceCallback">Р”РµР»РµРіР°С‚ РґР»СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё Р·Р°РґР°РЅРЅРѕРіРѕ С‚РёРїР° СѓСЃС‚СЂРѕР№СЃС‚РІ</param>
+        /// <param name="category">РљР°С‚РµРіРѕСЂРёСЏ СѓСЃС‚СЂРѕР№СЃС‚РІ</param>
+        private void LoadDevices<TProps, TIntf>(IEnumerable<TProps> propsList, IEnumerable<Type> attrFilter,
+            Action<TProps, TIntf> initDeviceCallback, string category)
             where TProps : BaseDeviceProperties
             where TIntf : IDevice
         {
-            // если список не содержит ни одного контейнера параметров устройства
-            if (propsList.Count == 0)
+            // РµСЃР»Рё СЃРїРёСЃРѕРє РЅРµ СЃРѕРґРµСЂР¶РёС‚ РЅРё РѕРґРЅРѕРіРѕ РєРѕРЅС‚РµР№РЅРµСЂР° РїР°СЂР°РјРµС‚СЂРѕРІ СѓСЃС‚СЂРѕР№СЃС‚РІР°
+            if (!propsList.Any())
                 return;
 
-            // просматриваем список контейнеров
+            // РїСЂРѕСЃРјР°С‚СЂРёРІР°РµРј СЃРїРёСЃРѕРє РєРѕРЅС‚РµР№РЅРµСЂРѕРІ
             foreach (TProps deviceProps in propsList)
             {
-                // поиск типа-реализации драйвера
-                Type t = FindDeviceType(deviceProps.DeviceType, attrFilter);
+                // РїРѕРёСЃРє С‚РёРїР°-СЂРµР°Р»РёР·Р°С†РёРё РґСЂР°Р№РІРµСЂР°
+                var deviceTypeHelper = deviceTypes.Contains(deviceProps.DeviceType) ?
+                    deviceTypes[deviceProps.DeviceType].FirstOrDefault(helper => attrFilter.Contains(helper.DeviceAttributeType)) : null;
 
-                if (t != null)
+                if (deviceTypeHelper != null)
                 {
-                    // реализация найдена
-                    // создаем экземпляр устройства
-                    TIntf device = (TIntf)Activator.CreateInstance(t);
+                    // СЂРµР°Р»РёР·Р°С†РёСЏ РЅР°Р№РґРµРЅР°
+                    // СЃРѕР·РґР°РµРј СЌРєР·РµРјРїР»СЏСЂ СѓСЃС‚СЂРѕР№СЃС‚РІР°
+                    TIntf device = (TIntf)Activator.CreateInstance(deviceTypeHelper.DeviceType);
 
-                    // задаем общие для всех устройств параметры
+                    // Р·Р°РґР°РµРј РѕР±С‰РёРµ РґР»СЏ РІСЃРµС… СѓСЃС‚СЂРѕР№СЃС‚РІ РїР°СЂР°РјРµС‚СЂС‹
                     device.Logger = this;
                     device.DeviceId = deviceProps.DeviceId;
 
-                    // если устройство унаследовано от CustomDevice
+                    // РµСЃР»Рё СѓСЃС‚СЂРѕР№СЃС‚РІРѕ СѓРЅР°СЃР»РµРґРѕРІР°РЅРѕ РѕС‚ CustomDevice
                     if (device is CustomDevice)
                     {
-                        // инициализируем пул последовательных портов
+                        // РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РїСѓР» РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅС‹С… РїРѕСЂС‚РѕРІ
                         (device as CustomDevice).SerialPortsPool = this;
                     }
 
-                    // если требуется более детальная инициализация
-                    if (initDeviceCallback != null)
-                        // вызываем ее
-                        initDeviceCallback(deviceProps, device);
+                    // РµСЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ Р±РѕР»РµРµ РґРµС‚Р°Р»СЊРЅР°СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ, РІС‹Р·С‹РІР°РµРј РµРµ
+                    initDeviceCallback?.Invoke(deviceProps, device);
 
-                    // добавляем устройство во внутренюю хэш-таблицу
+                    // РґРѕР±Р°РІР»СЏРµРј СѓСЃС‚СЂРѕР№СЃС‚РІРѕ РІРѕ РІРЅСѓС‚СЂРµРЅСЋСЋ С…СЌС€-С‚Р°Р±Р»РёС†Сѓ
                     devicesTable.Add(device.DeviceId, new DeviceHelper(device));
                 }
                 else
                 {
-                    // реализация не найдена
-                    String s = String.Format(
-                        driverNotFoundMessage,
-                        category,
-                        deviceProps.DeviceId,
-                        deviceProps.DeviceType);
-
-                    // протоколируем сообщение
-                    WriteEntry(s, EventLogEntryType.Warning);
+                    // СЂРµР°Р»РёР·Р°С†РёСЏ РЅРµ РЅР°Р№РґРµРЅР°, РїСЂРѕС‚РѕРєРѕР»РёСЂСѓРµРј
+                    WriteEntry(string.Format(driverNotFoundMessage, category, deviceProps.DeviceId, deviceProps.DeviceType), EventLogEntryType.Warning);
                 }
             }
         }
 
         /// <summary>
-        /// Инициализация SMS-клиента
+        /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ SMS-РєР»РёРµРЅС‚Р°
         /// </summary>
-        /// <param name="props">Свойства</param>
-        /// <param name="device">Интерфейс SMS-клиента</param>
+        /// <param name="props">РЎРІРѕР№СЃС‚РІР°</param>
+        /// <param name="device">РРЅС‚РµСЂС„РµР№СЃ SMS-РєР»РёРµРЅС‚Р°</param>
         void InitSMSClient(SMSClientProperties props, ISMSClient device)
         {
-            foreach (KeyValuePair<String, String> kvp in props.Settings)
+            foreach (KeyValuePair<string, string> kvp in props.Settings)
             {
                 device.SetConnectivityParam(kvp.Key, kvp.Value);
             }
         }
 
         /// <summary>
-        /// Инициализация считывателя
+        /// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃС‡РёС‚С‹РІР°С‚РµР»СЏ
         /// </summary>
-        /// <param name="props">Свойства</param>
-        /// <param name="device">Интерфейс считывателя</param>
+        /// <param name="props">РЎРІРѕР№СЃС‚РІР°</param>
+        /// <param name="device">РРЅС‚РµСЂС„РµР№СЃ СЃС‡РёС‚С‹РІР°С‚РµР»СЏ</param>
         void InitGenericReader(ReaderDeviceProperties props, IGenericReader device)
         {
             InitConnectableDevice(props, device);
@@ -604,90 +533,91 @@ namespace DevicesBase
         }
 
         /// <summary>
-        /// Загрузка конфигурации диспетчера устройств
+        /// Р—Р°РіСЂСѓР·РєР° РєРѕРЅС„РёРіСѓСЂР°С†РёРё РґРёСЃРїРµС‚С‡РµСЂР° СѓСЃС‚СЂРѕР№СЃС‚РІ
         /// </summary>
-        /// <param name="configFileName">Имя файла конфигурации</param>
-        private void LoadDevices(String configFileName)
+        /// <param name="configFileName">РРјСЏ С„Р°Р№Р»Р° РєРѕРЅС„РёРіСѓСЂР°С†РёРё</param>
+        private void LoadDevices(string configFileName)
         {
-            // загрузка конфигурации
+            // Р·Р°РіСЂСѓР·РєР° РєРѕРЅС„РёРіСѓСЂР°С†РёРё
             _props = DevmanProperties.Load(configFileName);
 
             if (_props.DebugInfo)
             {
-                // регистрируем трэкер
+                // СЂРµРіРёСЃС‚СЂРёСЂСѓРµРј С‚СЂСЌРєРµСЂ
                 _tracker = new DeviceManagerTrackingHandler(_eventLink, _props.DebugInfo);
             }
 
-            // проверка версии конфигурации
-            if (String.Compare(_props.Version, "1.0", true) != 0)
-                throw new DeviceManagerConfigException(String.Format(
-                    "Версия конфигурации {0} не поддерживается", _props.Version));
+            // РїСЂРѕРІРµСЂРєР° РІРµСЂСЃРёРё РєРѕРЅС„РёРіСѓСЂР°С†РёРё
+            if (string.Compare(_props.Version, "1.0", true) != 0)
+                throw new DeviceManagerConfigException(string.Format(
+                    "Р’РµСЂСЃРёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРё {0} РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ", _props.Version));
 
-            // устанавливаем фильтр для поиска в таблице типов
-            // это позволит создавать экземпляры устройств, чья реализация
-            // помечена одним и только одним из перечисленных в фильтре атрибутов
-            Type[] typeFilter = new Type[] { typeof(PrintableDeviceAttribute), 
-                    typeof(FiscalDeviceAttribute) };
+            // СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј С„РёР»СЊС‚СЂ РґР»СЏ РїРѕРёСЃРєР° РІ С‚Р°Р±Р»РёС†Рµ С‚РёРїРѕРІ
+            // СЌС‚Рѕ РїРѕР·РІРѕР»РёС‚ СЃРѕР·РґР°РІР°С‚СЊ СЌРєР·РµРјРїР»СЏСЂС‹ СѓСЃС‚СЂРѕР№СЃС‚РІ, С‡СЊСЏ СЂРµР°Р»РёР·Р°С†РёСЏ
+            // РїРѕРјРµС‡РµРЅР° РѕРґРЅРёРј Рё С‚РѕР»СЊРєРѕ РѕРґРЅРёРј РёР· РїРµСЂРµС‡РёСЃР»РµРЅРЅС‹С… РІ С„РёР»СЊС‚СЂРµ Р°С‚СЂРёР±СѓС‚РѕРІ
+            var typeFilter = new[] 
+            {
+                typeof(PrintableDeviceAttribute), 
+                typeof(FiscalDeviceAttribute)
+            };
 
-            // создание ссылок на интерфейсы печатающих устройств
-            LoadDevices<PrintableDeviceProperties, IPrintableDevice>(
-                _props.PrintableDevices, typeFilter, InitPrintableDevice, 
-                "Чековые принтеры");
+            // СЃРѕР·РґР°РЅРёРµ СЃСЃС‹Р»РѕРє РЅР° РёРЅС‚РµСЂС„РµР№СЃС‹ РїРµС‡Р°С‚Р°СЋС‰РёС… СѓСЃС‚СЂРѕР№СЃС‚РІ
+            LoadDevices<PrintableDeviceProperties, IPrintableDevice>(_props.PrintableDevices, typeFilter, InitPrintableDevice, 
+                "Р§РµРєРѕРІС‹Рµ РїСЂРёРЅС‚РµСЂС‹");
 
-            // создание ссылок на интерфейсы модулей управления бильярдом
-            LoadDevices<BilliardManagerProperties, IBilliardsManagerDevice>(
-                _props.BillardDevices,
-                new Type[] { typeof(BilliardsManagerAttribute) },
+            // СЃРѕР·РґР°РЅРёРµ СЃСЃС‹Р»РѕРє РЅР° РёРЅС‚РµСЂС„РµР№СЃС‹ РјРѕРґСѓР»РµР№ СѓРїСЂР°РІР»РµРЅРёСЏ Р±РёР»СЊСЏСЂРґРѕРј
+            LoadDevices<BilliardManagerProperties, IBilliardsManagerDevice>(_props.BillardDevices, 
+                new[] { typeof(BilliardsManagerAttribute) },
                 InitConnectableDevice,
-                "Бильярд");
+                "Р‘РёР»СЊСЏСЂРґ");
 
-            // создание ссылок на интерфейсы весов
+            // СЃРѕР·РґР°РЅРёРµ СЃСЃС‹Р»РѕРє РЅР° РёРЅС‚РµСЂС„РµР№СЃС‹ РІРµСЃРѕРІ
             LoadDevices<ScalesDeviceProperties, IScaleDevice>(
                 _props.ScalesDevices,
                 new Type[] { typeof(ScaleAttribute) },
                 delegate(ScalesDeviceProperties deviceProps, IScaleDevice device)
                 {
-                    // строка подключения к весам
+                    // СЃС‚СЂРѕРєР° РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє РІРµСЃР°Рј
                     device.ConnectionString = deviceProps.ConnectionString;
                 },
-                "Весы");
+                "Р’РµСЃС‹");
 
-            // создание ссылок на интерфейсы дисплеев покупателей
+            // СЃРѕР·РґР°РЅРёРµ СЃСЃС‹Р»РѕРє РЅР° РёРЅС‚РµСЂС„РµР№СЃС‹ РґРёСЃРїР»РµРµРІ РїРѕРєСѓРїР°С‚РµР»РµР№
             LoadDevices<DisplayDeviceProperties, ICustomerDisplay>(
                 _props.DisplayDevices,
                 new Type[] { typeof(CustomerDisplayAttribute) },
                 InitConnectableDevice,
-                "Дисплеи покупателя");
+                "Р”РёСЃРїР»РµРё РїРѕРєСѓРїР°С‚РµР»СЏ");
 
-            // создание ссылок на интерфейсы SMS-клиентов
+            // СЃРѕР·РґР°РЅРёРµ СЃСЃС‹Р»РѕРє РЅР° РёРЅС‚РµСЂС„РµР№СЃС‹ SMS-РєР»РёРµРЅС‚РѕРІ
             LoadDevices<SMSClientProperties, ISMSClient>(
                 _props.SMSClientDevices,
                 new Type[] { typeof(SMSClientAttribute) },
                 InitSMSClient,
-                "SMS-клиенты");
+                "SMS-РєР»РёРµРЅС‚С‹");
 
-            // считыватели, сканеры штрихкода
+            // СЃС‡РёС‚С‹РІР°С‚РµР»Рё, СЃРєР°РЅРµСЂС‹ С€С‚СЂРёС…РєРѕРґР°
             LoadDevices<ReaderDeviceProperties, IGenericReader>(
                 _props.ReaderDevices,
                 new Type[] { typeof(GenericReaderAttribute) },
                 InitGenericReader,
-                "Считыватели");
+                "РЎС‡РёС‚С‹РІР°С‚РµР»Рё");
 
-            // турникеты
+            // С‚СѓСЂРЅРёРєРµС‚С‹
             LoadDevices<TurnstileProperties, ITurnstileDevice>(
                 _props.TurnstileDevices,
                 new Type[] { typeof(TurnstileDeviceAttribute) },
                 InitTurnstile,
-                "Турникеты");
+                "РўСѓСЂРЅРёРєРµС‚С‹");
         }
 
         /// <summary>
-        /// Обработчик события, вызываемый при ативации или деактивации устройств
+        /// РћР±СЂР°Р±РѕС‚С‡РёРє СЃРѕР±С‹С‚РёСЏ, РІС‹Р·С‹РІР°РµРјС‹Р№ РїСЂРё Р°С‚РёРІР°С†РёРё РёР»Рё РґРµР°РєС‚РёРІР°С†РёРё СѓСЃС‚СЂРѕР№СЃС‚РІ
         /// </summary>
         public event EventHandler<DeviceStatusEventArgs> OnDeviceStatusChange;
 
         /// <summary>
-        /// Активация всех устройств
+        /// РђРєС‚РёРІР°С†РёСЏ РІСЃРµС… СѓСЃС‚СЂРѕР№СЃС‚РІ
         /// </summary>
         public void ActivateDevices()
         {
@@ -695,7 +625,7 @@ namespace DevicesBase
         }
 
         /// <summary>
-        /// Деактивация всех устройств
+        /// Р”РµР°РєС‚РёРІР°С†РёСЏ РІСЃРµС… СѓСЃС‚СЂРѕР№СЃС‚РІ
         /// </summary>
         public void DeactivateDevices()
         {
@@ -703,41 +633,41 @@ namespace DevicesBase
         }
 
         /// <summary>
-        /// Изменение состояния устройств
+        /// РР·РјРµРЅРµРЅРёРµ СЃРѕСЃС‚РѕСЏРЅРёСЏ СѓСЃС‚СЂРѕР№СЃС‚РІ
         /// </summary>
-        /// <param name="activate">Аткивировать или деактивировать</param>
+        /// <param name="activate">РђС‚РєРёРІРёСЂРѕРІР°С‚СЊ РёР»Рё РґРµР°РєС‚РёРІРёСЂРѕРІР°С‚СЊ</param>
         private void ChangeDevicesStatus(bool activate)
         {
             foreach (DeviceHelper helper in devicesTable.Values)
             {
                 try
                 {
-                    // меняем статус устройства
+                    // РјРµРЅСЏРµРј СЃС‚Р°С‚СѓСЃ СѓСЃС‚СЂРѕР№СЃС‚РІР°
                     helper.Device.Active = activate;
                     if (activate)
                     {
-                        // если происходит активация устройства, то допустимыми являются
-                        // либо успешная активация, либо активация с ошибкой,
-                        // специфичной для протокола обмена с устройством
+                        // РµСЃР»Рё РїСЂРѕРёСЃС…РѕРґРёС‚ Р°РєС‚РёРІР°С†РёСЏ СѓСЃС‚СЂРѕР№СЃС‚РІР°, С‚Рѕ РґРѕРїСѓСЃС‚РёРјС‹РјРё СЏРІР»СЏСЋС‚СЃСЏ
+                        // Р»РёР±Рѕ СѓСЃРїРµС€РЅР°СЏ Р°РєС‚РёРІР°С†РёСЏ, Р»РёР±Рѕ Р°РєС‚РёРІР°С†РёСЏ СЃ РѕС€РёР±РєРѕР№,
+                        // СЃРїРµС†РёС„РёС‡РЅРѕР№ РґР»СЏ РїСЂРѕС‚РѕРєРѕР»Р° РѕР±РјРµРЅР° СЃ СѓСЃС‚СЂРѕР№СЃС‚РІРѕРј
                         if (helper.Device.ErrorCode.Value != GeneralError.Success &&
                             helper.Device.ErrorCode.Value != GeneralError.Specific)
                         {
-                            // меняем статус на неактивный
+                            // РјРµРЅСЏРµРј СЃС‚Р°С‚СѓСЃ РЅР° РЅРµР°РєС‚РёРІРЅС‹Р№
                             if (helper.Device.Active)
                                 helper.Device.Active = false;
-                            // переходим к следующему устройству
+                            // РїРµСЂРµС…РѕРґРёРј Рє СЃР»РµРґСѓСЋС‰РµРјСѓ СѓСЃС‚СЂРѕР№СЃС‚РІСѓ
                             continue;
                         }
                     }
 
-                    // вызов делегата для протоколирования изменения статуса устройства
+                    // РІС‹Р·РѕРІ РґРµР»РµРіР°С‚Р° РґР»СЏ РїСЂРѕС‚РѕРєРѕР»РёСЂРѕРІР°РЅРёСЏ РёР·РјРµРЅРµРЅРёСЏ СЃС‚Р°С‚СѓСЃР° СѓСЃС‚СЂРѕР№СЃС‚РІР°
                     if (OnDeviceStatusChange != null)
                         OnDeviceStatusChange(this, new DeviceStatusEventArgs(helper.Device.DeviceId,
                             activate, helper.Device.ErrorCode.Succeeded));
                     else
                     {
-                        // протоколируем в лог
-                        String statusMessage = String.Format(deviceStatusSucceeded,
+                        // РїСЂРѕС‚РѕРєРѕР»РёСЂСѓРµРј РІ Р»РѕРі
+                        string statusMessage = string.Format(deviceStatusSucceeded,
                                 helper.Device.DeviceId, 
                                 helper.Device.Active ? deviceStatusActive : deviceStatusInactive);
 
@@ -746,18 +676,18 @@ namespace DevicesBase
                 }
                 catch (Exception e)
                 {
-                    // изменение статуса прошло с ошибкой
+                    // РёР·РјРµРЅРµРЅРёРµ СЃС‚Р°С‚СѓСЃР° РїСЂРѕС€Р»Рѕ СЃ РѕС€РёР±РєРѕР№
                     if (OnDeviceStatusChange != null)
                         OnDeviceStatusChange(this, new DeviceStatusEventArgs(helper.Device.DeviceId,
                             activate, false));
                     else
                     {
-                        String statusMessage = String.Format(deviceStatusFailed,
+                        string statusMessage = string.Format(deviceStatusFailed,
                                     helper.Device.DeviceId,
                                     helper.Device.Active ? deviceStatusActive : deviceStatusInactive,
                                     e.Message);
 
-                        // протоколируем в лог
+                        // РїСЂРѕС‚РѕРєРѕР»РёСЂСѓРµРј РІ Р»РѕРі
                         WriteEntry(statusMessage, EventLogEntryType.Error);
                     }
                 }
@@ -765,10 +695,10 @@ namespace DevicesBase
         }
 
         /// <summary>
-        /// Получить монопольный доступ к устройству
+        /// РџРѕР»СѓС‡РёС‚СЊ РјРѕРЅРѕРїРѕР»СЊРЅС‹Р№ РґРѕСЃС‚СѓРї Рє СѓСЃС‚СЂРѕР№СЃС‚РІСѓ
         /// </summary>
-        /// <param name="sessionID">Идентификатор сессии</param>
-        /// <param name="deviceID">Идентификатор устройства</param>
+        /// <param name="sessionID">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЃРµСЃСЃРёРё</param>
+        /// <param name="deviceID">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СѓСЃС‚СЂРѕР№СЃС‚РІР°</param>
         private bool PerformCapture(string sessionID, string deviceID)
         {
             lock (dataLocker)
@@ -776,27 +706,27 @@ namespace DevicesBase
                 DeviceHelper helper = GetDeviceByID(deviceID);
                 if (helper.Captured)
                 {
-                    // устройство захвачено
-                    // проверим, жива ли сессия, захватившая устройство
+                    // СѓСЃС‚СЂРѕР№СЃС‚РІРѕ Р·Р°С…РІР°С‡РµРЅРѕ
+                    // РїСЂРѕРІРµСЂРёРј, Р¶РёРІР° Р»Рё СЃРµСЃСЃРёСЏ, Р·Р°С…РІР°С‚РёРІС€Р°СЏ СѓСЃС‚СЂРѕР№СЃС‚РІРѕ
                     if (SessionAlive(helper.SessionID))
                     {
-                        // да, жива, сравним идентификаторы
+                        // РґР°, Р¶РёРІР°, СЃСЂР°РІРЅРёРј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹
                         return (helper.SessionID == sessionID);
                     }
                     else
                     {
-                        // сессия метрвая, удаляем ее
+                        // СЃРµСЃСЃРёСЏ РјРµС‚СЂРІР°СЏ, СѓРґР°Р»СЏРµРј РµРµ
                         if (sessionsTable.ContainsKey(helper.SessionID))
                             sessionsTable.Remove(helper.SessionID);
 
-                        // освобождаем устройство
+                        // РѕСЃРІРѕР±РѕР¶РґР°РµРј СѓСЃС‚СЂРѕР№СЃС‚РІРѕ
                         helper.Release();
                     }
                 }
 
-                // устройство свободно, проверим идентификатор новой сессии
+                // СѓСЃС‚СЂРѕР№СЃС‚РІРѕ СЃРІРѕР±РѕРґРЅРѕ, РїСЂРѕРІРµСЂРёРј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РЅРѕРІРѕР№ СЃРµСЃСЃРёРё
                 ValidateSession(sessionID, true);
-                // захват устройства
+                // Р·Р°С…РІР°С‚ СѓСЃС‚СЂРѕР№СЃС‚РІР°
                 helper.SessionID = sessionID;
                 return true;
             }
@@ -804,29 +734,29 @@ namespace DevicesBase
 
         #endregion
 
-        #region Реализация интерфейса IDeviceManager
+        #region Р РµР°Р»РёР·Р°С†РёСЏ РёРЅС‚РµСЂС„РµР№СЃР° IDeviceManager
 
-        #region Работа с устройствами
+        #region Р Р°Р±РѕС‚Р° СЃ СѓСЃС‚СЂРѕР№СЃС‚РІР°РјРё
 
         /// <summary>
-        /// Получить монопольный доступ к устройству
+        /// РџРѕР»СѓС‡РёС‚СЊ РјРѕРЅРѕРїРѕР»СЊРЅС‹Р№ РґРѕСЃС‚СѓРї Рє СѓСЃС‚СЂРѕР№СЃС‚РІСѓ
         /// </summary>
-        /// <param name="sessionID">Идентификатор сессии</param>
-        /// <param name="deviceID">Идентификатор устройства</param>
-        /// <param name="waitTimeout">Таймаут ожидания захвата устройства, секунды</param>
+        /// <param name="sessionID">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЃРµСЃСЃРёРё</param>
+        /// <param name="deviceID">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СѓСЃС‚СЂРѕР№СЃС‚РІР°</param>
+        /// <param name="waitTimeout">РўР°Р№РјР°СѓС‚ РѕР¶РёРґР°РЅРёСЏ Р·Р°С…РІР°С‚Р° СѓСЃС‚СЂРѕР№СЃС‚РІР°, СЃРµРєСѓРЅРґС‹</param>
         public bool Capture(string sessionID, string deviceID, Int32 waitTimeout)
         {
             bool isCaptured;
-            // засекаем время
+            // Р·Р°СЃРµРєР°РµРј РІСЂРµРјСЏ
             DateTime fixedTime = DateTime.Now;
 
             do
             {
-                // пытаемся захватить устройство
+                // РїС‹С‚Р°РµРјСЃСЏ Р·Р°С…РІР°С‚РёС‚СЊ СѓСЃС‚СЂРѕР№СЃС‚РІРѕ
                 isCaptured = PerformCapture(sessionID, deviceID);
-                // если устройство не захвачено и задано время ожидания
+                // РµСЃР»Рё СѓСЃС‚СЂРѕР№СЃС‚РІРѕ РЅРµ Р·Р°С…РІР°С‡РµРЅРѕ Рё Р·Р°РґР°РЅРѕ РІСЂРµРјСЏ РѕР¶РёРґР°РЅРёСЏ
                 if (!isCaptured && waitTimeout != WaitConstant.None)
-                    // приостанавливаемся перед следующей попыткой
+                    // РїСЂРёРѕСЃС‚Р°РЅР°РІР»РёРІР°РµРјСЃСЏ РїРµСЂРµРґ СЃР»РµРґСѓСЋС‰РµР№ РїРѕРїС‹С‚РєРѕР№
                     System.Threading.Thread.Sleep(0);
             }
             while (!isCaptured && DateTime.Now.Subtract(fixedTime).Seconds < waitTimeout);
@@ -834,10 +764,10 @@ namespace DevicesBase
         }
 
         /// <summary>
-        /// Освободить устройство
+        /// РћСЃРІРѕР±РѕРґРёС‚СЊ СѓСЃС‚СЂРѕР№СЃС‚РІРѕ
         /// </summary>
-        /// <param name="sessionID">Идентификатор сессии</param>
-        /// <param name="deviceID">Идентификатор устройства</param>
+        /// <param name="sessionID">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЃРµСЃСЃРёРё</param>
+        /// <param name="deviceID">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СѓСЃС‚СЂРѕР№СЃС‚РІР°</param>
         public bool Release(string sessionID, string deviceID)
         {
             lock (dataLocker)
@@ -846,21 +776,21 @@ namespace DevicesBase
                 DeviceHelper helper = GetDeviceByID(deviceID);
                 if (!helper.Captured || helper.SessionID == sessionID)
                 {
-                    // устройство свободно или захвачено этим клиентом
+                    // СѓСЃС‚СЂРѕР№СЃС‚РІРѕ СЃРІРѕР±РѕРґРЅРѕ РёР»Рё Р·Р°С…РІР°С‡РµРЅРѕ СЌС‚РёРј РєР»РёРµРЅС‚РѕРј
                     helper.Release();
                     return true;
                 }
 
-                // устройство захвачено другим клиентом
+                // СѓСЃС‚СЂРѕР№СЃС‚РІРѕ Р·Р°С…РІР°С‡РµРЅРѕ РґСЂСѓРіРёРј РєР»РёРµРЅС‚РѕРј
                 return false;
             }
         }
 
         /// <summary>
-        /// Базовый интерфейс устройства
+        /// Р‘Р°Р·РѕРІС‹Р№ РёРЅС‚РµСЂС„РµР№СЃ СѓСЃС‚СЂРѕР№СЃС‚РІР°
         /// </summary>
-        /// <param name="sessionID">Идентификатор сессии</param>
-        /// <param name="deviceID">Идентификатор устройства</param>
+        /// <param name="sessionID">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЃРµСЃСЃРёРё</param>
+        /// <param name="deviceID">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СѓСЃС‚СЂРѕР№СЃС‚РІР°</param>
         public IDevice GetDevice(string sessionID, string deviceID)
         {
             lock (dataLocker)
@@ -869,58 +799,58 @@ namespace DevicesBase
                 DeviceHelper helper = GetDeviceByID(deviceID);
                 if (helper.Captured && helper.SessionID != sessionID)
                     throw new DeviceManagerException(
-                        String.Format("Ошибка доступа к устройству {0}. Устройство захвачено клиентом {1}",
+                        string.Format("РћС€РёР±РєР° РґРѕСЃС‚СѓРїР° Рє СѓСЃС‚СЂРѕР№СЃС‚РІСѓ {0}. РЈСЃС‚СЂРѕР№СЃС‚РІРѕ Р·Р°С…РІР°С‡РµРЅРѕ РєР»РёРµРЅС‚РѕРј {1}",
                         deviceID, helper.SessionID));
 
-                // возвращаем ссылку на базовый интерфейс устройства
+                // РІРѕР·РІСЂР°С‰Р°РµРј СЃСЃС‹Р»РєСѓ РЅР° Р±Р°Р·РѕРІС‹Р№ РёРЅС‚РµСЂС„РµР№СЃ СѓСЃС‚СЂРѕР№СЃС‚РІР°
                 return helper.Device;
             }
         }
 
         #endregion
 
-        #region Работа с клиентскими сессиями
+        #region Р Р°Р±РѕС‚Р° СЃ РєР»РёРµРЅС‚СЃРєРёРјРё СЃРµСЃСЃРёСЏРјРё
 
         /// <summary>
-        /// Регистрация клиентской сессии в диспетчере устройств
+        /// Р РµРіРёСЃС‚СЂР°С†РёСЏ РєР»РёРµРЅС‚СЃРєРѕР№ СЃРµСЃСЃРёРё РІ РґРёСЃРїРµС‚С‡РµСЂРµ СѓСЃС‚СЂРѕР№СЃС‚РІ
         /// </summary>
-        /// <param name="sessionID">Идентификатор сессии</param>
-        /// <returns>true, если сессия успешно зарегистрирована</returns>
+        /// <param name="sessionID">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЃРµСЃСЃРёРё</param>
+        /// <returns>true, РµСЃР»Рё СЃРµСЃСЃРёСЏ СѓСЃРїРµС€РЅРѕ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅР°</returns>
         public void Login(out string sessionID)
         {
             lock (dataLocker)
             {
                 if (_props.MaxSessionsCount > 0 && sessionsTable.Count >= _props.MaxSessionsCount)
                     throw new DeviceManagerException(
-                        String.Format("Достигнуто максимальное количество клиентских сессий - {0}.",
+                        string.Format("Р”РѕСЃС‚РёРіРЅСѓС‚Рѕ РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РєР»РёРµРЅС‚СЃРєРёС… СЃРµСЃСЃРёР№ - {0}.",
                         _props.MaxSessionsCount));
 
-                // создаем новый идентификатор сессии
+                // СЃРѕР·РґР°РµРј РЅРѕРІС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЃРµСЃСЃРёРё
                 sessionID = Guid.NewGuid().ToString();
-                // регистрируем ее
+                // СЂРµРіРёСЃС‚СЂРёСЂСѓРµРј РµРµ
                 sessionsTable.Add(sessionID, new SessionHelper(sessionID, _props.SessionTimeout));
             }
         }
 
         /// <summary>
-        /// Завершение клиентской сессии в диспетчере устройств
+        /// Р—Р°РІРµСЂС€РµРЅРёРµ РєР»РёРµРЅС‚СЃРєРѕР№ СЃРµСЃСЃРёРё РІ РґРёСЃРїРµС‚С‡РµСЂРµ СѓСЃС‚СЂРѕР№СЃС‚РІ
         /// </summary>
-        /// <param name="sessionID">Идентификатор сессии</param>
+        /// <param name="sessionID">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СЃРµСЃСЃРёРё</param>
         public void Logout(string sessionID)
         {
             lock (dataLocker)
             {
-                // проверяем корректность идентификатора сессии
+                // РїСЂРѕРІРµСЂСЏРµРј РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚СЊ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР° СЃРµСЃСЃРёРё
                 ValidateSession(sessionID, false);
                 
-                // освобождаем все устройства, захваченные этой сессией
+                // РѕСЃРІРѕР±РѕР¶РґР°РµРј РІСЃРµ СѓСЃС‚СЂРѕР№СЃС‚РІР°, Р·Р°С…РІР°С‡РµРЅРЅС‹Рµ СЌС‚РѕР№ СЃРµСЃСЃРёРµР№
                 foreach (DeviceHelper helper in devicesTable.Values)
                 {
                     if (helper.SessionID == sessionID)
                         helper.Release();
                 }
                 
-                // удаляем сессию
+                // СѓРґР°Р»СЏРµРј СЃРµСЃСЃРёСЋ
                 if (sessionsTable.ContainsKey(sessionID))
                     sessionsTable.Remove(sessionID);
             }
@@ -930,17 +860,17 @@ namespace DevicesBase
 
         #endregion
 
-        #region Реализация интерфейса ILogger
+        #region Р РµР°Р»РёР·Р°С†РёСЏ РёРЅС‚РµСЂС„РµР№СЃР° ILogger
 
         /// <summary>
-        /// Добавляет запись в протокол работы приложения
+        /// Р”РѕР±Р°РІР»СЏРµС‚ Р·Р°РїРёСЃСЊ РІ РїСЂРѕС‚РѕРєРѕР» СЂР°Р±РѕС‚С‹ РїСЂРёР»РѕР¶РµРЅРёСЏ
         /// </summary>
-        /// <param name="message">Текст сообщения</param>
-        /// <param name="type">Тип сообщения</param>
-        public void WriteEntry(String message, EventLogEntryType type)
+        /// <param name="message">РўРµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ</param>
+        /// <param name="type">РўРёРї СЃРѕРѕР±С‰РµРЅРёСЏ</param>
+        public void WriteEntry(string message, EventLogEntryType type)
         {
-            // конвертируем тип события
-            // тип EventLogEntryType оставлен для обратной совместимости
+            // РєРѕРЅРІРµСЂС‚РёСЂСѓРµРј С‚РёРї СЃРѕР±С‹С‚РёСЏ
+            // С‚РёРї EventLogEntryType РѕСЃС‚Р°РІР»РµРЅ РґР»СЏ РѕР±СЂР°С‚РЅРѕР№ СЃРѕРІРјРµСЃС‚РёРјРѕСЃС‚Рё
             EventType nativeEventType = EventType.Undefined;
             switch (type)
             {
@@ -959,18 +889,18 @@ namespace DevicesBase
         }
 
         /// <summary>
-        /// Добавляет запись в протокол работы приложения
+        /// Р”РѕР±Р°РІР»СЏРµС‚ Р·Р°РїРёСЃСЊ РІ РїСЂРѕС‚РѕРєРѕР» СЂР°Р±РѕС‚С‹ РїСЂРёР»РѕР¶РµРЅРёСЏ
         /// </summary>
-        /// <param name="message">Текст сообщения</param>
-        /// <param name="type">Тип сообщения</param>
-        /// <param name="sender">Устройство, которое пишет в лог</param>
-        public void WriteEntry(IDevice sender, String message, EventLogEntryType type)
+        /// <param name="message">РўРµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ</param>
+        /// <param name="type">РўРёРї СЃРѕРѕР±С‰РµРЅРёСЏ</param>
+        /// <param name="sender">РЈСЃС‚СЂРѕР№СЃС‚РІРѕ, РєРѕС‚РѕСЂРѕРµ РїРёС€РµС‚ РІ Р»РѕРі</param>
+        public void WriteEntry(IDevice sender, string message, EventLogEntryType type)
         {
-            WriteEntry(String.Format("Устройство [{0}]: {1}", sender.DeviceId, message), type);
+            WriteEntry(string.Format("РЈСЃС‚СЂРѕР№СЃС‚РІРѕ [{0}]: {1}", sender.DeviceId, message), type);
         }
 
         /// <summary>
-        /// Режим отладки
+        /// Р РµР¶РёРј РѕС‚Р»Р°РґРєРё
         /// </summary>
         public Boolean DebugInfo
         {
@@ -978,44 +908,44 @@ namespace DevicesBase
         }
 
         /// <summary>
-        /// Сохранение отладочной информации
+        /// РЎРѕС…СЂР°РЅРµРЅРёРµ РѕС‚Р»Р°РґРѕС‡РЅРѕР№ РёРЅС„РѕСЂРјР°С†РёРё
         /// </summary>
-        /// <param name="sender">Устройство, которому нужно сохранить отладочную информацию</param>
-        /// <param name="info">Отладочная информация</param>
-        public void SaveDebugInfo(IDevice sender, String info)
+        /// <param name="sender">РЈСЃС‚СЂРѕР№СЃС‚РІРѕ, РєРѕС‚РѕСЂРѕРјСѓ РЅСѓР¶РЅРѕ СЃРѕС…СЂР°РЅРёС‚СЊ РѕС‚Р»Р°РґРѕС‡РЅСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ</param>
+        /// <param name="info">РћС‚Р»Р°РґРѕС‡РЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ</param>
+        public void SaveDebugInfo(IDevice sender, string info)
         {
-            // формируем имя файла для хранения отладдочной информации
-            String debugFileName = String.Format("{0}\\{1}.dmp",
+            // С„РѕСЂРјРёСЂСѓРµРј РёРјСЏ С„Р°Р№Р»Р° РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РѕС‚Р»Р°РґРґРѕС‡РЅРѕР№ РёРЅС„РѕСЂРјР°С†РёРё
+            string debugFileName = string.Format("{0}\\{1}.dmp",
                 FileSystemHelper.GetSubDirectory(GetDeviceManagerDebugDirectory(), sender.DeviceId),
                 DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
 
             using (StreamWriter debugWriter = new StreamWriter(debugFileName, false, Encoding.Default))
             {
-                debugWriter.WriteLine(String.Format("Дата и время: {0}",
+                debugWriter.WriteLine(string.Format("Р”Р°С‚Р° Рё РІСЂРµРјСЏ: {0}",
                     DateTime.Now.ToString("yyyy MMM dd, HH:mm:ss")));
-                debugWriter.WriteLine(String.Format("Устройство: {0}", sender.DeviceId));
-                debugWriter.WriteLine(String.Empty);
-                debugWriter.WriteLine("Отладочная информация:");
-                debugWriter.WriteLine(String.Empty);
+                debugWriter.WriteLine(string.Format("РЈСЃС‚СЂРѕР№СЃС‚РІРѕ: {0}", sender.DeviceId));
+                debugWriter.WriteLine(string.Empty);
+                debugWriter.WriteLine("РћС‚Р»Р°РґРѕС‡РЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ:");
+                debugWriter.WriteLine(string.Empty);
                 debugWriter.WriteLine(info);
             }
         }
 
         #endregion
 
-        #region Реализация интерфейса ISerialPortsPool
+        #region Р РµР°Р»РёР·Р°С†РёСЏ РёРЅС‚РµСЂС„РµР№СЃР° ISerialPortsPool
 
         /// <summary>
-        /// Получить доступ к порту из пула
+        /// РџРѕР»СѓС‡РёС‚СЊ РґРѕСЃС‚СѓРї Рє РїРѕСЂС‚Сѓ РёР· РїСѓР»Р°
         /// </summary>
-        /// <param name="deviceId">Идентификатор устройства</param>
-        /// <param name="portName">Имя порта</param>
-        /// <returns>Порт из пула</returns>
-        public EasyCommunicationPort GetPort(String deviceId, String portName)
+        /// <param name="deviceId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СѓСЃС‚СЂРѕР№СЃС‚РІР°</param>
+        /// <param name="portName">РРјСЏ РїРѕСЂС‚Р°</param>
+        /// <returns>РџРѕСЂС‚ РёР· РїСѓР»Р°</returns>
+        public EasyCommunicationPort GetPort(string deviceId, string portName)
         {
             CheckSerialPortName(portName);
             SerialPortsHelper helper = _serialPortsPool[portName];
-            if (String.Compare(helper.DeviceId, deviceId) == 0)
+            if (string.Compare(helper.DeviceId, deviceId) == 0)
                 return helper.Port;
             else
             {
@@ -1025,23 +955,23 @@ namespace DevicesBase
         }
 
         /// <summary>
-        /// Захватить коммуникационный порт
+        /// Р—Р°С…РІР°С‚РёС‚СЊ РєРѕРјРјСѓРЅРёРєР°С†РёРѕРЅРЅС‹Р№ РїРѕСЂС‚
         /// </summary>
-        /// <param name="deviceId">Идентификатор устройства</param>
-        /// <param name="portName">Имя порта</param>
-        /// <param name="waitIfCaptured">Ожидать освобождения порта</param>
-        /// <param name="waitTime">Время, в течение которого ожидать освобождение</param>
-        public EasyCommunicationPort CapturePort(String deviceId, String portName,
+        /// <param name="deviceId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СѓСЃС‚СЂРѕР№СЃС‚РІР°</param>
+        /// <param name="portName">РРјСЏ РїРѕСЂС‚Р°</param>
+        /// <param name="waitIfCaptured">РћР¶РёРґР°С‚СЊ РѕСЃРІРѕР±РѕР¶РґРµРЅРёСЏ РїРѕСЂС‚Р°</param>
+        /// <param name="waitTime">Р’СЂРµРјСЏ, РІ С‚РµС‡РµРЅРёРµ РєРѕС‚РѕСЂРѕРіРѕ РѕР¶РёРґР°С‚СЊ РѕСЃРІРѕР±РѕР¶РґРµРЅРёРµ</param>
+        public EasyCommunicationPort CapturePort(string deviceId, string portName,
             Boolean waitIfCaptured, TimeSpan waitTime)
         {
             CheckSerialPortName(portName);
             SerialPortsHelper helper = _serialPortsPool[portName];
 
-            // попытка захвата порта
+            // РїРѕРїС‹С‚РєР° Р·Р°С…РІР°С‚Р° РїРѕСЂС‚Р°
             TimeSpan timeElapsed = new TimeSpan();
             do
             {
-                if (String.IsNullOrEmpty(helper.DeviceId) || String.Compare(helper.DeviceId, deviceId) == 0)
+                if (string.IsNullOrEmpty(helper.DeviceId) || string.Compare(helper.DeviceId, deviceId) == 0)
                 {
                     lock (_portsLocker)
                     {
@@ -1051,7 +981,7 @@ namespace DevicesBase
                 }
                 else if (waitIfCaptured)
                 {
-                    // ждем освобождения порта
+                    // Р¶РґРµРј РѕСЃРІРѕР±РѕР¶РґРµРЅРёСЏ РїРѕСЂС‚Р°
                     Thread.Sleep(50);
                     TimeSpan ts = new TimeSpan(0, 0, 0, 0, 50);
                     timeElapsed.Add(ts);
@@ -1059,42 +989,42 @@ namespace DevicesBase
             }
             while (waitIfCaptured && (timeElapsed < waitTime));
 
-            // порт занят другим устройством
+            // РїРѕСЂС‚ Р·Р°РЅСЏС‚ РґСЂСѓРіРёРј СѓСЃС‚СЂРѕР№СЃС‚РІРѕРј
             ThrowPortIsBusy(portName, helper.DeviceId);
             return null;
         }
 
         /// <summary>
-        /// Захватить коммуникационный порт. Ожидать захвата порта в течение 
-        /// бесконечного интервала времени
+        /// Р—Р°С…РІР°С‚РёС‚СЊ РєРѕРјРјСѓРЅРёРєР°С†РёРѕРЅРЅС‹Р№ РїРѕСЂС‚. РћР¶РёРґР°С‚СЊ Р·Р°С…РІР°С‚Р° РїРѕСЂС‚Р° РІ С‚РµС‡РµРЅРёРµ 
+        /// Р±РµСЃРєРѕРЅРµС‡РЅРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р° РІСЂРµРјРµРЅРё
         /// </summary>
-        /// <param name="deviceId">Идентификатор устройства</param>
-        /// <param name="portName">Имя порта</param>
-        public EasyCommunicationPort CapturePort(String deviceId, String portName)
+        /// <param name="deviceId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СѓСЃС‚СЂРѕР№СЃС‚РІР°</param>
+        /// <param name="portName">РРјСЏ РїРѕСЂС‚Р°</param>
+        public EasyCommunicationPort CapturePort(string deviceId, string portName)
         {
             return CapturePort(deviceId, portName, true, TimeSpan.MaxValue);
         }
 
         /// <summary>
-        /// Освободить коммуникационный порт
+        /// РћСЃРІРѕР±РѕРґРёС‚СЊ РєРѕРјРјСѓРЅРёРєР°С†РёРѕРЅРЅС‹Р№ РїРѕСЂС‚
         /// </summary>
-        /// <param name="deviceId">Идентификатор устройства</param>
-        /// <param name="portName">Имя порта</param>
-        public void ReleasePort(String deviceId, String portName)
+        /// <param name="deviceId">РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ СѓСЃС‚СЂРѕР№СЃС‚РІР°</param>
+        /// <param name="portName">РРјСЏ РїРѕСЂС‚Р°</param>
+        public void ReleasePort(string deviceId, string portName)
         {
             CheckSerialPortName(portName);
             SerialPortsHelper helper = _serialPortsPool[portName];
 
-            // попытка освобождение порта
-            if (String.IsNullOrEmpty(helper.DeviceId) || String.Compare(helper.DeviceId, deviceId) == 0)
+            // РїРѕРїС‹С‚РєР° РѕСЃРІРѕР±РѕР¶РґРµРЅРёРµ РїРѕСЂС‚Р°
+            if (string.IsNullOrEmpty(helper.DeviceId) || string.Compare(helper.DeviceId, deviceId) == 0)
             {
                 lock (_portsLocker)
                 {
-                    helper.DeviceId = String.Empty;
+                    helper.DeviceId = string.Empty;
                 }
             }
             else
-                // порт занят другим устройством
+                // РїРѕСЂС‚ Р·Р°РЅСЏС‚ РґСЂСѓРіРёРј СѓСЃС‚СЂРѕР№СЃС‚РІРѕРј
                 ThrowPortIsBusy(portName, helper.DeviceId);
         }
 

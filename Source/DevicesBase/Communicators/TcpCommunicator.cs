@@ -10,7 +10,7 @@ namespace DevicesBase.Communicators
     public sealed class TcpCommunicator : CustomCommunicator
     {
         Socket socket;
-        String host;
+        string host;
         Int32 port;
 
         /// <summary>
@@ -18,7 +18,7 @@ namespace DevicesBase.Communicators
         /// </summary>
         /// <param name="host">Имя хоста</param>
         /// <param name="port">Порт</param>
-        public TcpCommunicator(String host, Int32 port) 
+        public TcpCommunicator(string host, Int32 port) 
             : base()
         {
             this.host = host;
@@ -57,7 +57,7 @@ namespace DevicesBase.Communicators
             catch (SocketException e)
             {
                 throw new CommunicationException(
-                    String.Format("Ошибка подключения к хосту {0}:{1}", host, port), e);
+                    string.Format("Ошибка подключения к хосту {0}:{1}", host, port), e);
             }
         }
 
@@ -94,7 +94,7 @@ namespace DevicesBase.Communicators
                         e.SocketErrorCode == SocketError.NoBufferSpaceAvailable)
                         System.Threading.Thread.Sleep(30);
                     else
-                        throw new CommunicationException(String.Format("Ошибка чтения из сокета"), e);
+                        throw new CommunicationException(string.Format("Ошибка чтения из сокета"), e);
                 }
             }
             while(received < size);
@@ -117,7 +117,7 @@ namespace DevicesBase.Communicators
             catch (SocketException e)
             {
                 throw new CommunicationException(
-                    String.Format("Ошибка записи в сокет"), e);
+                    string.Format("Ошибка записи в сокет"), e);
             }
         }
     }

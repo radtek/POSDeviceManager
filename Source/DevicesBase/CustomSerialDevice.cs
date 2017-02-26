@@ -16,7 +16,7 @@ namespace DevicesBase
 	public abstract class CustomSerialDevice : CustomConnectableDevice, 
         ISerialDevice, IDisposable
 	{
-        private String _portName;
+        private string _portName;
         private Int32 _baudRate;
         private Boolean _portCaptured;
         private Boolean _portOpened;
@@ -179,7 +179,7 @@ namespace DevicesBase
         /// </summary>
         /// <param name="sender">Коммуникационный порт</param>
         /// <param name="e">Аргументы события</param>
-        protected virtual void SetCommStateEventHandler(Object sender, CommStateEventArgs e)
+        protected virtual void SetCommStateEventHandler(object sender, CommStateEventArgs e)
         {
         }
 
@@ -199,7 +199,7 @@ namespace DevicesBase
 		/// <summary>
 		/// Имя порта (напр., COM1, LPT1...)
 		/// </summary>
-		public override String PortName
+		public override string PortName
 		{
 			get { return _portName; }
             set { _portName = value; } 

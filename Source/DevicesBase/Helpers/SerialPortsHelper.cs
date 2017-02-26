@@ -11,24 +11,24 @@ namespace DevicesBase.Helpers
     /// </summary>
     internal class SerialPortsHelper : IDisposable
     {
-        private String _deviceId;
+        private string _deviceId;
         private EasyCommunicationPort _port;
 
         /// <summary>
         /// Создает экземпляр класса
         /// </summary>
         /// <param name="portName">Имя порта</param>
-        public SerialPortsHelper(String portName)
+        public SerialPortsHelper(string portName)
         {
             _port = new EasyCommunicationPort();
             _port.PortName = portName;
-            _deviceId = String.Empty;
+            _deviceId = string.Empty;
         }
 
         /// <summary>
         /// Имя порта
         /// </summary>
-        public String PortName
+        public string PortName
         {
             get { return _port.PortName; }
         }
@@ -36,7 +36,7 @@ namespace DevicesBase.Helpers
         /// <summary>
         /// Идентификатор устройства
         /// </summary>
-        public String DeviceId
+        public string DeviceId
         {
             get { return _deviceId; }
             set { _deviceId = value; }

@@ -12,7 +12,7 @@ namespace DevicesBase.Helpers
     internal class DeviceHelper
     {
         IDevice device;
-        String sessionID;
+        string sessionID;
 
         /// <summary>
         /// Конструктор
@@ -21,7 +21,7 @@ namespace DevicesBase.Helpers
         public DeviceHelper(IDevice device)
         {
             this.device = device;
-            sessionID = String.Empty;
+            sessionID = string.Empty;
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace DevicesBase.Helpers
         {
             get
             {
-                return !String.IsNullOrEmpty(sessionID);
+                return !string.IsNullOrEmpty(sessionID);
             }
         }
 
@@ -39,7 +39,7 @@ namespace DevicesBase.Helpers
         /// Индентификатор клиентской сессии,
         /// заблокировавшей устройство
         /// </summary>
-        public String SessionID
+        public string SessionID
         {
             get
             {
@@ -50,7 +50,7 @@ namespace DevicesBase.Helpers
             {
                 if (Captured)
                     throw new DeviceManagerException(
-                        String.Format("Устройство заблокировано, идентификатор сессии {0}",
+                        string.Format("Устройство заблокировано, идентификатор сессии {0}",
                         sessionID));
 
                 // блокировка устройства
@@ -74,7 +74,7 @@ namespace DevicesBase.Helpers
         /// </summary>
         public void Release()
         {
-            sessionID = String.Empty;
+            sessionID = string.Empty;
         }
     }
 }
