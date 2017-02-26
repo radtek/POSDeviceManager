@@ -11,14 +11,14 @@ namespace DevicesBase.Helpers
     {
         private DateTime accessDateTime;
         private string sessionID;
-        private Int32 sessionTimeout;
+        private int sessionTimeout;
 
         /// <summary>
         /// Конструктор
         /// </summary>
         /// <param name="sessionID">Идентификатор сессии</param>
         /// <param name="sessionTimeout">Таймаут сессии</param>
-        public SessionHelper(string sessionID, Int32 sessionTimeout)
+        public SessionHelper(string sessionID, int sessionTimeout)
         {
             this.sessionID = sessionID;
             this.sessionTimeout = sessionTimeout;

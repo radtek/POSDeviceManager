@@ -12,11 +12,11 @@ namespace ERPService.SharedLibs.Eventlog
     {
         #region Поля и константы
 
-        private String _id;
+        private string _id;
         private DateTime _timestamp;
-        private String _source;
+        private string _source;
         private EventType _eventType;
-        private List<String> _text;
+        private List<string> _text;
 
         #endregion
 
@@ -30,14 +30,14 @@ namespace ERPService.SharedLibs.Eventlog
         /// <param name="source">Источник события</param>
         /// <param name="eventType">Тип события</param>
         /// <param name="text">Текст события</param>
-        public EventRecord(String id, DateTime timestamp, String source,
-            EventType eventType, String[] text)
+        public EventRecord(string id, DateTime timestamp, string source,
+            EventType eventType, string[] text)
         {
             _id = id;
             _timestamp = timestamp;
             _source = source;
             _eventType = eventType;
-            _text = new List<String>(text);
+            _text = new List<string>(text);
         }
 
         #endregion
@@ -55,7 +55,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// <summary>
         /// Идентификатор события
         /// </summary>
-        public String Id
+        public string Id
         {
             get { return _id; }
             set { _id = value; }
@@ -64,7 +64,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// <summary>
         /// Приложение-источник события
         /// </summary>
-        public String Source
+        public string Source
         {
             get { return _source; }
         }
@@ -72,7 +72,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// <summary>
         /// Текст события
         /// </summary>
-        public List<String> Text
+        public List<string> Text
         {
             get { return _text; }
         }

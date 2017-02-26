@@ -24,7 +24,7 @@ namespace ERPService.SharedLibs.Helpers.Databases
         /// <param name="parameterName">Имя параметра</param>
         /// <param name="parameterValue">Значение параметра</param>
         /// <returns>Вновь добавленный параметр</returns>
-        public IDataParameter NewParameter(IDbCommand command, String parameterName,
+        public IDataParameter NewParameter(IDbCommand command, string parameterName,
             Object parameterValue)
         {
             // создаем новый параметр

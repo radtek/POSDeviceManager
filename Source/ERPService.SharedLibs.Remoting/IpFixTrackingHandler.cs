@@ -18,7 +18,7 @@ namespace ERPService.SharedLibs.Remoting
         #region Реализация синглтона
 
         // имя источника событий
-        private const String EventSource = "Tracking handler";
+        private const string EventSource = "Tracking handler";
 
         // для синхронизации
         private static Object _syncObject = new Object();
@@ -68,20 +68,20 @@ namespace ERPService.SharedLibs.Remoting
         /// </summary>
         /// <param name="dataStore">Данные канала</param>
         /// <param name="serverHostNameOrIp">Имя или адрес хоста, переданное с клиента</param>
-        private void ReplaceHostNameOrIp(ChannelDataStore dataStore, String serverHostNameOrIp)
+        private void ReplaceHostNameOrIp(ChannelDataStore dataStore, string serverHostNameOrIp)
         {
-            for (Int32 i = 0; i < dataStore.ChannelUris.Length; i++)
+            for (int i = 0; i < dataStore.ChannelUris.Length; i++)
             {
                 if (_eventLink != null)
                 {
-                    _eventLink.Post(EventSource, String.Format(
+                    _eventLink.Post(EventSource, string.Format(
                         "Исходный URI в данных канала связи: {0}", dataStore.ChannelUris[i]));
                 }
 
                 UriBuilder ub = new UriBuilder(dataStore.ChannelUris[i]);
                 
                 // сравниваем имя хоста в URI канала и то же, переданное с клиента
-                if (String.Compare(ub.Host, serverHostNameOrIp, true) != 0)
+                if (string.Compare(ub.Host, serverHostNameOrIp, true) != 0)
                 {
                     // меняем на значение, переданное с клиента
                     ub.Host = serverHostNameOrIp;
@@ -89,7 +89,7 @@ namespace ERPService.SharedLibs.Remoting
 
                     if (_eventLink != null)
                     {
-                        _eventLink.Post(EventSource, String.Format(
+                        _eventLink.Post(EventSource, string.Format(
                             "Хост изменен. Новый URI: {0}", dataStore.ChannelUris[i]));
                     }
                 }
@@ -117,9 +117,9 @@ namespace ERPService.SharedLibs.Remoting
             Object serverHostNameOrIp = CallContext.GetData("serverHostNameOrIp");
             if (_eventLink != null)
             {
-                _eventLink.Post(EventSource, String.Format("Публикация объекта {0}, URI {1}", 
+                _eventLink.Post(EventSource, string.Format("Публикация объекта {0}, URI {1}", 
                     obj.GetType(), or.URI));
-                _eventLink.Post(EventSource, String.Format(
+                _eventLink.Post(EventSource, string.Format(
                     "Имя или IP-адрес сервера, полученное из контекста вызова: [{0}]", serverHostNameOrIp));
             }
 
@@ -145,7 +145,7 @@ namespace ERPService.SharedLibs.Remoting
 
             if (_eventLink != null)
             {
-                _eventLink.Post(EventSource, String.Format("Объект {0}, URI {1} опубликован",
+                _eventLink.Post(EventSource, string.Format("Объект {0}, URI {1} опубликован",
                     obj.GetType(), or.URI));
             }
         }

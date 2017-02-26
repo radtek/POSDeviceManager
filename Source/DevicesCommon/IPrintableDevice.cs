@@ -1,15 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DevicesCommon.Helpers;
 using System.Drawing;
+using DevicesCommon.Helpers;
 
 namespace DevicesCommon
 {
-	/// <summary>
-	/// Аргументы обработчика события печатающего устройства
-	/// </summary>
-	public class PrinterBreakEventArgs : EventArgs
+    /// <summary>
+    /// Аргументы обработчика события печатающего устройства
+    /// </summary>
+    public class PrinterBreakEventArgs : EventArgs
 	{
 		private PrinterBreak breakReason;
 		private bool canContinue;
@@ -79,12 +77,12 @@ namespace DevicesCommon
         /// <summary>
 		/// Заголовок документа
 		/// </summary>
-        String[] DocumentHeader { get; set; }
+        string[] DocumentHeader { get; set; }
 
-		/// <summary>
-		/// Подвал документа
-		/// </summary>
-        String[] DocumentFooter { get; set; }
+        /// <summary>
+        /// Подвал документа
+        /// </summary>
+        string[] DocumentFooter { get; set; }
 
         /// <summary>
         /// Графический заголовок документа
@@ -99,22 +97,22 @@ namespace DevicesCommon
         /// <summary>
         /// Печатать графический заголовок чека
         /// </summary>
-        Boolean PrintGraphicHeader { get; set; }
+        bool PrintGraphicHeader { get; set; }
 
         /// <summary>
         /// Печатать графический подвал документа
         /// </summary>
-        Boolean PrintGraphicFooter { get; set; }
+        bool PrintGraphicFooter { get; set; }
 
         /// <summary>
         /// Печатать заголовок документа
         /// </summary>
-        Boolean PrintHeader { get; set; }
+        bool PrintHeader { get; set; }
 
         /// <summary>
         /// Печатать подвал документа
         /// </summary>
-        Boolean PrintFooter { get; set; }
+        bool PrintFooter { get; set; }
 
         #endregion
 
@@ -131,7 +129,7 @@ namespace DevicesCommon
 		/// Печать документа
 		/// </summary>
 		/// <param name="xmlData">Данные XML-документа</param>
-		void Print(String xmlData);
+		void Print(string xmlData);
 
 		#endregion
 

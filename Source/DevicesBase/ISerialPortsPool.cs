@@ -26,7 +26,7 @@ namespace DevicesBase
         /// <param name="waitIfCaptured">Ожидать освобождения порта</param>
         /// <param name="waitTime">Время, в течение которого ожидать освобождение</param>
         /// <returns>Порт из пула</returns>
-        EasyCommunicationPort CapturePort(string deviceId, string portName, Boolean waitIfCaptured,
+        EasyCommunicationPort CapturePort(string deviceId, string portName, bool waitIfCaptured,
             TimeSpan waitTime);
 
         /// <summary>

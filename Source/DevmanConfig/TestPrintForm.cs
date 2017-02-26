@@ -195,7 +195,7 @@ namespace DevmanConfig
         private void WritePosition(XmlTextWriter xmlWriter, int n)
         {
             xmlWriter.WriteStartElement("row");
-            xmlWriter.WriteElementString("field", String.Format("{0}. Шампанское Ростовское", n));
+            xmlWriter.WriteElementString("field", string.Format("{0}. Шампанское Ростовское", n));
             xmlWriter.WriteElementString("field", "1");
             xmlWriter.WriteElementString("field", "135,00");
             xmlWriter.WriteEndElement();

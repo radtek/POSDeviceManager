@@ -27,7 +27,7 @@ namespace ERPService.SharedLibs.PropertyGrid.Forms
         /// Отображение модального редактора
         /// </summary>
         /// <param name="descriptorContext">Контекст для получения дополнительной информации о свойстве</param>
-        public virtual Boolean ShowEditor(ITypeDescriptorContext descriptorContext)
+        public virtual bool ShowEditor(ITypeDescriptorContext descriptorContext)
         {
             Text = descriptorContext.PropertyDescriptor.DisplayName;
             lblDescription.Text = descriptorContext.PropertyDescriptor.Description;

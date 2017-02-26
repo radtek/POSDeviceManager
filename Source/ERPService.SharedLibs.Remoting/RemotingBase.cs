@@ -35,9 +35,9 @@ namespace ERPService.SharedLibs.Remoting
         /// </summary>
         /// <param name="prefix">Префикс</param>
         /// <returns>Имя серверного канала</returns>
-        protected String GetChannelName(String prefix)
+        protected string GetChannelName(string prefix)
         {
-            return String.Format("{1}Channel{0}", prefix, Guid.NewGuid());
+            return string.Format("{1}Channel{0}", prefix, Guid.NewGuid());
         }
 
         #region Реализация IDisposable

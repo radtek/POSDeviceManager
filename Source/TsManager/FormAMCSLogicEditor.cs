@@ -1,11 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.Reflection;
+using System.Windows.Forms;
 using ERPService.SharedLibs.PropertyGrid.Forms;
 
 namespace TsManager
@@ -16,7 +11,7 @@ namespace TsManager
     public partial class FormAMCSLogicEditor : FormModalEditor
     {
         private Object _obj;
-        private Boolean _modified;
+        private bool _modified;
 
         /// <summary>
         /// Создает экземпляр класса

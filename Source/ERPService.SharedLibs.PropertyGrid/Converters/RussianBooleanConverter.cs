@@ -12,11 +12,11 @@ namespace ERPService.SharedLibs.PropertyGrid.Converters
         /// <summary>
         /// Набор строковых значений, сопоставленных элементам перечисления
         /// </summary>
-        protected override String[] StringValues
+        protected override string[] StringValues
         {
             get 
             {
-                return new String[] { "Да", "Нет" };
+                return new string[] { "Да", "Нет" };
             }
         }
 

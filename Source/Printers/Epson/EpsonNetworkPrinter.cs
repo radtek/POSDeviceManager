@@ -28,7 +28,7 @@ namespace EpsonPrn
         /// </summary>
         private const int TAPE_WIDTH_PX = 512;
 
-        private const String _errorWaitingEndOfPrint = 
+        private const string _errorWaitingEndOfPrint = 
             "Ошибка во время ожидания завершения печати документа.\n" +
             "Тип: {0}\nТекст: {1}\nСтек:\n\n{2}";
 
@@ -36,7 +36,7 @@ namespace EpsonPrn
 
         #region Переменные
 
-        private Boolean bOpenedDoc;
+        private bool bOpenedDoc;
         private readonly PrintableDeviceInfo printerInfo;
         private readonly StringBuilder debugInfo;
         private readonly Encoding defaultEncoding;
@@ -204,7 +204,7 @@ namespace EpsonPrn
             }
             finally
             {
-                if (!ErrorCode.Succeeded && Logger.DebugInfo && !String.IsNullOrEmpty(debugInfo.ToString()))
+                if (!ErrorCode.Succeeded && Logger.DebugInfo && !string.IsNullOrEmpty(debugInfo.ToString()))
                     Logger.SaveDebugInfo(this, debugInfo.ToString());
                 ClearDebugInfo();
             }
@@ -336,7 +336,7 @@ namespace EpsonPrn
         }
 
         protected override void OnOpenDocument(DocumentType docType,
-            String cashierName)
+            string cashierName)
         {
             ExecuteDriverCommand(delegate()
             {
@@ -368,7 +368,7 @@ namespace EpsonPrn
         private void OnWaitException(Exception ex)
         {
             // записываем сообщение об ошибке в лог
-            Logger.WriteEntry(this, String.Format(_errorWaitingEndOfPrint,
+            Logger.WriteEntry(this, string.Format(_errorWaitingEndOfPrint,
                 ex.GetType(), ex.Message, ex.StackTrace),
                 System.Diagnostics.EventLogEntryType.Error);
 
@@ -424,7 +424,7 @@ namespace EpsonPrn
             });
         }
 
-        protected override void OnPrintString(String source, FontStyle style)
+        protected override void OnPrintString(string source, FontStyle style)
         {
             ExecuteDriverCommand(delegate()
             {
@@ -438,7 +438,7 @@ namespace EpsonPrn
                     source = source.Substring(0, PrinterInfo.TapeWidth.MainPrinter);
 
                 // получаем буфер для печати в кодировке по умолчанию
-                var buffer = defaultEncoding.GetBytes(String.Concat(source, Environment.NewLine));
+                var buffer = defaultEncoding.GetBytes(string.Concat(source, Environment.NewLine));
 
                 // печатаем буфер
                 WriteBuffer(buffer, buffer.Length);
@@ -448,7 +448,7 @@ namespace EpsonPrn
             });
         }
 
-        protected override void OnPrintBarcode(String barcode, AlignOptions align,
+        protected override void OnPrintBarcode(string barcode, AlignOptions align,
             bool readable)
         {
             ExecuteDriverCommand(delegate()
@@ -582,17 +582,17 @@ namespace EpsonPrn
             });
         }
 
-        protected override void OnRegistration(String commentary, UInt32 quantity, UInt32 amount,
-            Byte section)
+        protected override void OnRegistration(string commentary, uint quantity, uint amount,
+            byte section)
         {
             OnPrintString(commentary, FontStyle.Regular);
         }
 
-        protected override void OnPayment(UInt32 amount, FiscalPaymentType paymentType)
+        protected override void OnPayment(uint amount, FiscalPaymentType paymentType)
         {
         }
 
-        protected override void OnCash(UInt32 amount)
+        protected override void OnCash(uint amount)
         {
         }
 
@@ -600,12 +600,12 @@ namespace EpsonPrn
 
         #region Реализация абстрактных методов
 
-        protected override Int32 ReadTimeout
+        protected override int ReadTimeout
         {
             get { return 5000; }
         }
 
-        protected override Int32 WriteTimeout
+        protected override int WriteTimeout
         {
             get { return 2000; }
         }
@@ -629,7 +629,7 @@ namespace EpsonPrn
             string[] bufDump = Array.ConvertAll(nBuffer, new Converter<byte, string>(delegate(byte b) { return b.ToString("X"); }));
             debugInfo.AppendFormat("{0:HH:mm:ss}\t{1}\r\n", DateTime.Now, message);
             if (nBufferLen > 0)
-                debugInfo.AppendFormat("\t{0:X}\r\n", String.Join(" ", bufDump, 0, nBufferLen));
+                debugInfo.AppendFormat("\t{0:X}\r\n", string.Join(" ", bufDump, 0, nBufferLen));
             else
                 debugInfo.Append("\tнет\r\n");
         }

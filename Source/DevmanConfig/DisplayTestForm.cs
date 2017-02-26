@@ -57,7 +57,7 @@ namespace DevmanConfig
                 pos = tbDisplayLines.Text.IndexOf("\n", currPos);
             }
 
-            lbPosition.Text = String.Format("{0}:{1}", tbDisplayLines.SelectionStart + tbDisplayLines.SelectionLength - currPos + 1, rowNo + 1);
+            lbPosition.Text = string.Format("{0}:{1}", tbDisplayLines.SelectionStart + tbDisplayLines.SelectionLength - currPos + 1, rowNo + 1);
         }
 
         /// <summary>

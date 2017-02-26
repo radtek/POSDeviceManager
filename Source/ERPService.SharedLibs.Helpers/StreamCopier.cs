@@ -33,9 +33,9 @@ namespace ERPService.SharedLibs.Helpers
     {
         #region Поля
 
-        private Byte[] _buffer;
-        private Boolean _disposeSource;
-        private Boolean _disposeDest;
+        private byte[] _buffer;
+        private bool _disposeSource;
+        private bool _disposeDest;
         private Int64 _sourceOffset;
         private Int64 _length;
         private SourceStartPosition _startPosition;
@@ -47,14 +47,14 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Размер внутреннего буфера данных
         /// </summary>
-        public Int32 BufferSize
+        public int BufferSize
         {
             get { return _buffer.Length; }
             set 
             {
                 if (value <= 0)
                     throw new ArgumentOutOfRangeException("BufferSize");
-                _buffer = new Byte[value];
+                _buffer = new byte[value];
             }
         }
 
@@ -62,7 +62,7 @@ namespace ERPService.SharedLibs.Helpers
         /// Освобождать ресурсы потока-источника
         /// </summary>
         /// <remarks>Значение по умолчанию - false</remarks>
-        public Boolean DisposeSource
+        public bool DisposeSource
         {
             get { return _disposeSource; }
             set { _disposeSource = value; }
@@ -72,7 +72,7 @@ namespace ERPService.SharedLibs.Helpers
         /// Освобождать ресурсы потока-приемника
         /// </summary>
         /// <remarks>Значение по умолчанию - false</remarks>
-        public Boolean DisposeDest
+        public bool DisposeDest
         {
             get { return _disposeDest; }
             set { _disposeDest = value; }
@@ -131,7 +131,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Создает экземпляр класса
         /// </summary>
-        public StreamCopier(Int32 bufferSize)
+        public StreamCopier(int bufferSize)
         {
             if (bufferSize < 0)
                 throw new ArgumentOutOfRangeException("bufferSize");
@@ -202,7 +202,7 @@ namespace ERPService.SharedLibs.Helpers
                     if (count > _buffer.Length)
                         count = _buffer.Length;
 
-                    Int32 bytesRead = source.Read(_buffer, 0, (Int32)count);
+                    int bytesRead = source.Read(_buffer, 0, (int)count);
                     if (bytesRead == 0)
                         break;
 

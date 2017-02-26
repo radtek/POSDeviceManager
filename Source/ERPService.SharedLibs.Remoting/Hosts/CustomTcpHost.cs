@@ -30,8 +30,8 @@ namespace ERPService.SharedLibs.Remoting.Hosts
         /// <param name="channelName">Имя канала</param>
         /// <param name="port">Порт</param>
         /// <returns>Серверный канал</returns>
-        protected override IChannel CreateChannel(Int32 port, IServerChannelSinkProvider sinkProvider, 
-            String channelName)
+        protected override IChannel CreateChannel(int port, IServerChannelSinkProvider sinkProvider,
+            string channelName)
         {
             IDictionary channelProps = new Hashtable();
             channelProps["name"] = channelName;

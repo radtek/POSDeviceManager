@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace TsManager
 {
@@ -10,13 +8,13 @@ namespace TsManager
     [AttributeUsage(AttributeTargets.Class)]
     public class AMCSLogicAttrubute : Attribute
     {
-        private String _amcsName;
+        private string _amcsName;
 
         /// <summary>
         /// Создает экземпляр класса
         /// </summary>
         /// <param name="amcsName">Наименование СКУД</param>
-        public AMCSLogicAttrubute(String amcsName)
+        public AMCSLogicAttrubute(string amcsName)
             : base()
         {
             _amcsName = amcsName;
@@ -25,7 +23,7 @@ namespace TsManager
         /// <summary>
         /// Наименование СКУД
         /// </summary>
-        public String AMCSName
+        public string AMCSName
         {
             get { return _amcsName; }
         }

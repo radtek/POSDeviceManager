@@ -28,6 +28,6 @@ namespace ERPService.SharedLibs.Eventlog
         /// Уведомление о процессе загрузки событий
         /// </summary>
         /// <param name="eventsLoaded">Загруженное число событий</param>
-        void ReloadProgress(Int32 eventsLoaded);
+        void ReloadProgress(int eventsLoaded);
     }
 }

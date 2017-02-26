@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.Serialization;
-using System.Security;
-using System.Security.Permissions;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 
 namespace DevicesCommon.Helpers
 {
@@ -15,15 +12,15 @@ namespace DevicesCommon.Helpers
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public class PrintableTapeWidth: ISerializable
     {
-        private Int32 _mainPrinter;
-        private Int32 _additionalPrinter1;
+        private int _mainPrinter;
+        private int _additionalPrinter1;
 
         /// <summary>
         /// Возвращает строковое представление объекта
         /// </summary>
-        public override String ToString()
+        public override string ToString()
         {
-            return String.Format("{0}; {1}", _mainPrinter, _additionalPrinter1);
+            return string.Format("{0}; {1}", _mainPrinter, _additionalPrinter1);
         }
 
         /// <summary>
@@ -41,7 +38,7 @@ namespace DevicesCommon.Helpers
         /// <param name="mainPrinter">Ширина ленты на основном принтере</param>
         /// <param name="additionalPrinter1">Ширина ленты на первом дополнительном 
         /// принтере</param>
-        public PrintableTapeWidth(Int32 mainPrinter, Int32 additionalPrinter1)
+        public PrintableTapeWidth(int mainPrinter, int additionalPrinter1)
         {
             _mainPrinter = mainPrinter;
             _additionalPrinter1 = additionalPrinter1;
@@ -76,7 +73,7 @@ namespace DevicesCommon.Helpers
         [DefaultValue(0)]
         [Description("Ширина ленты на основном принтере")]
         [DisplayName("Основной принтер")]
-        public Int32 MainPrinter
+        public int MainPrinter
         {
             get { return _mainPrinter; }
             set { _mainPrinter = value; }
@@ -88,7 +85,7 @@ namespace DevicesCommon.Helpers
         [DefaultValue(0)]
         [Description("Ширина ленты на первом дополнительном принтере")]
         [DisplayName("Дополнительный принтер №1")]
-        public Int32 AdditionalPrinter1
+        public int AdditionalPrinter1
         {
             get { return _additionalPrinter1; }
             set { _additionalPrinter1 = value; }
@@ -104,13 +101,13 @@ namespace DevicesCommon.Helpers
         // ширина чековой ленты
         private PrintableTapeWidth _tapeWidth;
         // отступ в строках от верхнего края документа
-        private Int32 _topMargin;
+        private int _topMargin;
         // длина бланка подкладного документа
-        private Int32 _slipFormLength;
+        private int _slipFormLength;
         // вид печатающего устройства
         private PrinterKind _kind;
         // аппаратный контроль за передачей данных
-        private Boolean _dsrFlowControl; 
+        private bool _dsrFlowControl; 
 
 		#region Характеристики
 
@@ -135,7 +132,7 @@ namespace DevicesCommon.Helpers
         /// <summary>
         /// Верхний отступ от края печатной формы, строк
         /// </summary>
-        public Int32 TopMargin
+        public int TopMargin
         {
             get { return _topMargin; }
             set { _topMargin = value; }
@@ -144,7 +141,7 @@ namespace DevicesCommon.Helpers
         /// <summary>
         /// Длина бланка подкладного документа в миллиметрах
         /// </summary>
-        public Int32 SlipFormLength
+        public int SlipFormLength
         {
             get { return _slipFormLength; }
             set { _slipFormLength = value; }
@@ -153,7 +150,7 @@ namespace DevicesCommon.Helpers
         /// <summary>
         /// Аппаратный контроль DTR/DSR
         /// </summary>
-        public Boolean DsrFlowControl
+        public bool DsrFlowControl
         {
             get { return _dsrFlowControl; }
             set { _dsrFlowControl = value; }
@@ -177,8 +174,8 @@ namespace DevicesCommon.Helpers
         /// <param name="slipFormLength">Длина бланка подкладного документа в миллиметрах</param>
         /// <param name="kind">Вид печатающего устройства</param>
         /// <param name="dsrFlowControl">Аппаратный контроль DTR/DSR</param>
-        public PrintableDeviceInfo(PrintableTapeWidth tapeWidth, Boolean supportsBoldFont, Int32 topMargin,
-            Int32 slipFormLength, PrinterKind kind, Boolean dsrFlowControl)
+        public PrintableDeviceInfo(PrintableTapeWidth tapeWidth, bool supportsBoldFont, int topMargin,
+            int slipFormLength, PrinterKind kind, bool dsrFlowControl)
         {
             _tapeWidth = tapeWidth;
             _topMargin = topMargin;
@@ -196,8 +193,8 @@ namespace DevicesCommon.Helpers
         /// <param name="topMargin">Верхний отступ от края печатной формы, строк</param>
         /// <param name="slipFormLength">Длина бланка подкладного документа в миллиметрах</param>
         /// <param name="kind">Вид печатающего устройства</param>
-        public PrintableDeviceInfo(PrintableTapeWidth tapeWidth, Boolean supportsBoldFont, Int32 topMargin,
-            Int32 slipFormLength, PrinterKind kind)
+        public PrintableDeviceInfo(PrintableTapeWidth tapeWidth, bool supportsBoldFont, int topMargin,
+            int slipFormLength, PrinterKind kind)
             : this(tapeWidth, supportsBoldFont, topMargin, slipFormLength, kind, false)
         {
         }
@@ -207,7 +204,7 @@ namespace DevicesCommon.Helpers
         /// </summary>
         /// <param name="tapeWidth">Ширина чековой ленты в символах</param>
         /// <param name="supportsBoldFont">Поддерживается или нет жирный шрифт (удвоенный по ширине)</param>
-        public PrintableDeviceInfo(PrintableTapeWidth tapeWidth, Boolean supportsBoldFont)
+        public PrintableDeviceInfo(PrintableTapeWidth tapeWidth, bool supportsBoldFont)
             : this(tapeWidth, supportsBoldFont, 0, 0, PrinterKind.Receipt, false)
         {
         }
@@ -262,12 +259,12 @@ namespace DevicesCommon.Helpers
 		/// <summary>
 		/// Тип фискальной памяти
 		/// </summary>
-		public readonly String DeviceType;
+		public readonly string DeviceType;
 
 		/// <summary>
 		/// Серийный номер
 		/// </summary>
-		public readonly String SerialNo;
+		public readonly string SerialNo;
 
 		#endregion
 
@@ -278,7 +275,7 @@ namespace DevicesCommon.Helpers
 		/// </summary>
 		/// <param name="deviceType">Тип фискальной памяти</param>
 		/// <param name="serialNo">Серийны номер устройства</param>
-		public FiscalDeviceInfo(String deviceType, String serialNo)
+		public FiscalDeviceInfo(string deviceType, string serialNo)
 		{
 			DeviceType = deviceType;
 			SerialNo = serialNo;

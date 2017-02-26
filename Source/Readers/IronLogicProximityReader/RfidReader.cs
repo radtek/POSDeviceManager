@@ -15,13 +15,13 @@ namespace IronLogicProximityReader
     [GenericReader(DeviceNames.ironLogicRFIDReader)]
     public class RfidReader : CustomGenericReader
     {
-        private const String _rfidMask = 
+        private const string _rfidMask = 
             @"(?:\w*\u002D\w*)(?:\u005B\w+\u005D)(?:\s*)(\d+\u002C\d+)";
 
-        protected override String Prepare(String rawData)
+        protected override string Prepare(string rawData)
         {
             Match match = Regex.Match(rawData, _rfidMask);
-            return match.Success ? match.Groups[1].Value : String.Empty;
+            return match.Success ? match.Groups[1].Value : string.Empty;
         }
     }
 }

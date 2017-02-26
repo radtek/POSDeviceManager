@@ -18,23 +18,23 @@ namespace ERPService.SharedLibs.Remoting.Connectors
 
         private T _remoteObject;
         private IChannel _channel;
-        private String _serverNameOrIp;
-        private Int32 _port;
-        private String _objectName;
-        private String _url;
-        private Int32 _timeout;
+        private string _serverNameOrIp;
+        private int _port;
+        private string _objectName;
+        private string _url;
+        private int _timeout;
 
         #endregion
 
         #region Константы
 
-        private const String readableServerNameOrIp = "Имя или IP-адрес сервера";
-        private const String readableObjectName = "Имя объекта";
+        private const string readableServerNameOrIp = "Имя или IP-адрес сервера";
+        private const string readableObjectName = "Имя объекта";
         
         /// <summary>
         /// Имя локального сервера
         /// </summary>
-        protected const String Localhost = "localhost";
+        protected const string Localhost = "localhost";
 
         #endregion
 
@@ -43,18 +43,18 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// </summary>
         /// <param name="value">Значение свойства для проверки</param>
         /// <param name="readableParamName">Читаемое название свойства</param>
-        protected void ThrowIfEmpty(String value, String readableParamName)
+        protected void ThrowIfEmpty(string value, string readableParamName)
         {
-            if (String.IsNullOrEmpty(value))
-                throw new ArgumentNullException("value", 
-                    String.Format("Не задано свойство \"{0}\"", readableParamName));
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentNullException("value",
+                    string.Format("Не задано свойство \"{0}\"", readableParamName));
         }
 
         /// <summary>
         /// Генерация исключения, если значение TCP-порта вне диапазона
         /// </summary>
         /// <param name="value">Значение для проверки</param>
-        protected void ThrowIfOutOfRange(Int32 value)
+        protected void ThrowIfOutOfRange(int value)
         {
             if (value < 0 || value > UInt16.MaxValue)
                 throw new ArgumentOutOfRangeException("value", value, "Значение TCP-порта вне диапазона");
@@ -66,7 +66,7 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// </summary>
         /// <param name="channelName">Имя канала</param>
         /// <returns>Набор свойств канала</returns>
-        protected IDictionary GetBasicChannelProperties(String channelName)
+        protected IDictionary GetBasicChannelProperties(string channelName)
         {
             IDictionary channelProps = new Hashtable();
             
@@ -85,7 +85,7 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// <param name="serverNameOrIp">Имя или IP-адрес сервера</param>
         /// <param name="port">Порт сервера</param>
         /// <param name="objectName">Имя объекта</param>
-        protected CustomConnector(String serverNameOrIp, Int32 port, String objectName)
+        protected CustomConnector(string serverNameOrIp, int port, string objectName)
         {
             ServerNameOrIp = serverNameOrIp;
             Port = port;
@@ -109,12 +109,12 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// <summary>
         /// Таймаут ремоутинг-вызова
         /// </summary>
-        public Int32 Timeout
+        public int Timeout
         {
             get { return _timeout; }
             set
             {
-                if (value < -1 || value > Int32.MaxValue)
+                if (value < -1 || value > int.MaxValue)
                     throw new ArgumentOutOfRangeException("value");
 
                 _timeout = value;
@@ -124,7 +124,7 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// <summary>
         /// Имя или IP-адрес сервера
         /// </summary>
-        public String ServerNameOrIp
+        public string ServerNameOrIp
         {
             get { return _serverNameOrIp; }
             set 
@@ -137,7 +137,7 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// <summary>
         /// Порт сервера
         /// </summary>
-        public Int32 Port
+        public int Port
         {
             get { return _port; }
             set 
@@ -150,7 +150,7 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// <summary>
         /// Имя объекта
         /// </summary>
-        public String ObjectName
+        public string ObjectName
         {
             get { return _objectName; }
             set 
@@ -188,7 +188,7 @@ namespace ERPService.SharedLibs.Remoting.Connectors
                     ChannelServices.RegisterChannel(_channel, false);
 
                     // формируем URL объекта
-                    _url = String.Format("{0}://{1}:{2}/{3}", Protocol, _serverNameOrIp, _port, _objectName);
+                    _url = string.Format("{0}://{1}:{2}/{3}", Protocol, _serverNameOrIp, _port, _objectName);
 
                     // создаем прокси объекта
                     _remoteObject = (T)Activator.GetObject(typeof(T), _url);
@@ -205,7 +205,7 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// <summary>
         /// Префикс протокола связи с объектом
         /// </summary>
-        protected abstract String Protocol { get; }
+        protected abstract string Protocol { get; }
 
         /// <summary>
         /// Создает провайдер для приемников, отвечающих за форматирование сообщений
@@ -220,7 +220,7 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// <param name="channelName">Имя канала</param>
         /// <returns>Клиентский канал</returns>
         protected abstract IChannel CreateChannel(IClientChannelSinkProvider sinkProvider,
-            String channelName);
+            string channelName);
 
         #endregion
 

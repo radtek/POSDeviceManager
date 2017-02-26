@@ -17,12 +17,12 @@ namespace DevicesBase
         #region Поля 
 
         private Parity _parity;
-        private Byte _stopChar;
+        private byte _stopChar;
         private Queue<string> _data;
         private object _syncObject;
         private Thread _readerThread;
-        private Boolean _terminated;
-        private Byte[] _buffer;
+        private bool _terminated;
+        private byte[] _buffer;
         private StringBuilder _tempData;
 
         #endregion
@@ -41,7 +41,7 @@ namespace DevicesBase
             _stopChar = 0x0A;
             _data = new Queue<string>();
             _readerThread = new Thread(ReadData);
-            _buffer = new Byte[1024];
+            _buffer = new byte[1024];
             _tempData = new StringBuilder();
         }
 
@@ -49,11 +49,11 @@ namespace DevicesBase
 
         #region Закрытые свойства и методы
 
-        private Boolean Terminated
+        private bool Terminated
         {
             get
             {
-                Boolean value;
+                bool value;
                 lock (_syncObject)
                 {
                     value = _terminated;
@@ -113,12 +113,12 @@ namespace DevicesBase
                 {
                     // читаем все, что есть во входящем буфере порта
                     Array.Clear(_buffer, 0, _buffer.Length);
-                    Int32 bytesRead = Port.Read(_buffer, 0, _buffer.Length);
+                    int bytesRead = Port.Read(_buffer, 0, _buffer.Length);
 
                     if (bytesRead > 0)
                     {
                         // помещаем считанные данные во временную строку
-                        for (Int32 i = 0; i < bytesRead; i++)
+                        for (int i = 0; i < bytesRead; i++)
                         {
                             if (_buffer[i] == _stopChar)
                             {
@@ -175,7 +175,7 @@ namespace DevicesBase
         /// <summary>
         /// Стоп-символ
         /// </summary>
-        public Byte StopChar
+        public byte StopChar
         {
             get { return _stopChar; }
             set { _stopChar = value; }
@@ -201,11 +201,11 @@ namespace DevicesBase
         /// <summary>
         /// Состояние очереди
         /// </summary>
-        public Boolean Empty
+        public bool Empty
         {
             get
             {
-                Boolean state;
+                bool state;
                 lock (_syncObject)
                 {
                     state = _data.Count == 0;

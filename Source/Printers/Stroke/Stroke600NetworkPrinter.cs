@@ -64,7 +64,7 @@ namespace Stroke
         }
 
         protected override void OnOpenDocument(DocumentType docType,
-            String cashierName)
+            string cashierName)
         {
             _bufSize = 0;
             // инициализация принтера
@@ -120,7 +120,7 @@ namespace Stroke
             _docBuffer[_bufSize++] = 0x0A;
         }
 
-        protected override void OnPrintString(String source, FontStyle style)
+        protected override void OnPrintString(string source, FontStyle style)
         {
             // обрезаем строку до максимальной длины
             if (source.Length > PrinterInfo.TapeWidth.MainPrinter)
@@ -171,17 +171,17 @@ namespace Stroke
             _docBuffer[_bufSize++] = 0x0A;
         }
 
-        protected override void OnRegistration(String commentary, UInt32 quantity, UInt32 amount,
-            Byte section)
+        protected override void OnRegistration(string commentary, uint quantity, uint amount,
+            byte section)
         {
             OnPrintString(commentary, FontStyle.Regular);
         }
 
-        protected override void OnPayment(UInt32 amount, FiscalPaymentType paymentType)
+        protected override void OnPayment(uint amount, FiscalPaymentType paymentType)
         {
         }
 
-        protected override void OnCash(UInt32 amount)
+        protected override void OnCash(uint amount)
         {
         }
 
@@ -201,12 +201,12 @@ namespace Stroke
 
         }
 
-        protected override Int32 ReadTimeout
+        protected override int ReadTimeout
         {
             get { return 10000; }
         }
 
-        protected override Int32 WriteTimeout
+        protected override int WriteTimeout
         {
             get { return 10000; }
         }

@@ -8,25 +8,25 @@ namespace ERPService.SharedLibs.Eventlog
     {
         #region Константы
 
-        private const Int32 maxBufferSize = 10;
+        private const int maxBufferSize = 10;
 
         #endregion
 
         #region Поля
 
-        private readonly Boolean bufferedOutput;
+        private readonly bool bufferedOutput;
         private readonly Action<IEnumerable<EventRecord>> flushAction;
         private readonly Object syncObject;
         private readonly List<EventRecord> eventsList;
         private readonly AutoResetEvent flushEvent;
         private readonly RegisteredWaitHandle registeredWaitHandle;
-        private Boolean disposed;
+        private bool disposed;
 
         #endregion
 
         #region Конструктор
 
-        public EventsQueue(Boolean bufferedOutput, Int32 autoFlushPeriod, 
+        public EventsQueue(bool bufferedOutput, int autoFlushPeriod, 
             Action<IEnumerable<EventRecord>> flushAction)
         {
             this.bufferedOutput = bufferedOutput;
@@ -44,7 +44,7 @@ namespace ERPService.SharedLibs.Eventlog
 
         public void Enqueue(EventRecord eventRecord)
         {
-            Boolean mustFlush;
+            bool mustFlush;
 
             lock (syncObject)
             {
@@ -61,7 +61,7 @@ namespace ERPService.SharedLibs.Eventlog
 
         #region Закрытые методы
 
-        private void FlushEventSignaledCallback(Object state, Boolean timedOut)
+        private void FlushEventSignaledCallback(Object state, bool timedOut)
         {
             EventRecord[] eventRecords;
 
@@ -87,7 +87,7 @@ namespace ERPService.SharedLibs.Eventlog
             GC.SuppressFinalize(this);
         }
 
-        private void Dispose(Boolean disposing)
+        private void Dispose(bool disposing)
         {
             if (disposed)
                 return;

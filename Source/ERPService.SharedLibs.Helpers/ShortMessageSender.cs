@@ -14,13 +14,13 @@ namespace ERPService.SharedLibs.Helpers
         #region Поля
 
         private EasyCommunicationPort _port;
-        private String[] _finalResults;
+        private string[] _finalResults;
 
-        private const Int32 _waitForCommand = 7000;
-        private const String _opCancelled = 
+        private const int _waitForCommand = 7000;
+        private const string _opCancelled = 
             "Отправка короткого текстового сообщения прервана. Команда: {0}. Ошибка: {1}";
-        private const String _invalidIndexes = "Не возможно определить индексы хранилища сообшений. Ответ: {0}";
-        private const String _storageIndexesPattern =
+        private const string _invalidIndexes = "Не возможно определить индексы хранилища сообшений. Ответ: {0}";
+        private const string _storageIndexesPattern =
             @"(?:\u002BCMGD\u003A\s\u0028)(\d+)(?:-)(\d+)(?:\u0029)";
 
         #endregion
@@ -30,7 +30,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Результат успешного выполнения большинства команд
         /// </summary>
-        private String OkResult
+        private string OkResult
         {
             get { return _finalResults[0]; }
         }
@@ -39,12 +39,12 @@ namespace ERPService.SharedLibs.Helpers
         /// Проверка завершения получения ответа от телефона
         /// </summary>
         /// <param name="answers">Список уже полученных ответов</param>
-        private Boolean FinalResultReceived(List<String> answers)
+        private bool FinalResultReceived(List<string> answers)
         {
             // проверяем, получен ли один из финальных результатов
-            foreach (String answer in answers)
+            foreach (string answer in answers)
             {
-                foreach (String finalResult in _finalResults)
+                foreach (string finalResult in _finalResults)
                 {
                     if (answer.Contains(finalResult))
                         return true;
@@ -58,7 +58,7 @@ namespace ERPService.SharedLibs.Helpers
         /// </summary>
         /// <param name="sb">Ответ</param>
         /// <param name="answers">Список ответов</param>
-        private void SaveAnswer(StringBuilder sb, List<String> answers)
+        private void SaveAnswer(StringBuilder sb, List<string> answers)
         {
             if (sb.Length > 0)
             {
@@ -71,7 +71,7 @@ namespace ERPService.SharedLibs.Helpers
         /// Чтение ответа на AT-команду
         /// </summary>
         /// <param name="answers">Список для хранения ответных строк</param>
-        private void ReceiveATCommandResponse(List<String> answers)
+        private void ReceiveATCommandResponse(List<string> answers)
         {
             // увеличиваем таймаут на чтение для того, чтобы дать время
             // телефону обработать команду и начать выдавать ответ на нее
@@ -84,7 +84,7 @@ namespace ERPService.SharedLibs.Helpers
             do
             {
                 // очередной байт, полученный от телефона
-                Int32 nextByte;
+                int nextByte;
                 // читаем до первого таймаута
                 do
                 {
@@ -128,7 +128,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <param name="command">Текст команды</param>
         /// <param name="terminator">Завершающий символ</param>
         /// <returns>Список строк, полученных в ответ на команду</returns>
-        private String[] SendATCommand(String command, Byte terminator)
+        private string[] SendATCommand(string command, byte terminator)
         {
             // пишем команду и завершающий символ в порт
             _port.DiscardBuffers();
@@ -140,7 +140,7 @@ namespace ERPService.SharedLibs.Helpers
             try
             {
                 // читаем ответ модема
-                List<String> answers = new List<String>();
+                List<string> answers = new List<string>();
                 ReceiveATCommandResponse(answers);
                 return answers.ToArray();
             }
@@ -155,7 +155,7 @@ namespace ERPService.SharedLibs.Helpers
         /// Отправка AT-команды телефону. Команда заверщается символом CR
         /// </summary>
         /// <param name="command">Текст команды</param>
-        private String[] SendATCommand(String command)
+        private string[] SendATCommand(string command)
         {
             return SendATCommand(command, 0x0D);
         }
@@ -165,21 +165,21 @@ namespace ERPService.SharedLibs.Helpers
         /// </summary>
         /// <param name="answers">Список ответов на команду</param>
         /// <param name="okValue">Значение, соответствующее успешному выполнению команды</param>
-        private void CheckCommandStatus(String[] answers, String okValue)
+        private void CheckCommandStatus(string[] answers, string okValue)
         {
             if (answers.Length == 0)
                 throw new InvalidOperationException("Неверный ответ на команду");
 
             if (IsFail(answers, okValue))
                 throw new OperationCanceledException(
-                    String.Format(_opCancelled, answers[0], answers[answers.Length - 1]));
+                    string.Format(_opCancelled, answers[0], answers[answers.Length - 1]));
         }
 
         /// <summary>
         /// Проверка статуса выполнения команды, для которой ожидается ответ "OK"
         /// </summary>
         /// <param name="answers">Список ответов на команду</param>
-        private void CheckCommandStatus(String[] answers)
+        private void CheckCommandStatus(string[] answers)
         {
             CheckCommandStatus(answers, OkResult);
         }
@@ -189,7 +189,7 @@ namespace ERPService.SharedLibs.Helpers
         /// </summary>
         /// <param name="answers">Список ответов на команду</param>
         /// <param name="okValue">Значение, соответствующее успешному выполнению команды</param>
-        private Boolean IsFail(String[] answers, String okValue)
+        private bool IsFail(string[] answers, string okValue)
         {
             return !answers[answers.Length - 1].Contains(okValue);
         }
@@ -199,14 +199,14 @@ namespace ERPService.SharedLibs.Helpers
         /// </summary>
         /// <param name="minValue">Минимальный индекс</param>
         /// <param name="maxValue">Максимальный индекс</param>
-        private void GetStoragesRange(out Int32 minValue, out Int32 maxValue)
+        private void GetStoragesRange(out int minValue, out int maxValue)
         {
             // запрашиваем диапазон индексов
-            String[] answers = SendATCommand("AT+CMGD=?");
+            string[] answers = SendATCommand("AT+CMGD=?");
             CheckCommandStatus(answers);
 
             // разбираем полученный ответ
-            foreach (String answer in answers)
+            foreach (string answer in answers)
             {
                 Match match = Regex.Match(answer, _storageIndexesPattern);
                 if (match.Success)
@@ -216,7 +216,7 @@ namespace ERPService.SharedLibs.Helpers
                     return;
                 }
             }
-            throw new InvalidOperationException(String.Format(_invalidIndexes, answers[0]));
+            throw new InvalidOperationException(string.Format(_invalidIndexes, answers[0]));
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace ERPService.SharedLibs.Helpers
         /// </summary>
         /// <param name="portName">Имя порта модема</param>
         /// <param name="baud">Скорость связи с модемом</param>
-        public ShortMessageSender(String portName, Int32 baud)
+        public ShortMessageSender(string portName, int baud)
         {
             _port = new EasyCommunicationPort();
             _port.PortName = portName;
@@ -252,7 +252,7 @@ namespace ERPService.SharedLibs.Helpers
             _port.Parity = Parity.None;
             _port.DsrFlow = false;
 
-            _finalResults = new String[] { "OK", ">", "ERROR", "+CMS ERROR", "Call Ready" };
+            _finalResults = new string[] { "OK", ">", "ERROR", "+CMS ERROR", "Call Ready" };
         }
 
         #endregion
@@ -266,11 +266,11 @@ namespace ERPService.SharedLibs.Helpers
         {
             PreparePort();
             // определяем диапазон индексов хранилища сообщений
-            Int32 minIndex, maxIndex;
+            int minIndex, maxIndex;
             GetStoragesRange(out minIndex, out maxIndex);
 
-            for (Int32 i = minIndex; i <= maxIndex; i++)
-                CheckCommandStatus(SendATCommand(String.Format("AT+CMGD={0}", i)));
+            for (int i = minIndex; i <= maxIndex; i++)
+                CheckCommandStatus(SendATCommand(string.Format("AT+CMGD={0}", i)));
         }
 
         /// <summary>
@@ -286,7 +286,7 @@ namespace ERPService.SharedLibs.Helpers
             CheckCommandStatus(SendATCommand("AT+CSMS=0"));
             // отправляем заголовок сообщения
             CheckCommandStatus(
-                SendATCommand(String.Format("AT+CMGS={0}", message.NumberOfOctets)), ">");
+                SendATCommand(string.Format("AT+CMGS={0}", message.NumberOfOctets)), ">");
             // отправляем тело сообщения
             CheckCommandStatus(SendATCommand(message.Message, 0x1A));
         }
@@ -305,11 +305,11 @@ namespace ERPService.SharedLibs.Helpers
         /// </summary>
         /// <param name="messages">Сообщения, подготовленные к отправке</param>
         /// <param name="reverseOrder">Отправить сообщения в обратном порядке</param>
-        public void Send(EncodedMessage[] messages, Boolean reverseOrder)
+        public void Send(EncodedMessage[] messages, bool reverseOrder)
         {
             if (reverseOrder)
             {
-                for (Int32 i = messages.Length; i > 0; i--)
+                for (int i = messages.Length; i > 0; i--)
                     Send(messages[i - 1]);
             }
             else

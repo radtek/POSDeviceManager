@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ServiceProcess;
 
 namespace DevicesCommon.Helpers
@@ -24,7 +21,7 @@ namespace DevicesCommon.Helpers
         /// <summary>
         /// Возвращает строковое представление объекта
         /// </summary>
-        public override String ToString()
+        public override string ToString()
         {
  	        switch(_originalStatus)
             {

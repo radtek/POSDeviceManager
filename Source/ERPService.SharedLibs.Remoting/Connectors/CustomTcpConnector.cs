@@ -17,7 +17,7 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// <summary>
         /// Префикс протокола связи с объектом
         /// </summary>
-        protected override String Protocol
+        protected override string Protocol
         {
             get { return "tcp"; }
         }
@@ -28,7 +28,7 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// <param name="sinkProvider">Провайдер приемников канала</param>
         /// <param name="channelName">Имя канала</param>
         /// <returns>Клиентский канал</returns>
-        protected override IChannel CreateChannel(IClientChannelSinkProvider sinkProvider, String channelName)
+        protected override IChannel CreateChannel(IClientChannelSinkProvider sinkProvider, string channelName)
         {
             return new IpFixTcpClientChannel(GetBasicChannelProperties(channelName), sinkProvider);
         }
@@ -47,7 +47,7 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// <param name="serverNameOrIp">Имя или IP-адрес сервера</param>
         /// <param name="port">Порт сервера</param>
         /// <param name="objectName">Имя объекта</param>
-        protected CustomTcpConnector(String serverNameOrIp, Int32 port, String objectName)
+        protected CustomTcpConnector(string serverNameOrIp, int port, string objectName)
             : base(serverNameOrIp, port, objectName)
         {
         }

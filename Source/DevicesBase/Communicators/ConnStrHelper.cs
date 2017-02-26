@@ -39,7 +39,7 @@ namespace DevicesBase.Communicators
         /// Возвращает элемент строки подключения по номеру
         /// </summary>
         /// <param name="itemNo">Номер элемента строки подключения</param>
-        public string this[Int32 itemNo]
+        public string this[int itemNo]
         {
             get
             {

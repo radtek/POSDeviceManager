@@ -17,7 +17,7 @@ namespace ERPService.SharedLibs.Remoting.Sinks
     {
         #region Поля
 
-        private const String _eventSource = "Channel Sink";
+        private const string _eventSource = "Channel Sink";
 
         // ссылка на следующий приемник в цепи
         private IServerChannelSink _nextSink;
@@ -117,7 +117,7 @@ namespace ERPService.SharedLibs.Remoting.Sinks
                 // протоколируем
                 if (_eventLink != null)
                 {
-                    _eventLink.Post(_eventSource, String.Format("Имя или IP-адрес сервера ЗАДАНО: [{0}]",
+                    _eventLink.Post(_eventSource, string.Format("Имя или IP-адрес сервера ЗАДАНО: [{0}]",
                         _serverHostNameOrIp));
                 }
             }

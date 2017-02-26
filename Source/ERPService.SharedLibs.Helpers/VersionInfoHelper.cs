@@ -16,7 +16,7 @@ namespace ERPService.SharedLibs.Helpers
         /// Возвращает версию файла
         /// </summary>
         /// <param name="fileName">Имя файла</param>
-        public static String GetVersion(String fileName)
+        public static string GetVersion(string fileName)
         {
             try
             {
@@ -24,11 +24,11 @@ namespace ERPService.SharedLibs.Helpers
             }
             catch (BadImageFormatException)
             {
-                return String.Empty;
+                return string.Empty;
             }
             catch (FileLoadException)
             {
-                return String.Empty;
+                return string.Empty;
             }
         }
 
@@ -36,7 +36,7 @@ namespace ERPService.SharedLibs.Helpers
         /// Возвращает версию файла
         /// </summary>
         /// <param name="asm">Сборка</param>
-        public static String GetVersion(Assembly asm)
+        public static string GetVersion(Assembly asm)
         {
             return FileVersionInfo.GetVersionInfo(asm.Location).FileVersion;
         }

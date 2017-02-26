@@ -10,21 +10,21 @@ namespace ERPService.SharedLibs.Eventlog
     [Serializable]
     public class ListedEventsViewSettings
     {
-        private Int32[] _columnWidth;
+        private int[] _columnWidth;
 
         /// <summary>
         /// Создает экземпляр класса
         /// </summary>
         public ListedEventsViewSettings()
         {
-            _columnWidth = new Int32[] { 100, 100, 100, 250 };
+            _columnWidth = new int[] { 100, 100, 100, 250 };
         }
 
         /// <summary>
         /// Возвращает ширину колонки
         /// </summary>
         /// <param name="index">Индекс</param>
-        public Int32 this[Int32 index]
+        public int this[int index]
         {
             get { return _columnWidth[index]; }
             set { _columnWidth[index] = value; }
@@ -33,7 +33,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// <summary>
         /// 
         /// </summary>
-        public Int32[] ColumnWidth
+        public int[] ColumnWidth
         {
             get { return _columnWidth; }
             set { _columnWidth = value; }

@@ -33,10 +33,10 @@ namespace ERPService.SharedLibs.Remoting.Channels
         /// <param name="remoteChannelData">The channel data object of the remote host to which the new sink will deliver messages</param>
         /// <param name="objectURI">When this method returns, contains a URI of the new channel message sink that delivers messages to the specified URL or channel data object</param>
         /// <returns>A channel message sink that delivers messages to the specified URL or channel data object</returns>
-        public override IMessageSink CreateMessageSink(String url, Object remoteChannelData, 
-            out String objectURI)
+        public override IMessageSink CreateMessageSink(string url, Object remoteChannelData, 
+            out string objectURI)
         {
-            objectURI = String.Empty;
+            objectURI = string.Empty;
             return _channelHelper.Match(url, remoteChannelData) ?
                 base.CreateMessageSink(url, remoteChannelData, out objectURI) : null;
         }

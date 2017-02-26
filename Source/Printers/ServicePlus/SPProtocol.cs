@@ -53,7 +53,7 @@ namespace ServicePlus
                 {
                     _nfi = new System.Globalization.NumberFormatInfo();
                     _nfi.NumberDecimalSeparator = ".";
-                    _nfi.NumberGroupSeparator = String.Empty;
+                    _nfi.NumberGroupSeparator = string.Empty;
                 }
                 return _nfi; 
             }
@@ -219,8 +219,8 @@ namespace ServicePlus
         {
             string[] reqDump = Array.ConvertAll<byte, string>(_cmdBuffer, b => b.ToString("X"));
             string[] rspDump = Array.ConvertAll<byte, string>(_rspBuffer, b => b.ToString("X"));
-            return String.Format("Байты команды ({0}):\n{1:X}\nБайты ответа ({2}):\n{3:X}",
-                _cmdLen, String.Join(" ", reqDump, 0, _cmdLen), _rspLen, String.Join(" ", rspDump, 0, _rspLen));
+            return string.Format("Байты команды ({0}):\n{1:X}\nБайты ответа ({2}):\n{3:X}",
+                _cmdLen, string.Join(" ", reqDump, 0, _cmdLen), _rspLen, string.Join(" ", rspDump, 0, _rspLen));
         }
     }
 }

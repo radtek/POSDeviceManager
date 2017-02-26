@@ -24,7 +24,7 @@ namespace ERPService.SharedLibs.Helpers
         /// </summary>
         /// <param name="componentName">Наименование компонента</param>
         /// <param name="componentVersion">Версия компонента</param>
-        public virtual void AppendComponentInfo(String componentName, String componentVersion)
+        public virtual void AppendComponentInfo(string componentName, string componentVersion)
         {
             _formAbout.AppendComponentInfo(componentName, componentVersion);
         }
@@ -33,7 +33,7 @@ namespace ERPService.SharedLibs.Helpers
         /// Показывает диалог "О программе"
         /// </summary>
         /// <param name="showComponents">Отображать информацию о версии компонентов</param>
-        public void Show(Boolean showComponents)
+        public void Show(bool showComponents)
         {
             _formAbout.ShowDialog(showComponents);
         }
@@ -41,7 +41,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Наименование программного продукта
         /// </summary>
-        public String ProductName
+        public string ProductName
         {
             get { return _formAbout.AppProductName; }
             set { _formAbout.AppProductName = value; }
@@ -50,7 +50,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Версия программного продукта
         /// </summary>
-        public String Version
+        public string Version
         {
             get { return _formAbout.AppProductVersion; }
             set { _formAbout.AppProductVersion = value; }
@@ -59,7 +59,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Год авторского права или модификации
         /// </summary>
-        public Int32 CopyrightYear
+        public int CopyrightYear
         {
             get { return _formAbout.CopyrightYear; }
             set { _formAbout.CopyrightYear = value; }
@@ -68,7 +68,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Наименование приложения
         /// </summary>
-        public String AppName
+        public string AppName
         {
             get { return _formAbout.AppName; }
             set { _formAbout.AppName = value; }

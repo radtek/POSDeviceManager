@@ -10,15 +10,15 @@ namespace ERPService.SharedLibs.PropertyGrid
     /// </summary>
     public class FileType
     {
-        private String _description;
-        private String _extension;
+        private string _description;
+        private string _extension;
 
         /// <summary>
         /// Создает экземпляр класса
         /// </summary>
         /// <param name="description">Описание типа файлов</param>
         /// <param name="extension">Расширение, сопоставленное типу файлов</param>
-        public FileType(String description, String extension)
+        public FileType(string description, string extension)
         {
             _description = description;
             _extension = extension;
@@ -27,7 +27,7 @@ namespace ERPService.SharedLibs.PropertyGrid
         /// <summary>
         /// Описание типа файлов
         /// </summary>
-        public String Descpription
+        public string Descpription
         {
             get { return _description; }
         }
@@ -35,7 +35,7 @@ namespace ERPService.SharedLibs.PropertyGrid
         /// <summary>
         /// Расширение, сопоставленное типу файлов
         /// </summary>
-        public String Extension
+        public string Extension
         {
             get { return _extension; }
         }
@@ -43,9 +43,9 @@ namespace ERPService.SharedLibs.PropertyGrid
         /// <summary>
         /// Строковое представление объекта
         /// </summary>
-        public override String ToString()
+        public override string ToString()
         {
-            return String.Format("{0} (*.{1})|*.{1}", _description, _extension);
+            return string.Format("{0} (*.{1})|*.{1}", _description, _extension);
         }
     }
 }

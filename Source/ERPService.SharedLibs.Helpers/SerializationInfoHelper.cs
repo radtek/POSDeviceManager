@@ -29,7 +29,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <typeparam name="T">Тип значения</typeparam>
         /// <param name="name">Наименование значения</param>
         /// <returns>Десериализованное значение</returns>
-        public T GetValue<T>(String name)
+        public T GetValue<T>(string name)
         {
             return (T)_info.GetValue(name, typeof(T));
         }
@@ -40,7 +40,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <typeparam name="T">Тип значения</typeparam>
         /// <param name="name">Наименование значения</param>
         /// <param name="value">Значение</param>
-        public void AddValue<T>(String name, T value)
+        public void AddValue<T>(string name, T value)
         {
             _info.AddValue(name, value, typeof(T));
         }

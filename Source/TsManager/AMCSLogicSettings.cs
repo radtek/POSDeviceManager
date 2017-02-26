@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Drawing.Design;
 using System.ComponentModel;
+using System.Drawing.Design;
 using ERPService.SharedLibs.PropertyGrid.Converters;
 
 namespace TsManager
@@ -15,8 +14,8 @@ namespace TsManager
     {
         private List<TsUnitSettings> _units;
         private Object _logicSettings;
-        private String _acmsName;
-        private String _name;
+        private string _acmsName;
+        private string _name;
 
         /// <summary>
         /// Создает экземпляр класса
@@ -25,8 +24,8 @@ namespace TsManager
         {
             _units = new List<TsUnitSettings>();
             _logicSettings = null;
-            _acmsName = String.Empty;
-            _name = String.Empty;
+            _acmsName = string.Empty;
+            _name = string.Empty;
         }
 
         /// <summary>
@@ -60,7 +59,7 @@ namespace TsManager
         [DisplayName("Наименование СКУД")]
         [Category("Прочее")]
         [Description("Наименование СКУД, логика которой реализована в этом модуле")]
-        public String AcmsName
+        public string AcmsName
         {
             get { return _acmsName; }
             set { _acmsName = value; }
@@ -72,7 +71,7 @@ namespace TsManager
         [DisplayName("Наименование элемента")]
         [Category("Прочее")]
         [Description("Наименование элемента в конфигурации менеджера турникетов")]
-        public String Name
+        public string Name
         {
             get { return _name; }
             set { _name = value; }

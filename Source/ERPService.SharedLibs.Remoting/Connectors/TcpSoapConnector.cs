@@ -35,7 +35,7 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// <param name="serverNameOrIp">Имя или IP-адрес сервера</param>
         /// <param name="port">Порт сервера</param>
         /// <param name="objectName">Имя объекта</param>
-        public TcpSoapConnector(String serverNameOrIp, Int32 port, String objectName)
+        public TcpSoapConnector(string serverNameOrIp, int port, string objectName)
             : base(serverNameOrIp, port, objectName)
         {
         }
@@ -45,7 +45,7 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// </summary>
         /// <param name="port">Порт сервера</param>
         /// <param name="objectName">Имя объекта</param>
-        public TcpSoapConnector(Int32 port, String objectName)
+        public TcpSoapConnector(int port, string objectName)
             : this(CustomConnector<T>.Localhost, port, objectName)
         {
         }

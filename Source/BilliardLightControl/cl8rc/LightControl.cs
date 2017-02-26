@@ -17,9 +17,9 @@ namespace cl8rc
     {
         IDevice _parent;
         EasyCommunicationPort _port;
-        Byte _address;
-        Byte _relayStatus;
-        Boolean _connected;
+        byte _address;
+        byte _relayStatus;
+        bool _connected;
 
         /// <summary>
         /// Создает экземпляр класса
@@ -27,7 +27,7 @@ namespace cl8rc
         /// <param name="parent">Родительское устройство</param>
         /// <param name="port">Коммуникационный порт</param>
         /// <param name="address">Адрес модуля</param>
-        public RelayModule(IDevice parent, EasyCommunicationPort port, Byte address)
+        public RelayModule(IDevice parent, EasyCommunicationPort port, byte address)
         {
             if (parent == null)
                 throw new ArgumentNullException("parent");
@@ -49,21 +49,21 @@ namespace cl8rc
         /// </summary>
         /// <param name="relayNo">Номер реле</param>
         /// <param name="switchOn">Включить</param>
-        public ErrorCode ExecuteCommand(Byte relayNo, Boolean switchOn)
+        public ErrorCode ExecuteCommand(byte relayNo, bool switchOn)
         {
             if (!_connected)
                 throw new InvalidOperationException(
-                    String.Format("Модуль {0:X2} отключен", _address));
+                    string.Format("Модуль {0:X2} отключен", _address));
             if (relayNo > 7)
                 throw new ArgumentOutOfRangeException("relayNo");
 
             // переключатель
-            Int32 switchByte = Pow2(relayNo);
+            int switchByte = Pow2(relayNo);
 
             // формируем новый статус реле модуля
-            Byte nextRelayStatus = switchOn ?
-                (Byte)(_relayStatus | switchByte) :
-                (Byte)(_relayStatus & ~switchByte);
+            byte nextRelayStatus = switchOn ?
+                (byte)(_relayStatus | switchByte) :
+                (byte)(_relayStatus & ~switchByte);
 
             // выполняем команду
             return ExecuteCommand(nextRelayStatus, 3);
@@ -73,20 +73,20 @@ namespace cl8rc
         /// Степень двойки
         /// </summary>
         /// <param name="pow">Показатель степени</param>
-        private Int32 Pow2(Int32 pow)
+        private int Pow2(int pow)
         {
             if (pow < 1)
                 return 1;
 
-            Int32 pow2 = 1;
-            for (Int32 i = 1; i <= pow; i++)
+            int pow2 = 1;
+            for (int i = 1; i <= pow; i++)
             {
                 pow2 = pow2 * 2;
             }
             return pow2;
         }
 
-        private ErrorCode OnException(Boolean saveErrors, Exception e)
+        private ErrorCode OnException(bool saveErrors, Exception e)
         {
             if (saveErrors)
                 return new ServerErrorCode(_parent, e);
@@ -100,14 +100,14 @@ namespace cl8rc
         /// </summary>
         /// <param name="nextRelayStatus">Новое состояние реле</param>
         /// <param name="retryCount">Число попыток повтора</param>
-        private ErrorCode ExecuteCommand(Byte nextRelayStatus, Byte retryCount)
+        private ErrorCode ExecuteCommand(byte nextRelayStatus, byte retryCount)
         {
 
             // формируем команду
-            String command = String.Format("@{0:X2}{1:X2}00\r",
+            string command = string.Format("@{0:X2}{1:X2}00\r",
                 _address, nextRelayStatus);
 
-            Boolean saveConnected = retryCount == 1;
+            bool saveConnected = retryCount == 1;
             ErrorCode storedErrorCode;
             do
             {
@@ -120,13 +120,13 @@ namespace cl8rc
                     _port.Write(Encoding.Default.GetBytes(command));
 
                     // читаем ответ
-                    Byte[] answer = new Byte[4];
+                    byte[] answer = new byte[4];
                     _port.Read(answer, 0, answer.Length);
 
                     if (saveConnected)
                         _connected = true;
 
-                    if (answer[0] == (Byte)'!')
+                    if (answer[0] == (byte)'!')
                     {
                         _relayStatus = nextRelayStatus;
                         return new ServerErrorCode(_parent, GeneralError.Success);
@@ -182,20 +182,20 @@ namespace cl8rc
             Port.ReadTimeout = 1000;
 
             // выполняем опрос модулей
-            for (Int32 i = 0; i < _modules.Length; i++)
-                _modules[i] = new RelayModule(this, Port, (Byte)i);
+            for (int i = 0; i < _modules.Length; i++)
+                _modules[i] = new RelayModule(this, Port, (byte)i);
         }
 
-        private void SwitchTableLight(Int32 billiardTableNo, Boolean switchOn)
+        private void SwitchTableLight(int billiardTableNo, bool switchOn)
         {
             if (billiardTableNo < 1 || billiardTableNo > 64)
                 throw new ArgumentOutOfRangeException("billiardTableNo");
 
             // определяем адрес модуля по абсолютному номеру стола
-            Int32 moduleAddress = (billiardTableNo - 1) / 8;
+            int moduleAddress = (billiardTableNo - 1) / 8;
 
             // выполняем команду
-            ErrorCode = _modules[moduleAddress].ExecuteCommand((Byte)((billiardTableNo - 1) % 8), switchOn);
+            ErrorCode = _modules[moduleAddress].ExecuteCommand((byte)((billiardTableNo - 1) % 8), switchOn);
         }
 
         #endregion
@@ -204,7 +204,7 @@ namespace cl8rc
         /// Выключить свет
         /// </summary>
         /// <param name="billiardTableNo">Номер стола</param>
-        public override void LightsOff(Int32 billiardTableNo)
+        public override void LightsOff(int billiardTableNo)
         {
             SwitchTableLight(billiardTableNo, false);
         }
@@ -213,7 +213,7 @@ namespace cl8rc
         /// Включить свет
         /// </summary>
         /// <param name="billiardTableNo">Номер стола</param>
-        public override void LightsOn(Int32 billiardTableNo)
+        public override void LightsOn(int billiardTableNo)
         {
             SwitchTableLight(billiardTableNo, true);
         }

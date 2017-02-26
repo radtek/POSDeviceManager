@@ -32,7 +32,7 @@ namespace DevmanConfig
 
         public void ReloadProgress(int eventsLoaded)
         {
-            _tsslReloadProgress.Text = String.Format("Событий загружено: {0}", eventsLoaded);
+            _tsslReloadProgress.Text = string.Format("Событий загружено: {0}", eventsLoaded);
         }
 
         public IEventLinkBasics Source

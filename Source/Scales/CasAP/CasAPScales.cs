@@ -90,7 +90,7 @@ namespace CasAP
                 ConnStrHelper connStrHelper = new ConnStrHelper(_connStr);
 
                 // поддерживается обмен только по RS-232
-                if (String.Compare(connStrHelper[1], "rs", true) != 0)
+                if (string.Compare(connStrHelper[1], "rs", true) != 0)
                     throw new InvalidOperationException("Весы поддерживают обмен только по интерфейсу RS-232");
 
                 // инициализируем параметры связи
@@ -111,7 +111,7 @@ namespace CasAP
         /// <summary>
         /// Текущие показания веса
         /// </summary>
-        public Int32 Weight
+        public int Weight
         {
             get 
             {

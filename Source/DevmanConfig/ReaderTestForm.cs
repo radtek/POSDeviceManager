@@ -59,7 +59,7 @@ namespace DevmanConfig
                         _device = (IGenericReader)_dmClient[deviceId];
                     else
                         MessageBox.Show(
-                            String.Format("Не удалось получить доступ к устройству \"{0}\"",
+                            string.Format("Не удалось получить доступ к устройству \"{0}\"",
                             deviceId), "Тест устройства", MessageBoxButtons.OK,
                             MessageBoxIcon.Error);
                 }
@@ -77,10 +77,10 @@ namespace DevmanConfig
             catch (Exception E)
             {
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine(String.Format("Ошибка тестирования устройства \"{0}\".",
+                sb.AppendLine(string.Format("Ошибка тестирования устройства \"{0}\".",
                     deviceId));
-                sb.AppendLine(String.Format("Тип: {0}.", E.GetType().Name));
-                sb.AppendLine(String.Format("Сообщение: {0}.", E.Message));
+                sb.AppendLine(string.Format("Тип: {0}.", E.GetType().Name));
+                sb.AppendLine(string.Format("Сообщение: {0}.", E.Message));
                 sb.AppendLine("Трассировка стека:");
                 sb.Append(E.StackTrace);
 
@@ -106,10 +106,10 @@ namespace DevmanConfig
             {
                 tbReadData.Enabled = false;
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine(String.Format("Ошибка тестирования устройства \"{0}\".",
+                sb.AppendLine(string.Format("Ошибка тестирования устройства \"{0}\".",
                     deviceId));
-                sb.AppendLine(String.Format("Тип: {0}.", E.GetType().Name));
-                sb.AppendLine(String.Format("Сообщение: {0}.", E.Message));
+                sb.AppendLine(string.Format("Тип: {0}.", E.GetType().Name));
+                sb.AppendLine(string.Format("Сообщение: {0}.", E.Message));
                 sb.AppendLine("Трассировка стека:");
                 sb.Append(E.StackTrace);
 

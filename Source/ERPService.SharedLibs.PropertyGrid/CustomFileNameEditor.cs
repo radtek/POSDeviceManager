@@ -29,7 +29,7 @@ namespace ERPService.SharedLibs.PropertyGrid
         /// <param name="value">Исходное значение</param>
         protected override Object OnEdit(Object value)
         {
-            String fileName = (String)value;
+            string fileName = (string)value;
             using (OpenFileDialog dialog = new OpenFileDialog())
             {
                 dialog.Title = DialogTitle;
@@ -44,7 +44,7 @@ namespace ERPService.SharedLibs.PropertyGrid
                 }
                 dialog.Filter = sb.ToString();
 
-                if (!String.IsNullOrEmpty(fileName))
+                if (!string.IsNullOrEmpty(fileName))
                     dialog.InitialDirectory = Path.GetDirectoryName(fileName);
                 
                 dialog.CheckFileExists = CheckFileExists;
@@ -61,7 +61,7 @@ namespace ERPService.SharedLibs.PropertyGrid
         /// <summary>
         /// Заголовок диалога выбора файла
         /// </summary>
-        protected virtual String DialogTitle
+        protected virtual string DialogTitle
         {
             get { return "Выбрать файл"; }
         }
@@ -69,7 +69,7 @@ namespace ERPService.SharedLibs.PropertyGrid
         /// <summary>
         /// Проверять, существует ли указанный файл
         /// </summary>
-        protected virtual Boolean CheckFileExists
+        protected virtual bool CheckFileExists
         {
             get { return false; }
         }
@@ -77,7 +77,7 @@ namespace ERPService.SharedLibs.PropertyGrid
         /// <summary>
         /// Проверять, существует ли введенный путь
         /// </summary>
-        protected virtual Boolean CheckPathExists
+        protected virtual bool CheckPathExists
         {
             get { return true; }
         }

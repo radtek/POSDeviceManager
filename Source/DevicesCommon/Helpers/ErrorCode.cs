@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DevicesCommon.Helpers
 {
@@ -13,22 +11,22 @@ namespace DevicesCommon.Helpers
         #region Константы
 
         // шаблон полного описания кода ошибки
-        private const String fullDescriptionTemplate = "Устройство: \"{0}\".\nОбщий код ошибки: {1} ({2}).\nДополнительный код ошибки: {3} ({4})";
+        private const string fullDescriptionTemplate = "Устройство: \"{0}\".\nОбщий код ошибки: {1} ({2}).\nДополнительный код ошибки: {3} ({4})";
 
         #endregion
 
         #region Поля
 
         // идентификатор устройства, которому принадлежит код ошибки
-        private String _sender;
+        private string _sender;
         // общий код ошибки
         private GeneralError _value;
         // описание общего кода ошибки
-        private String _description;
+        private string _description;
         // специфический для протокола обмена с устройством код ошибки
         private Int16 _specificValue;
         // описание специфического для протокола обмена с устройством кода ошибки
-        private String _specificDescription;
+        private string _specificDescription;
 
         #endregion
 
@@ -42,8 +40,8 @@ namespace DevicesCommon.Helpers
         /// <param name="specificValue">Код ошибки протокола обмена с устройством</param>
         /// <param name="specificDescription">Описание кода ошибки</param>
         /// <param name="sender">Устройство-отправитель кода ошибки</param>
-        public ErrorCode(String sender, GeneralError value, String description,
-            Int16 specificValue, String specificDescription)
+        public ErrorCode(string sender, GeneralError value, string description,
+            Int16 specificValue, string specificDescription)
         {
             _sender = sender;
             _value = value;
@@ -60,7 +58,7 @@ namespace DevicesCommon.Helpers
         /// Возвращает описание общего кода ошибки по его значению
         /// </summary>
         /// <param name="value">Значение кода ошибки</param>
-        protected static String GetGeneralDescription(GeneralError value)
+        protected static string GetGeneralDescription(GeneralError value)
         {
             switch (value)
             {
@@ -90,7 +88,7 @@ namespace DevicesCommon.Helpers
         /// <summary>
         /// Идентификатор устройства, которому принадлежит код ошибки
         /// </summary>
-        public String Sender
+        public string Sender
         {
             get { return _sender; }
         }
@@ -106,7 +104,7 @@ namespace DevicesCommon.Helpers
         /// <summary>
         /// Описание общего кода ошибки
         /// </summary>
-        public String Description 
+        public string Description 
         {
             get { return _description; }
         }
@@ -122,7 +120,7 @@ namespace DevicesCommon.Helpers
         /// <summary>
         /// Описание специфического для протокола обмена с устройством кода ошибки
         /// </summary>
-        public String SpecificDescription
+        public string SpecificDescription
         {
             get { return _specificDescription; }
         }
@@ -134,7 +132,7 @@ namespace DevicesCommon.Helpers
         {
             get
             {
-                return String.Format(
+                return string.Format(
                     fullDescriptionTemplate,
                     _sender,
                     _value,
@@ -147,7 +145,7 @@ namespace DevicesCommon.Helpers
         /// <summary>
         /// Успешное завершение предыдущей операции
         /// </summary>
-        public Boolean Succeeded
+        public bool Succeeded
         {
             get { return _value == GeneralError.Success; }
         }
@@ -155,7 +153,7 @@ namespace DevicesCommon.Helpers
         /// <summary>
         /// Неуспешное завершение предыдущей операции
         /// </summary>
-        public Boolean Failed
+        public bool Failed
         {
             get { return _value != GeneralError.Success; }
         }
@@ -167,7 +165,7 @@ namespace DevicesCommon.Helpers
         /// <summary>
         /// Возвращает строковое представление объекта (краткое описание кода ошибки)
         /// </summary>
-        public override String ToString()
+        public override string ToString()
         {
             switch (_value)
             {

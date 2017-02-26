@@ -11,14 +11,14 @@ namespace DevicesBase.Communicators
     {
         Socket socket;
         string host;
-        Int32 port;
+        int port;
 
         /// <summary>
         /// Создает экземпляр класса
         /// </summary>
         /// <param name="host">Имя хоста</param>
         /// <param name="port">Порт</param>
-        public TcpCommunicator(string host, Int32 port) 
+        public TcpCommunicator(string host, int port) 
             : base()
         {
             this.host = host;
@@ -30,7 +30,7 @@ namespace DevicesBase.Communicators
         /// <summary>
         /// Таймаут чтения
         /// </summary>
-        public override Int32 ReadTimeout
+        public override int ReadTimeout
         {
             get { return socket.ReceiveTimeout; }
             set { socket.ReceiveTimeout = value; }
@@ -39,7 +39,7 @@ namespace DevicesBase.Communicators
         /// <summary>
         /// Таймаут записи
         /// </summary>
-        public override Int32 WriteTimeout
+        public override int WriteTimeout
         {
             get { return socket.SendTimeout; }
             set { socket.SendTimeout = value; }
@@ -75,7 +75,7 @@ namespace DevicesBase.Communicators
         /// <param name="buffer">Буфер данных</param>
         /// <param name="offset">Смещение от начала буфера</param>
         /// <param name="size">Размер принимаемых данных</param>
-        public override Int32 Read(Byte[] buffer, Int32 offset, Int32 size)
+        public override int Read(byte[] buffer, int offset, int size)
         {
             int received = 0;
             do
@@ -108,7 +108,7 @@ namespace DevicesBase.Communicators
         /// <param name="buffer">Буфер данных</param>
         /// <param name="offset">Смещение от начала буфера</param>
         /// <param name="size">Размер записываемых данных</param>
-        public override Int32 Write(Byte[] buffer, Int32 offset, Int32 size)
+        public override int Write(byte[] buffer, int offset, int size)
         {
             try
             {

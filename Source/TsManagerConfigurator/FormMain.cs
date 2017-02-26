@@ -16,7 +16,7 @@ namespace TsManagerConfigurator
     {
         #region Ïîëÿ
 
-        private Boolean _modified;
+        private bool _modified;
         private TsManagerSettings _settings;
         private AMCSLogicLoader _logicLoader;
         private ServiceMonitor _svcMonitor;
@@ -81,7 +81,7 @@ namespace TsManagerConfigurator
         private void NewTurnstile()
         {
             TsUnitSettings unitSettings = new TsUnitSettings();
-            unitSettings.Name = String.Format("Òóðíèêåò{0}", tvSettings.SelectedNode.Nodes.Count + 1);
+            unitSettings.Name = string.Format("Òóðíèêåò{0}", tvSettings.SelectedNode.Nodes.Count + 1);
 
             AMCSLogicSettings logicSettings = (AMCSLogicSettings)tvSettings.SelectedNode.Tag;
             logicSettings.Units.Add(unitSettings);
@@ -103,7 +103,7 @@ namespace TsManagerConfigurator
                 AMCSLogicSettings logicSettings = new AMCSLogicSettings();
                 logicSettings.LogicSettings = _logicLoader.CreateLogicSettings(formSelectAMÑSLogic.ACMSName);
                 logicSettings.AcmsName = formSelectAMÑSLogic.ACMSName;
-                logicSettings.Name = String.Format("ÑÊÓÄ{0}", tvSettings.Nodes[0].Nodes.Count + 1);
+                logicSettings.Name = string.Format("ÑÊÓÄ{0}", tvSettings.Nodes[0].Nodes.Count + 1);
 
                 _settings.LogicSettings.Add(logicSettings);
                 

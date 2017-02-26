@@ -60,7 +60,7 @@ namespace ERPService.SharedLibs.Remoting.Hosts
         /// </summary>
         /// <param name="objectName">Имя объекта</param>
         /// <param name="port">Порт</param>
-        public void Marshal(String objectName, Int32 port)
+        public void Marshal(string objectName, int port)
         {
             CheckCustomErrors();
 
@@ -99,7 +99,7 @@ namespace ERPService.SharedLibs.Remoting.Hosts
         /// </summary>
         /// <param name="objectName">Имя объекта</param>
         /// <remarks>Используется порт, указанный в объекте</remarks>
-        public void Marshal(String objectName)
+        public void Marshal(string objectName)
         {
             Marshal(objectName, _target.Port);
         }
@@ -109,7 +109,7 @@ namespace ERPService.SharedLibs.Remoting.Hosts
         /// </summary>
         /// <param name="port">Порт</param>
         /// <remarks>Используется имя объекта, указанное в объекте</remarks>
-        public void Marshal(Int32 port)
+        public void Marshal(int port)
         {
             Marshal(_target.Name, port);
         }
@@ -119,7 +119,7 @@ namespace ERPService.SharedLibs.Remoting.Hosts
         /// </summary>
         /// <param name="disposeTarget">Вызывать IDisposable.Dispose у объекта, 
         /// к которому обеспечивался доступ<see cref="System.IDisposable"/></param>
-        public void Unmarshal(Boolean disposeTarget)
+        public void Unmarshal(bool disposeTarget)
         {
             if (_targetRef != null)
             {
@@ -167,8 +167,8 @@ namespace ERPService.SharedLibs.Remoting.Hosts
         /// <param name="channelName">Имя канала</param>
         /// <param name="port">Порт для публикации объекта</param>
         /// <returns>Серверный канал</returns>
-        protected abstract IChannel CreateChannel(Int32 port, 
-            IServerChannelSinkProvider sinkProvider, String channelName);
+        protected abstract IChannel CreateChannel(int port, 
+            IServerChannelSinkProvider sinkProvider, string channelName);
 
         #endregion
 

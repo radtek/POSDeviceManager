@@ -12,7 +12,7 @@ namespace DevicesBase
 	public abstract class CustomFiscalDevice : CustomPrintableDevice, IFiscalDevice
 	{
 		// пароль НИ
-		private Int32 taxerPassword;
+		private int taxerPassword;
 
 		#region Конструктор
 

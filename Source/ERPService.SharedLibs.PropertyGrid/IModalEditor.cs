@@ -14,7 +14,7 @@ namespace ERPService.SharedLibs.PropertyGrid
         /// Отображение модального редактора
         /// </summary>
         /// <param name="descriptorContext">Контекст для получения дополнительной информации о свойстве</param>
-        Boolean ShowEditor(ITypeDescriptorContext descriptorContext);
+        bool ShowEditor(ITypeDescriptorContext descriptorContext);
 
         /// <summary>
         /// Редактируемое значение

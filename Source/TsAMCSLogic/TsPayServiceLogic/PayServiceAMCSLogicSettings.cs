@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
 
 namespace TsPayServiceLogic
@@ -8,8 +6,8 @@ namespace TsPayServiceLogic
     [Serializable]
     public class PayServiceAMCSLogicSettings
     {
-        private String _hostOrIp;
-        private Int32 _port;
+        private string _hostOrIp;
+        private int _port;
 
         public PayServiceAMCSLogicSettings()
         {
@@ -21,7 +19,7 @@ namespace TsPayServiceLogic
         [Description("Имя хоста или его IP-адрес для подключения к \"Форинт-С: Платежи и скидки\"")]
         [Category("Прочее")]
         [DefaultValue("localhost")]
-        public String HostOrIp
+        public string HostOrIp
         {
             get { return _hostOrIp; }
             set { _hostOrIp = value; }
@@ -31,7 +29,7 @@ namespace TsPayServiceLogic
         [Description("TCP-порт для подключения к \"Форинт-С: Платежи и скидки\"")]
         [Category("Прочее")]
         [DefaultValue(34601)]
-        public Int32 Port
+        public int Port
         {
             get { return _port; }
             set { _port = value; }

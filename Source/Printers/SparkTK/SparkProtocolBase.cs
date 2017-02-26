@@ -69,12 +69,12 @@ namespace SparkTK
                 }
                 catch (TimeoutException)
                 {
-                    WriteDebugLine(String.Format("{0}. Таймаут", errMessage));
+                    WriteDebugLine(string.Format("{0}. Таймаут", errMessage));
                     throw;
                 }
                 catch (System.ComponentModel.Win32Exception E)
                 {
-                    WriteDebugLine(String.Format("{0}. Ошибка {1}: {2}", errMessage, E.NativeErrorCode, E.Message));
+                    WriteDebugLine(string.Format("{0}. Ошибка {1}: {2}", errMessage, E.NativeErrorCode, E.Message));
                     if (E.NativeErrorCode == 995 && retriesCount > 0)
                     {
                         // сброс ошибки и повтор попытки
@@ -232,7 +232,7 @@ namespace SparkTK
 
         protected void SetDsrFlow(bool value)
         {
-            WriteDebugLine(String.Format("SetDsrFlow({0})", value));
+            WriteDebugLine(string.Format("SetDsrFlow({0})", value));
             ExecuteCommOperation("SetDsrFlow", 5, delegate() { CommPort.DsrFlow = value; });
         }
 
@@ -246,7 +246,7 @@ namespace SparkTK
             string[] bufDump = Array.ConvertAll(nBuffer, new Converter<byte, string>(delegate(byte b) { return b.ToString("X"); }));
             _debugInfo.AppendFormat("{0:HH:mm:ss}\t{1}\r\n", DateTime.Now, message);
             if (nBufferLen > 0)
-                _debugInfo.AppendFormat("\t{0:X}\r\n", String.Join(" ", bufDump, 0, nBufferLen));
+                _debugInfo.AppendFormat("\t{0:X}\r\n", string.Join(" ", bufDump, 0, nBufferLen));
             else
                 _debugInfo.Append("\tнет\r\n");
         }

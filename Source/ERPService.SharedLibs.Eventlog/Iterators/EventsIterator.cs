@@ -15,13 +15,13 @@ namespace ERPService.SharedLibs.Eventlog.Iterators
 
         internal DateTime FromDate { get; set; }
         internal DateTime ToDate { get; set; }
-        internal IEnumerable<String> SourceFilter { get; set; }
-        internal IEnumerable<String> EventTypeFilter { get; set; }
+        internal IEnumerable<string> SourceFilter { get; set; }
+        internal IEnumerable<string> EventTypeFilter { get; set; }
 
-        private Int32 _maxEvents;
-        private Int32 _maxEventsPerIteration;
+        private int _maxEvents;
+        private int _maxEventsPerIteration;
 
-        internal Int32 MaxEvents
+        internal int MaxEvents
         {
             get { return _maxEvents; }
             set 
@@ -32,7 +32,7 @@ namespace ERPService.SharedLibs.Eventlog.Iterators
             }
         }
 
-        internal Int32 MaxEventsPerIteration
+        internal int MaxEventsPerIteration
         {
             get { return _maxEventsPerIteration; }
             set 
@@ -68,13 +68,13 @@ namespace ERPService.SharedLibs.Eventlog.Iterators
 
         #region Поля
 
-        private readonly Func<DateTime, String> _storageNamePredicate;
+        private readonly Func<DateTime, string> _storageNamePredicate;
 
         #endregion
 
         #region Конструктор
 
-        internal EventsIterator(Func<DateTime, String> storageNamePredicate)
+        internal EventsIterator(Func<DateTime, string> storageNamePredicate)
         {
             _storageNamePredicate = storageNamePredicate;
         }

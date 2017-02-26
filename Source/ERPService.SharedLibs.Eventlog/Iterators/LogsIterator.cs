@@ -10,20 +10,20 @@ namespace ERPService.SharedLibs.Eventlog.Iterators
     {
         #region Константы
 
-        private const String _dateRangeError = 
+        private const string _dateRangeError = 
             "Ошибка задания диапазона дат. Начало диапазона {0} больше конца диапазона {1}";
 
         #endregion
 
         #region Поля
 
-        private Func<DateTime, String> _storageNamePredicate;
+        private Func<DateTime, string> _storageNamePredicate;
 
         #endregion
 
         #region Конструктор
 
-        internal LogsIterator(Func<DateTime, String> storageNamePredicate)
+        internal LogsIterator(Func<DateTime, string> storageNamePredicate)
         {
             if (storageNamePredicate == null)
                 throw new ArgumentNullException("storageNamePredicate");
@@ -41,11 +41,11 @@ namespace ERPService.SharedLibs.Eventlog.Iterators
         /// <param name="fromDate">Дата начала диапазона</param>
         /// <param name="toDate">Дата окончания диапазона</param>
         /// <returns>Интерфейс для перебора логов</returns>
-        internal IEnumerable<String> LogsRundown(DateTime fromDate, DateTime toDate)
+        internal IEnumerable<string> LogsRundown(DateTime fromDate, DateTime toDate)
         {
             // проверяем корректность задания диапазона дат
             if (fromDate > toDate)
-                throw new ArgumentException(String.Format(_dateRangeError, fromDate, toDate));
+                throw new ArgumentException(string.Format(_dateRangeError, fromDate, toDate));
             if (toDate > DateTime.Today)
                 // приравниваем окончание интервала сегодняшней дата
                 toDate = DateTime.Today;
@@ -55,7 +55,7 @@ namespace ERPService.SharedLibs.Eventlog.Iterators
             do
             {
                 // для каждой даты ищем свой лог
-                String storageName = _storageNamePredicate(nextDate);
+                string storageName = _storageNamePredicate(nextDate);
                 
                 if (File.Exists(storageName))
                     yield return storageName;

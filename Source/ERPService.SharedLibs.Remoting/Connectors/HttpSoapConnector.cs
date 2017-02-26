@@ -31,8 +31,8 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// открыто к зададнному серверу</param>
         /// <param name="proxyName">»м€ или IP-адрес прокси-сервера</param>
         /// <param name="proxyPort">ѕорт прокси-сервера</param>
-        public HttpSoapConnector(String serverNameOrIp, Int32 port, String objectName,
-            Int32 clientConnectionLimit, String proxyName, Int32 proxyPort)
+        public HttpSoapConnector(string serverNameOrIp, int port, string objectName,
+            int clientConnectionLimit, string proxyName, int proxyPort)
             : base(serverNameOrIp, port, objectName, clientConnectionLimit, proxyName, proxyPort)
         {
         }
@@ -46,8 +46,8 @@ namespace ERPService.SharedLibs.Remoting.Connectors
         /// открыто к зададнному серверу</param>
         /// <param name="proxyName">»м€ или IP-адрес прокси-сервера</param>
         /// <param name="proxyPort">ѕорт прокси-сервера</param>
-        public HttpSoapConnector(Int32 port, String objectName, Int32 clientConnectionLimit,
-            String proxyName, Int32 proxyPort)
+        public HttpSoapConnector(int port, string objectName, int clientConnectionLimit,
+            string proxyName, int proxyPort)
             : this(CustomConnector<T>.Localhost, port, objectName, clientConnectionLimit, 
             proxyName, proxyPort)
         {

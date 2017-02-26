@@ -47,6 +47,6 @@ namespace ERPService.SharedLibs.PropertyGrid
         /// <summary>
         /// ¬озвращает список стандартных значений
         /// </summary>
-        abstract protected String[] StandardValues { get; }
+        abstract protected string[] StandardValues { get; }
     }
 }

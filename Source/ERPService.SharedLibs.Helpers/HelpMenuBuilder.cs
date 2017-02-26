@@ -14,8 +14,8 @@ namespace ERPService.SharedLibs.Helpers
     {
         #region Поля
 
-        private String _svnSubDirectory;
-        private Boolean _showComponents;
+        private string _svnSubDirectory;
+        private bool _showComponents;
 
         #endregion
 
@@ -38,7 +38,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <param name="args"></param>
         protected virtual void OnUpdatesClick(Object sender, EventArgs args)
         {
-            Process.Start(String.Format("http://www.erpservice.ru/svn/{0}", _svnSubDirectory));
+            Process.Start(string.Format("http://www.erpservice.ru/svn/{0}", _svnSubDirectory));
         }
 
         /// <summary>
@@ -60,12 +60,12 @@ namespace ERPService.SharedLibs.Helpers
         /// </summary>
         /// <param name="form">Форма, в которую нужно встроить меню</param>
         /// <param name="svnSubDirectory">Подкаталог в системе контроля версий для программного продукта</param>
-        public HelpMenuBuilder(Form form, String svnSubDirectory)
+        public HelpMenuBuilder(Form form, string svnSubDirectory)
             : base()
         {
             if (form == null)
                 throw new ArgumentNullException("form");
-            if (String.IsNullOrEmpty(svnSubDirectory))
+            if (string.IsNullOrEmpty(svnSubDirectory))
                 throw new ArgumentNullException("svnSubDirectory");
             if (form.MainMenuStrip == null)
                 throw new InvalidOperationException("Форма не содержит главного меню");
@@ -94,7 +94,7 @@ namespace ERPService.SharedLibs.Helpers
         /// </summary>
         /// <param name="componentName">Наименование компонента</param>
         /// <param name="componentVersion">Версия компонента</param>
-        public override void AppendComponentInfo(String componentName, String componentVersion)
+        public override void AppendComponentInfo(string componentName, string componentVersion)
         {
             _showComponents = true;
             base.AppendComponentInfo(componentName, componentVersion);

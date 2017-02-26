@@ -42,7 +42,7 @@ namespace ERPService.SharedLibs.PropertyGrid
                 valuesList.EndUpdate();
             }
             // определ€ем высоту списка
-            Int32 heightMultiplier = valuesList.Items.Count > 7 ? 7 : valuesList.Items.Count;
+            int heightMultiplier = valuesList.Items.Count > 7 ? 7 : valuesList.Items.Count;
             valuesList.Height = valuesList.ItemHeight * (heightMultiplier + 1);
             // выбираем строку в списке в зависимости от значени€ свойства
             valuesList.SelectedIndex = ObjectToIndex(value);
@@ -67,18 +67,18 @@ namespace ERPService.SharedLibs.PropertyGrid
         /// <summary>
         /// ¬озвращает список возможных значений свойства
         /// </summary>
-        abstract public String[] Values { get; }
+        abstract public string[] Values { get; }
 
         /// <summary>
         /// ¬озвращает индекс выбранного значени€
         /// </summary>
         /// <param name="value">»сходное значение свойства</param>
-        abstract protected Int32 ObjectToIndex(Object value);
+        abstract protected int ObjectToIndex(Object value);
 
         /// <summary>
         ///  онвертирует выбранное строковое значение в нужный тип
         /// </summary>
         /// <param name="selectedIndex">»декс строки в списке</param>
-        abstract protected Object IndexToObject(Int32 selectedIndex);
+        abstract protected Object IndexToObject(int selectedIndex);
     }
 }

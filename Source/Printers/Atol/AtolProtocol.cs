@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Drawing.Imaging;
 using DevicesBase;
 using DevicesBase.Helpers;
 using DevicesCommon;
 using DevicesCommon.Helpers;
-using System.Drawing.Imaging;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace Atol
@@ -47,7 +45,7 @@ namespace Atol
         public int SlipLineSize;
 
         // поддержка отрезчика
-        public Boolean IsCutterSupported;
+        public bool IsCutterSupported;
     }
 
     [Serializable]
@@ -607,7 +605,7 @@ namespace Atol
         }
 
         // печать строки
-        private void PrintStringInternal(String source, FontStyle style)
+        private void PrintStringInternal(string source, FontStyle style)
         {
             _atolProtocol.CreateCommand(0x87);
             _atolProtocol.AddByte(0); // режим проверки
@@ -694,15 +692,15 @@ namespace Atol
             }
             catch (TimeoutException)
             {
-                ErrorCode = new ServerErrorCode(this, GeneralError.Timeout, _atolProtocol != null ? _atolProtocol.GetCommandDump() : String.Empty);
+                ErrorCode = new ServerErrorCode(this, GeneralError.Timeout, _atolProtocol != null ? _atolProtocol.GetCommandDump() : string.Empty);
             }
             catch (DeviceErrorException E)
             {
-                ErrorCode = new ServerErrorCode(this, E.ErrorCode, _atolProtocol != null ? GetSpecificDescription(E.ErrorCode) : String.Empty, _atolProtocol.GetCommandDump());
+                ErrorCode = new ServerErrorCode(this, E.ErrorCode, _atolProtocol != null ? GetSpecificDescription(E.ErrorCode) : string.Empty, _atolProtocol.GetCommandDump());
             }
             catch (Exception E)
             {
-                ErrorCode = new ServerErrorCode(this, E, _atolProtocol != null ? _atolProtocol.GetCommandDump() : String.Empty);
+                ErrorCode = new ServerErrorCode(this, E, _atolProtocol != null ? _atolProtocol.GetCommandDump() : string.Empty);
             }
             finally
             {
@@ -820,7 +818,7 @@ namespace Atol
         }
 
         protected override void OnOpenDocument(DocumentType docType,
-            String cashierName)
+            string cashierName)
         {
             ExecuteDriverCommand(delegate()
             {
@@ -948,7 +946,7 @@ namespace Atol
             });
         }
 
-        protected override void OnPrintString(String source, FontStyle style)
+        protected override void OnPrintString(string source, FontStyle style)
         {
             ExecuteDriverCommand(delegate()
             {
@@ -979,7 +977,7 @@ namespace Atol
             });
         }
 
-        protected override void OnPrintBarcode(String barcode, AlignOptions align,
+        protected override void OnPrintBarcode(string barcode, AlignOptions align,
             bool readable)
         {
             ExecuteDriverCommand(delegate()
@@ -1034,8 +1032,7 @@ namespace Atol
             });
         }
 
-        protected override void OnRegistration(String commentary, UInt32 quantity, UInt32 amount,
-            Byte section)
+        protected override void OnRegistration(string commentary, uint quantity, uint amount, byte section)
         {
             ExecuteDriverCommand(delegate()
             {
@@ -1063,7 +1060,7 @@ namespace Atol
             });
         }
 
-        protected override void OnPayment(UInt32 amount, FiscalPaymentType paymentType)
+        protected override void OnPayment(uint amount, FiscalPaymentType paymentType)
         {
             ExecuteDriverCommand(delegate()
             {
@@ -1099,7 +1096,7 @@ namespace Atol
             });
         }
 
-        protected override void OnCash(UInt32 amount)
+        protected override void OnCash(uint amount)
         {
             ExecuteDriverCommand(delegate()
             {

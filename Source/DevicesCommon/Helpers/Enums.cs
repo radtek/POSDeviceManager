@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace DevicesCommon.Helpers
 {
-	/// <summary>
-	/// Общие для всех устройств коды ошибок
-	/// </summary>
-	public enum GeneralError
+    /// <summary>
+    /// Общие для всех устройств коды ошибок
+    /// </summary>
+    public enum GeneralError
 	{
 		/// <summary>
 		/// Успешно (ошибок нет)

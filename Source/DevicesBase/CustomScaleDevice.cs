@@ -32,7 +32,7 @@ namespace DevicesBase
     {
         private string _connectionString;
         private ICommunicator _communicator;
-        private Dictionary<string, Int32> _dataRecordsCount;
+        private Dictionary<string, int> _dataRecordsCount;
 
         /// <summary>
         /// Создает устройство-весы
@@ -40,7 +40,7 @@ namespace DevicesBase
         protected CustomScaleDevice()
             : base()
         {
-            _dataRecordsCount = new Dictionary<string, Int32>();
+            _dataRecordsCount = new Dictionary<string, int>();
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace DevicesBase
         /// Возвращает текущие показания веса
         /// </summary>
         /// <param name="communicator">Коммуникатор, подключенный к устройству</param>
-        protected virtual Int32 GetWeight(ICommunicator communicator)
+        protected virtual int GetWeight(ICommunicator communicator)
         {
             return 0;
         }
@@ -107,8 +107,8 @@ namespace DevicesBase
         /// <param name="box">Вес тары в граммах</param>
         /// <param name="shelfLife">Срок годности в днях</param>
         /// <param name="message">Номер сообщения (экстра-текста)</param>
-        protected virtual Boolean OnArticleUpload(string articleName, Int32 articleCode, Int32 PLU,
-            Int32 price, Int32 units, Int32 box, Int32 shelfLife, Int32 message)
+        protected virtual bool OnArticleUpload(string articleName, int articleCode, int PLU,
+            int price, int units, int box, int shelfLife, int message)
         {
             return true;
         }
@@ -118,7 +118,7 @@ namespace DevicesBase
         /// </summary>
         /// <param name="messageText">Текст сообщения</param>
         /// <param name="messageNumber">Номер сообщения в памяти весов</param>
-        protected virtual Boolean OnMessageUpload(string messageText, Int32 messageNumber)
+        protected virtual bool OnMessageUpload(string messageText, int messageNumber)
         {
             return true;
         }
@@ -128,7 +128,7 @@ namespace DevicesBase
         /// </summary>
         /// <param name="advertisingText">Текст рекламной информации</param>
         /// <param name="advertisingType">Тип рекламной информации <see cref="AdvertisingType"/></param>
-        protected virtual Boolean OnAdvertisingUpload(string advertisingText,
+        protected virtual bool OnAdvertisingUpload(string advertisingText,
             AdvertisingType advertisingType)
         {
             return true;
@@ -145,8 +145,8 @@ namespace DevicesBase
         /// <param name="attributeName">Имя атрибута</param>
         /// <param name="required">Обязательный или нет</param>
         /// <param name="defaultValue">Значение по умолчанию</param>
-        private Int32 GetInt32AttributeValue(XmlElement element, string attributeName,
-            Boolean required, Int32 defaultValue)
+        private int GetInt32AttributeValue(XmlElement element, string attributeName,
+            bool required, int defaultValue)
         {
             if (!element.HasAttribute(attributeName))
             {
@@ -164,15 +164,15 @@ namespace DevicesBase
         /// </summary>
         /// <param name="articlesRoot">xml-элемент "Товары"</param>
         /// <param name="startIndex">Индекс записи, с которой начинать выгрузку</param>
-        private Boolean UploadArticles(XmlElement articlesRoot, Int32 startIndex)
+        private bool UploadArticles(XmlElement articlesRoot, int startIndex)
         {
             if (startIndex < 0)
                 return true;
 
-            Int32 itemsProceeded = 0;
-            Boolean uploadResult = false;
+            int itemsProceeded = 0;
+            bool uploadResult = false;
 
-            for (Int32 i = startIndex - 1; i < articlesRoot.ChildNodes.Count; i++)
+            for (int i = startIndex - 1; i < articlesRoot.ChildNodes.Count; i++)
             {
                 // очередной товар
                 XmlElement article = (XmlElement)articlesRoot.ChildNodes[i];
@@ -201,15 +201,15 @@ namespace DevicesBase
         /// </summary>
         /// <param name="messagesRoot">xml-элемент "сообщения"</param>
         /// <param name="startIndex">Индекс записи, с которой начинать выгрузку</param>
-        private Boolean UploadMessages(XmlElement messagesRoot, Int32 startIndex)
+        private bool UploadMessages(XmlElement messagesRoot, int startIndex)
         {
             if (startIndex < 0)
                 return true;
 
-            Int32 itemsProceeded = 0;
-            Boolean uploadResult = false;
+            int itemsProceeded = 0;
+            bool uploadResult = false;
 
-            for (Int32 i = startIndex - 1; i < messagesRoot.ChildNodes.Count; i++)
+            for (int i = startIndex - 1; i < messagesRoot.ChildNodes.Count; i++)
             {
                 // очередное сообщение
                 XmlElement message = (XmlElement)messagesRoot.ChildNodes[i];
@@ -232,15 +232,15 @@ namespace DevicesBase
         /// </summary>
         /// <param name="advertisingsRoot"></param>
         /// <param name="startIndex">Индекс записи, с которой начинать выгрузку</param>
-        private Boolean UploadAdvertisings(XmlElement advertisingsRoot, Int32 startIndex)
+        private bool UploadAdvertisings(XmlElement advertisingsRoot, int startIndex)
         {
             if (startIndex < 0)
                 return true;
 
-            Int32 itemsProceeded = 0;
-            Boolean uploadResult = false;
+            int itemsProceeded = 0;
+            bool uploadResult = false;
 
-            for (Int32 i = startIndex - 1; i < advertisingsRoot.ChildNodes.Count; i++)
+            for (int i = startIndex - 1; i < advertisingsRoot.ChildNodes.Count; i++)
             {
                 // очередная строка рекламной информации
                 XmlElement advertising = (XmlElement)advertisingsRoot.ChildNodes[i];
@@ -308,7 +308,7 @@ namespace DevicesBase
                     foreach (XmlElement uploadTag in uploadData.DocumentElement.ChildNodes)
                     {
                         // порядковый номер элемента, с которого начинать выгрузку данных
-                        Int32 startIndex = GetInt32AttributeValue(uploadTag, "startIndex", false, 1);
+                        int startIndex = GetInt32AttributeValue(uploadTag, "startIndex", false, 1);
 
                         // поиск набора данных
                         if (string.Compare(uploadTag.Name, "articles") == 0)
@@ -348,7 +348,7 @@ namespace DevicesBase
         /// <summary>
         /// Текущие показания веса
         /// </summary>
-        public Int32 Weight
+        public int Weight
         {
             get 
             {
@@ -362,7 +362,7 @@ namespace DevicesBase
                         OnOpen(communicator);
 
                         // определяем показания веса
-                        Int32 weight = GetWeight(communicator);
+                        int weight = GetWeight(communicator);
 
                         // формируем код ошибки
                         ErrorCode = new ServerErrorCode(this, GeneralError.Success);
@@ -384,7 +384,7 @@ namespace DevicesBase
         /// <summary>
         /// Активация и деактивация устройства
         /// </summary>
-        public override Boolean Active
+        public override bool Active
         {
             get { return true; }
             set { }

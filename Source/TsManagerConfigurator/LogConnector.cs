@@ -32,7 +32,7 @@ namespace TsManagerConfigurator
 
         public void ReloadProgress(int eventsLoaded)
         {
-            _tsslUpdateState.Text = String.Format("Событий загружено: {0}", eventsLoaded);
+            _tsslUpdateState.Text = string.Format("Событий загружено: {0}", eventsLoaded);
         }
 
         public IEventLinkBasics Source

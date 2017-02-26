@@ -14,13 +14,13 @@ namespace ERPService.SharedLibs.Helpers
     /// </summary>
     internal partial class FormContacts : Form
     {
-        private String _productName;
-        private String _productVersion;
+        private string _productName;
+        private string _productVersion;
 
         /// <summary>
         /// Наименование продукта
         /// </summary>
-        public String AppProductName
+        public string AppProductName
         {
             get { return _productName; }
             set { _productName = value; }
@@ -29,7 +29,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Версия продукта
         /// </summary>
-        public String AppProductVersion
+        public string AppProductVersion
         {
             get { return _productVersion; }
             set { _productVersion = value; }
@@ -50,7 +50,7 @@ namespace ERPService.SharedLibs.Helpers
 
         private void label7_Click(object sender, EventArgs e)
         {
-            Process.Start(String.Format("mailto:support@erpservice.ru?subject={0}, версия {1}",
+            Process.Start(string.Format("mailto:support@erpservice.ru?subject={0}, версия {1}",
                 _productName, _productVersion));
         }
 

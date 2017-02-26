@@ -14,7 +14,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// </summary>
         /// <param name="value">Значение типа события</param>
         /// <returns>Строковое представление типа события</returns>
-        public static String ConvertFrom(EventType value)
+        public static string ConvertFrom(EventType value)
         {
             switch (value)
             {
@@ -34,7 +34,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// </summary>
         /// <param name="value">Исходная строка</param>
         /// <returns>Значение типа события</returns>
-        public static EventType ConvertTo(String value)
+        public static EventType ConvertTo(string value)
         {
             switch (value.TrimEnd())
             {

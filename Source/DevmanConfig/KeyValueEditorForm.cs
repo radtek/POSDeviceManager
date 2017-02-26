@@ -64,7 +64,7 @@ namespace DevmanConfig
             string autoName;
             do
             {
-                autoName = String.Format("Параметр {0}", i++);
+                autoName = string.Format("Параметр {0}", i++);
             }
             while (lvCollection.Items.ContainsKey(autoName));
 
@@ -98,7 +98,7 @@ namespace DevmanConfig
                 {
                     if (lvCollection.SelectedItems[0].Text != key && lvCollection.Items.ContainsKey(key))
                     {
-                        MessageBox.Show(this, String.Format("Параметр \"{0}\" уже имеется в списке", key), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show(this, string.Format("Параметр \"{0}\" уже имеется в списке", key), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
                     if (lvCollection.SelectedItems[0].Text != key)

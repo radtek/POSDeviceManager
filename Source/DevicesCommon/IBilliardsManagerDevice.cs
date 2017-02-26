@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using DevicesCommon.Helpers;
-
 namespace DevicesCommon
 {
     /// <summary>
@@ -14,12 +9,12 @@ namespace DevicesCommon
         /// ¬ключить свет над биль€рдным столом
         /// </summary>
         /// <param name="billiardTableNo">Ќомер биль€рдного стола</param>
-        void LightsOn(Int32 billiardTableNo);
+        void LightsOn(int billiardTableNo);
 
         /// <summary>
         /// ќтключить свет над биль€рдным столом
         /// </summary>
         /// <param name="billiardTableNo">Ќомер биль€рдного стола</param>
-        void LightsOff(Int32 billiardTableNo);
+        void LightsOff(int billiardTableNo);
     }
 }

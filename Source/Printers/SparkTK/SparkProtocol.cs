@@ -304,8 +304,8 @@ namespace SparkTK
         {
             string[] reqDump = Array.ConvertAll(Request, new Converter<byte, string>(delegate(byte b) { return b.ToString("X"); }));
             string[] rspDump = Array.ConvertAll(Response, new Converter<byte, string>(delegate(byte b) { return b.ToString("X"); }));
-            return String.Format("Байты команды ({0}):\n{1:X}\nБайты ответа ({2}):\n{3:X}",
-                RequestLen, String.Join(" ", reqDump, 0, RequestLen), ResponseLen, String.Join(" ", rspDump, 0, ResponseLen));
+            return string.Format("Байты команды ({0}):\n{1:X}\nБайты ответа ({2}):\n{3:X}",
+                RequestLen, string.Join(" ", reqDump, 0, RequestLen), ResponseLen, string.Join(" ", rspDump, 0, ResponseLen));
         }
 
         /// <summary>
@@ -443,8 +443,8 @@ namespace SparkTK
             int nRes = 0;
             for (int i = 0; i < nLen; i++)
                 nRes += nBuff[i];
-            String sRes = nRes.ToString("X4");
-            sRes = new String(new char[] { sRes[2], sRes[3], sRes[0], sRes[1] });
+            string sRes = nRes.ToString("X4");
+            sRes = new string(new char[] { sRes[2], sRes[3], sRes[0], sRes[1] });
             return _currEnconing.GetBytes(sRes);
         }
 

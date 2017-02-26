@@ -29,7 +29,7 @@ namespace TsBiometricsLogic
         [Description("TCP-порт для подключения к \"Форинт-CMS\"")]
         [Category("Прочее")]
         [DefaultValue(34601)]
-        public Int32 Port { get; set; }
+        public int Port { get; set; }
 
         [DisplayName("Минимальный баланс")]
         [Description("Минимальный баланс на счете клиента")]

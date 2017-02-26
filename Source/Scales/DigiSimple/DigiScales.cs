@@ -18,15 +18,15 @@ namespace DigiSimple
     [Scale(DeviceNames.digiSimpleScales)]
     public sealed class DigiScales : CustomSerialDevice, IScaleDevice
     {
-        private String _connStr;
+        private string _connStr;
         private Thread _worker;
-        private Int32 _weight;
+        private int _weight;
         private Object _syncObject;
-        private Boolean _terminated;
-        private Byte[] _rawData;
-        private Int32 _rawPos;
-        private Byte[] _strData;
-        private Int32 _timeoutsCount;
+        private bool _terminated;
+        private byte[] _rawData;
+        private int _rawPos;
+        private byte[] _strData;
+        private int _timeoutsCount;
 
         /// <summary>
         /// Создает экземпляр класса
@@ -46,11 +46,11 @@ namespace DigiSimple
         /// <summary>
         /// Флаг завершения работы
         /// </summary>
-        private Boolean Terminated
+        private bool Terminated
         {
             get
             {
-                Boolean t;
+                bool t;
                 lock (_syncObject)
                 {
                     t = _terminated;
@@ -80,8 +80,8 @@ namespace DigiSimple
             {
                 // достаем из "сырых" данных строку
                 // с данными веса без плавающей точки
-                Int32 j = 0;
-                for (Int32 i = 6; i < 13; i++)
+                int j = 0;
+                for (int i = 6; i < 13; i++)
                 {
                     if (_rawData[i] != 0x2E)
                     {
@@ -103,9 +103,9 @@ namespace DigiSimple
         /// </summary>
         private void WorkerRoutine()
         {
-            Byte[] opData = new Byte[1024];
-            _strData = new Byte[6];
-            _rawData = new Byte[50];
+            byte[] opData = new byte[1024];
+            _strData = new byte[6];
+            _rawData = new byte[50];
             _rawPos = 0;
             _timeoutsCount = 0;
 
@@ -114,14 +114,14 @@ namespace DigiSimple
                 try
                 {
                     // читаем все, что есть в буфере порта
-                    Int32 bytesRead = Port.Read(opData, 0, opData.Length);
+                    int bytesRead = Port.Read(opData, 0, opData.Length);
                     if (bytesRead == -1)
                     {
                         // ничего не прочитали
                         // приостанавливаемся для разгрузки процессора
                         Thread.Sleep(50);
                         
-                        if (_timeoutsCount < Int32.MaxValue)
+                        if (_timeoutsCount < int.MaxValue)
                             // увеличиваем счетчик операций чтения,
                             // завершившихся таймаутом
                             _timeoutsCount++;
@@ -138,7 +138,7 @@ namespace DigiSimple
 
                         // разбираем полученные данные на последовательности,
                         // заканчивающиеся символом LF
-                        for (Int32 i = 0; i < bytesRead; i++)
+                        for (int i = 0; i < bytesRead; i++)
                         {
                             // текущий символ равен LF
                             if (opData[i] == 0x0A)
@@ -169,8 +169,8 @@ namespace DigiSimple
                     // протоколируем сообщение об ошибке
                     StringBuilder sb = new StringBuilder();
                     sb.AppendLine("Ошибка во время обмена данными с весами.");
-                    sb.AppendLine(String.Format("Тип: {0}", e.GetType().Name));
-                    sb.AppendLine(String.Format("Текст: {0}", e.Message));
+                    sb.AppendLine(string.Format("Тип: {0}", e.GetType().Name));
+                    sb.AppendLine(string.Format("Текст: {0}", e.Message));
                     sb.AppendLine("Трассировка стека:");
                     sb.Append(e.StackTrace);
 
@@ -234,7 +234,7 @@ namespace DigiSimple
                 ConnStrHelper connStrHelper = new ConnStrHelper(_connStr);
 
                 // поддерживается обмен только по RS-232
-                if (String.Compare(connStrHelper[1], "rs", true) != 0)
+                if (string.Compare(connStrHelper[1], "rs", true) != 0)
                     throw new InvalidOperationException("Весы поддерживают обмен только по интерфейсу RS-232");
 
                 // инициализируем параметры связи
@@ -255,11 +255,11 @@ namespace DigiSimple
         /// <summary>
         /// Текущие показания веса
         /// </summary>
-        public Int32 Weight
+        public int Weight
         {
             get 
             {
-                Int32 tmp;
+                int tmp;
                 lock (_syncObject)
                 {
                     tmp = _weight;

@@ -14,7 +14,7 @@ namespace DevicesBase
     {
         #region Поля
 
-        private Int32 _address;
+        private int _address;
 
         #endregion
 
@@ -36,7 +36,7 @@ namespace DevicesBase
         /// <summary>
         /// Адрес устройства
         /// </summary>
-        public Int32 Address
+        public int Address
         {
             get { return _address; }
             set { _address = value; }

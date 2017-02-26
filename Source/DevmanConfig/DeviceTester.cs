@@ -20,7 +20,7 @@ namespace DevmanConfig
     internal sealed class DeviceTester<TIntf>
         where TIntf: IDevice
     {
-        private String _deviceId;
+        private string _deviceId;
         private DeviceTestDelegate<TIntf> _testCallback;
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace DevmanConfig
         /// </summary>
         /// <param name="deviceId">Идентификатор устройства</param>
         /// <param name="testCallback">Делегат для выполнения тестов</param>
-        public DeviceTester(String deviceId, DeviceTestDelegate<TIntf> testCallback)
+        public DeviceTester(string deviceId, DeviceTestDelegate<TIntf> testCallback)
         {
             _deviceId = deviceId;
             _testCallback = testCallback;
@@ -58,7 +58,7 @@ namespace DevmanConfig
                     }
                     else
                         MessageBox.Show(
-                            String.Format("Не удалось получить доступ к устройству \"{0}\"",
+                            string.Format("Не удалось получить доступ к устройству \"{0}\"",
                             _deviceId), "Тест устройства", MessageBoxButtons.OK,
                             MessageBoxIcon.Error);
                 }
@@ -66,10 +66,10 @@ namespace DevmanConfig
             catch (Exception e)
             {
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine(String.Format("Ошибка тестирования устройства \"{0}\".", 
+                sb.AppendLine(string.Format("Ошибка тестирования устройства \"{0}\".", 
                     _deviceId));
-                sb.AppendLine(String.Format("Тип: {0}.", e.GetType().Name));
-                sb.AppendLine(String.Format("Сообщение: {0}.", e.Message));
+                sb.AppendLine(string.Format("Тип: {0}.", e.GetType().Name));
+                sb.AppendLine(string.Format("Сообщение: {0}.", e.Message));
                 sb.AppendLine("Трассировка стека:");
                 sb.Append(e.StackTrace);
 

@@ -16,9 +16,9 @@ namespace DevicesBase.Helpers
         private const string _objUnMarshalled = "Публикация объекта отменена.\nТип объекта: {0}\nURI: {1}";
 
         IEventLink _eventLink;
-        Boolean _debugInfo;
+        bool _debugInfo;
 
-        internal DeviceManagerTrackingHandler(IEventLink eventLink, Boolean debugInfo)
+        internal DeviceManagerTrackingHandler(IEventLink eventLink, bool debugInfo)
         {
             _eventLink = eventLink;
             _debugInfo = debugInfo;

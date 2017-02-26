@@ -792,12 +792,12 @@ namespace StarPrn
             OnPrintString(commentary, FontStyle.Regular);
         }
 
-        protected override void OnPayment(UInt32 amount, FiscalPaymentType paymentType)
+        protected override void OnPayment(uint amount, FiscalPaymentType paymentType)
         {
             ExecuteDriverCommand(delegate(){ });
         }
 
-        protected override void OnCash(UInt32 amount)
+        protected override void OnCash(uint amount)
         {
             ExecuteDriverCommand(delegate() { });
         }

@@ -9,7 +9,7 @@ namespace ERPService.SharedLibs.Eventlog
     /// </summary>
     public static class EventLinkExceptionHelper
     {
-        private static void AddRange(List<String> destination, String value)
+        private static void AddRange(List<string> destination, string value)
         {
             destination.AddRange(value.Split(
                 new Char[] { (Char)10, (Char)13, (Char)9 },
@@ -22,18 +22,18 @@ namespace ERPService.SharedLibs.Eventlog
         /// <param name="ex">Исключение</param>
         /// <param name="checkPointId">Название контрольной точки</param>
         /// <returns>Набор строк события</returns>
-        public static String[] GetStrings(String checkPointId, Exception ex)
+        public static string[] GetStrings(string checkPointId, Exception ex)
         {
             var exceptionLevel = 0;
-            var message = new List<String>();
-            message.Add(String.Format("Контрольная точка: {0}", checkPointId));
+            var message = new List<string>();
+            message.Add(string.Format("Контрольная точка: {0}", checkPointId));
 
             Exception current = ex;
             do
             {
                 // пишем в лог текущее исключение
-                message.Add(String.Format("Тип исключения: {0}", current.GetType()));
-                AddRange(message, String.Format("Текст исключения: {0}", current.Message));
+                message.Add(string.Format("Тип исключения: {0}", current.GetType()));
+                AddRange(message, string.Format("Текст исключения: {0}", current.Message));
                 AddRange(message, current.StackTrace);
 
                 // поднимаем уровень исключения
@@ -44,9 +44,9 @@ namespace ERPService.SharedLibs.Eventlog
                 if (current != null)
                 {
                     // разделитель
-                    message.Add(String.Empty);
-                    message.Add(String.Format("Внутреннее исключение [{0}]:", exceptionLevel));
-                    message.Add(String.Empty);
+                    message.Add(string.Empty);
+                    message.Add(string.Format("Внутреннее исключение [{0}]:", exceptionLevel));
+                    message.Add(string.Empty);
                 }
             }
             while (current != null);

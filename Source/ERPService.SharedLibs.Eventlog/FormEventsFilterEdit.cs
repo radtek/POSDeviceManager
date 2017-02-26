@@ -28,7 +28,7 @@ namespace ERPService.SharedLibs.Eventlog
         /// </summary>
         /// <param name="filter">Текущее значение фильтра</param>
         /// <returns>Новое значение фильтра</returns>
-        public Boolean Execute(EventLinkFilterBase filter)
+        public bool Execute(EventLinkFilterBase filter)
         {
             if (filter == null)
                 throw new ArgumentNullException("filter");

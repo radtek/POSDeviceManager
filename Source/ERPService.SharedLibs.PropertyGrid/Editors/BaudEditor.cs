@@ -12,11 +12,11 @@ namespace ERPService.SharedLibs.PropertyGrid.Editors
         /// <summary>
         /// Возвращает список возможных значений свойства
         /// </summary>
-        public override String[] Values
+        public override string[] Values
         {
             get
             {
-                return new String[] { 
+                return new string[] { 
                     "4800", 
                     "9600",
                     "19200",
@@ -31,7 +31,7 @@ namespace ERPService.SharedLibs.PropertyGrid.Editors
         /// Возвращает индекс выбранного значения
         /// </summary>
         /// <param name="value">Исходное значение свойства</param>
-        protected override Int32 ObjectToIndex(Object value)
+        protected override int ObjectToIndex(Object value)
         {
             return Array.IndexOf<String>(Values, value.ToString());
         }
@@ -40,7 +40,7 @@ namespace ERPService.SharedLibs.PropertyGrid.Editors
         /// Конвертирует выбранное строковое значение в нужный тип
         /// </summary>
         /// <param name="selectedIndex">Идекс строки в списке</param>
-        protected override Object IndexToObject(Int32 selectedIndex)
+        protected override Object IndexToObject(int selectedIndex)
         {
             return Convert.ToInt32(Values[selectedIndex]);
         }

@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Xml;
+using DevicesCommon;
 using DevicesCommon.Connectors;
 using DevicesCommon.Helpers;
-using DevicesCommon;
-using System.Xml;
 
 namespace DevmanTest
 {
@@ -17,10 +15,10 @@ namespace DevmanTest
             Console.WriteLine();
         }
 
-        static Boolean ProcessErrorCode(ErrorCode errorCode, Boolean writeIfSuccess)
+        static bool ProcessErrorCode(ErrorCode errorCode, bool writeIfSuccess)
         {
             if ((errorCode.Succeeded && writeIfSuccess) || errorCode.Failed)
-                Console.WriteLine(String.Format("Error code: {0}", errorCode.ToString()));
+                Console.WriteLine(string.Format("Error code: {0}", errorCode.ToString()));
 
             if (errorCode.Failed)
             {
@@ -46,16 +44,16 @@ namespace DevmanTest
                     ViewHelp();
                 else
                 {
-                    String host = args.Length > 0 ? args[0] : "localhost";
+                    string host = args.Length > 0 ? args[0] : "localhost";
                     using (DeviceManagerClient dmc = new DeviceManagerClient(host))
                     {
                         dmc.Login();
-                        String deviceID = args.Length > 1 ? args[1] : "Устройство1";
+                        string deviceID = args.Length > 1 ? args[1] : "Устройство1";
                         dmc.Capture(deviceID, WaitConstant.Infinite);
                         try
                         {
                             IPrintableDevice device = (IPrintableDevice)dmc[deviceID];
-                            Console.WriteLine(String.Format("Device status: {0}",
+                            Console.WriteLine(string.Format("Device status: {0}",
                                 device.Active ? "active" : "inactive"));
 
                             if (!device.Active)
@@ -73,7 +71,7 @@ namespace DevmanTest
                                 PaperOutStatus paperStatus = device.PrinterStatus.PaperOut;
                                 if (ProcessErrorCode(device.ErrorCode, false))
                                 {
-                                    Console.WriteLine(String.Format("Paper: {0}", paperStatus));
+                                    Console.WriteLine(string.Format("Paper: {0}", paperStatus));
                                     if (paperStatus == PaperOutStatus.Present || paperStatus == PaperOutStatus.OutAfterActive)
                                     {
                                         XmlDocument xmlDoc = new XmlDocument();

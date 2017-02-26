@@ -12,7 +12,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
     public class CommStateEventArgs : EventArgs
     {
         private DCB _dcb;
-        private Boolean _handled;
+        private bool _handled;
 
         /// <summary>
         /// Создает экземпляр класса
@@ -43,7 +43,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <summary>
         /// Событие обработано
         /// </summary>
-        public Boolean Handled
+        public bool Handled
         {
             get
             {
@@ -64,18 +64,18 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         #region Закрытые поля класса
 
         // формат имени порта
-        private const String _portNameFormat = @"\\.\{0}";
+        private const string _portNameFormat = @"\\.\{0}";
         // таймаут приема байта
-        private const UInt32 _byteTimeout = 100;
+        private const uint _byteTimeout = 100;
 
         // внутренний буфер для чтения/записи в порт
-        private Byte[] _operationBuffer = new Byte[1024];
-        private Byte[] _smallBuffer = new Byte[1];
+        private byte[] _operationBuffer = new byte[1024];
+        private byte[] _smallBuffer = new byte[1];
 
         // описатель порта
         private SafeFileHandle _handle;
         // имя порта
-        private String _portName;
+        private string _portName;
         // конфигурация порта
         private DCB _dcb;
         // таймауты порта
@@ -89,17 +89,17 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         // бит данных
         private byte _dataBits;
         // контроль DTR/DSR
-        private Boolean _dsrFlow;
+        private bool _dsrFlow;
         // таймаут чтения
         private uint _readTimeout;
         // таймаут записи
         private uint _writeTimeout;
         // признак последовательного порта
-        private Boolean _isSerial;
+        private bool _isSerial;
         // генерировать ислючения при таймаутах
-        private Boolean _throwTimeoutExceptions;
+        private bool _throwTimeoutExceptions;
         // можно ли читать из параллельных портов
-        private Boolean _canReadFromParallel;
+        private bool _canReadFromParallel;
         // размер входного буфера порта
         private uint _readBufferSize;
         // размер выходного буфера порта
@@ -140,14 +140,14 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         private void CheckOpening()
         {
             if (!IsOpen)
-                throw new Exception(String.Format("Порт {0} не открыт", _portName));
+                throw new Exception(string.Format("Порт {0} не открыт", _portName));
         }
 
         /// <summary>
         /// Устанавливает таймаут приема байта
         /// </summary>
         /// <param name="timeoutValue"></param>
-        private void SetReadTimeout(UInt32 timeoutValue)
+        private void SetReadTimeout(uint timeoutValue)
         {
             if (!IsSerial)
                 return;
@@ -178,7 +178,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// </summary>
         /// <param name="input">Очистить входящий буфер</param>
         /// <param name="output">Очистить исходящий буфер</param>
-        private void DiscardBuffers(Boolean input, Boolean output)
+        private void DiscardBuffers(bool input, bool output)
         {
             // проверяем состояние порта
             CheckOpening();
@@ -199,12 +199,12 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
                 // задаем флаги для очистки исходящего буфера
                 flags = flags | PURGE_FLAGS.PURGE_TXABORT | PURGE_FLAGS.PURGE_TXCLEAR;
 
-            Boolean purgeResult = WinApi.PurgeComm(_handle, (uint)flags);
+            bool purgeResult = WinApi.PurgeComm(_handle, (uint)flags);
             if (!purgeResult)
             {
                 uint errors = 0;
 
-                if (Marshal.GetLastWin32Error() == (UInt32)SystemErrorCodes.ERROR_OPERATION_ABORTED)
+                if (Marshal.GetLastWin32Error() == (uint)SystemErrorCodes.ERROR_OPERATION_ABORTED)
                     WinApi.ClearCommError(_handle, ref errors, IntPtr.Zero);
                 else
                     WinApi.Win32Check(purgeResult);
@@ -219,7 +219,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// Можно ли выполнять операцию чтения на параллельных портах.
         /// Если нет, то все попытки чтения будут игнорироваться
         /// </summary>
-        public Boolean CanReadFromParallel
+        public bool CanReadFromParallel
         {
             get
             {
@@ -234,7 +234,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <summary>
         /// Генерировать исключения по таймауту обмена с устройством
         /// </summary>
-        public Boolean ThrowTimeoutExceptions
+        public bool ThrowTimeoutExceptions
         {
             get
             {
@@ -249,7 +249,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <summary>
         /// Возвращает признак работы по последовательному порту
         /// </summary>
-        public Boolean IsSerial
+        public bool IsSerial
         {
             get
             {
@@ -260,7 +260,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <summary>
         /// Возвращает признак открытия порта
         /// </summary>
-        public Boolean IsOpen
+        public bool IsOpen
         {
             get
             {
@@ -271,7 +271,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <summary>
         /// Имя порта
         /// </summary>
-        public String PortName
+        public string PortName
         {
             get
             {
@@ -283,7 +283,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
                 _portName = value;
                 if (_portName.Length > 3)
                     // имя порта задано
-                    _isSerial = String.Compare(_portName.Substring(0, 3), "COM", true) == 0;
+                    _isSerial = string.Compare(_portName.Substring(0, 3), "COM", true) == 0;
                 else
                     throw new InvalidOperationException();
             }
@@ -292,15 +292,15 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <summary>
         /// Скорость обмена данными через порт
         /// </summary>
-        public Int32 BaudRate
+        public int BaudRate
         {
             get
             {
-                return (Int32)_baudRate;
+                return (int)_baudRate;
             }
             set
             {
-                _baudRate = (UInt32)value;
+                _baudRate = (uint)value;
                 if (_isSerial && IsOpen)
                 {
                     _dcb.BaudRate = (uint)_baudRate;
@@ -352,7 +352,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <summary>
         /// Бит данных
         /// </summary>
-        public Int32 DataBits
+        public int DataBits
         {
             get
             {
@@ -372,7 +372,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <summary>
         /// Контроль за состоянием линии DSR
         /// </summary>
-        public Boolean DsrFlow
+        public bool DsrFlow
         {
             get
             {
@@ -383,7 +383,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
                 _dsrFlow = value;
                 if (_isSerial && IsOpen)
                 {
-                    _dcb.fOutxDsrFlow = (UInt32)(_dsrFlow ? 1 : 0);
+                    _dcb.fOutxDsrFlow = (uint)(_dsrFlow ? 1 : 0);
                     WinApi.Win32Check(WinApi.SetCommState(_handle, ref _dcb));
                 }
             }
@@ -392,27 +392,27 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <summary>
         /// Таймаут чтения данных
         /// </summary>
-        public Int32 ReadTimeout
+        public int ReadTimeout
         {
             get
             {
-                return (Int32)_readTimeout;
+                return (int)_readTimeout;
             }
             set
             {
                 CheckOpening();
                 unchecked
                 {
-                    _readTimeout = (UInt32)value;
+                    _readTimeout = (uint)value;
                 }
                 if (_isSerial)
                 {
                     // таймауты чтения устанавливаются только для последовательного порта
-                    if (_readTimeout == UInt32.MaxValue)
+                    if (_readTimeout == uint.MaxValue)
                     {
                         // операция чтения будет завершаться немедленно,
                         // возвращая данные, уже находящиеся в буфере порта
-                        _timeouts.ReadIntervalTimeout = UInt32.MaxValue;
+                        _timeouts.ReadIntervalTimeout = uint.MaxValue;
                         _timeouts.ReadTotalTimeoutMultiplier = 0;
                         _timeouts.ReadTotalTimeoutConstant = 0;
                     }
@@ -432,16 +432,16 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <summary>
         /// Таймаут записи данных
         /// </summary>
-        public Int32 WriteTimeout
+        public int WriteTimeout
         {
             get
             {
-                return (Int32)_writeTimeout;
+                return (int)_writeTimeout;
             }
             set
             {
                 CheckOpening();
-                _writeTimeout = (UInt32)value;
+                _writeTimeout = (uint)value;
                 // запись
                 _timeouts.WriteTotalTimeoutMultiplier = 100;
                 _timeouts.WriteTotalTimeoutConstant = _writeTimeout;
@@ -452,7 +452,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <summary>
         /// Включает или отключает сигнал DTR
         /// </summary>
-        public Boolean DtrEnable
+        public bool DtrEnable
         {
             set
             {
@@ -465,7 +465,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <summary>
         /// Включает или отключает сигнал RTS
         /// </summary>
-        public Boolean RtsEnable
+        public bool RtsEnable
         {
             set
             {
@@ -507,18 +507,18 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// Ожидание появления символа во входном буфере порта
         /// </summary>
         /// <param name="customChar">Символ определяется пользователем</param>
-        public Boolean WaitChar(Boolean customChar)
+        public bool WaitChar(bool customChar)
         {
-            UInt32 mask = 0;
+            uint mask = 0;
             WinApi.Win32Check(WinApi.SetCommMask(_handle,
-                customChar ? (UInt32)CommEvents.EV_RXFLAG : (UInt32)CommEvents.EV_RXCHAR));
+                customChar ? (uint)CommEvents.EV_RXFLAG : (uint)CommEvents.EV_RXCHAR));
             try
             {
                 WinApi.Win32Check(WinApi.WaitCommEvent(_handle, ref mask, IntPtr.Zero));
                 if (customChar)
-                    return (mask & (UInt32)CommEvents.EV_RXFLAG) == (UInt32)CommEvents.EV_RXFLAG;
+                    return (mask & (uint)CommEvents.EV_RXFLAG) == (uint)CommEvents.EV_RXFLAG;
                 else
-                    return (mask & (UInt32)CommEvents.EV_RXCHAR) == (UInt32)CommEvents.EV_RXCHAR;
+                    return (mask & (uint)CommEvents.EV_RXCHAR) == (uint)CommEvents.EV_RXCHAR;
             }
             finally
             {
@@ -538,7 +538,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
 
             // открываем порт
             _handle = WinApi.CreateFile(
-                String.Format(_portNameFormat, _portName),
+                string.Format(_portNameFormat, _portName),
                 (uint)(DESIRED_ACCESS.GENERIC_READ | DESIRED_ACCESS.GENERIC_WRITE),
                 0, 
                 IntPtr.Zero, 
@@ -592,7 +592,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <param name="buffer">Буфер для размещения полученных данных</param>
         /// <param name="offset">Смещение от начала буфера</param>
         /// <param name="count">Сколько прочитать</param>
-        public Int32 Read(Byte[] buffer, int offset, int count)
+        public int Read(byte[] buffer, int offset, int count)
         {
             if (buffer == null)
                 throw new ArgumentNullException("buffer", "Не задан буфер данных для чтения из порта");
@@ -608,7 +608,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
                 return count;
             }
 
-            UInt32 totalRead = 0, bytesRead;
+            uint totalRead = 0, bytesRead;
 
             // очищаем массив для хранения данных
             Array.Clear(buffer, offset, count);
@@ -618,7 +618,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
             {
                 // очищаем временный буфер
                 Array.Clear(_operationBuffer, 0, _operationBuffer.Length);
-                UInt32 recentDataSize = (UInt32)count - totalRead;
+                uint recentDataSize = (uint)count - totalRead;
                 bytesRead = 0;
 
                 // читаем данные
@@ -626,7 +626,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
                     _handle,
                     _operationBuffer,
                     recentDataSize >
-                        (UInt32)_operationBuffer.Length ? (UInt32)_operationBuffer.Length : recentDataSize,
+                        (uint)_operationBuffer.Length ? (uint)_operationBuffer.Length : recentDataSize,
                     ref bytesRead,
                     IntPtr.Zero));
 
@@ -639,7 +639,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
                     totalRead += bytesRead;
                 }
 
-                if (_readTimeout != UInt32.MaxValue)
+                if (_readTimeout != uint.MaxValue)
                 {
                     TimeSpan ellapsed = DateTime.Now.Subtract(startTime);
                     if (Math.Abs(_readTimeout - ellapsed.TotalMilliseconds) < _byteTimeout)
@@ -650,10 +650,10 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
             }
             while (bytesRead > 0 && totalRead < count);
             if (totalRead > 0)
-                return (Int32)totalRead;
+                return (int)totalRead;
             else
             {
-                if (_readTimeout != UInt32.MaxValue)
+                if (_readTimeout != uint.MaxValue)
                     ThrowTimeoutException();
                 return -1;
             }
@@ -662,14 +662,14 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <summary>
         /// Читает один байт из входящего буфера порта
         /// </summary>
-        public Int32 ReadByte()
+        public int ReadByte()
         {
-            UInt32 bytesRead = 0;
+            uint bytesRead = 0;
             WinApi.Win32Check(WinApi.ReadFile(_handle, _smallBuffer, 1, ref bytesRead, 
                 IntPtr.Zero));
 
             if (bytesRead > 0)
-                return (Int32)_smallBuffer[0];
+                return (int)_smallBuffer[0];
             else
             {
                 ThrowTimeoutException();
@@ -681,7 +681,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// Запись данных в порт. Пишется весь буфер целиком с нулевым смещением
         /// </summary>
         /// <param name="buffer">Буфер данных для записи</param>
-        public Int32 Write(Byte[] buffer)
+        public int Write(byte[] buffer)
         {
             return Write(buffer, 0, buffer.Length);
         }
@@ -692,20 +692,20 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// <param name="buffer">Буфер данных для записи</param>
         /// <param name="offset">Смещение от начала буфера</param>
         /// <param name="count">Сколько записать</param>
-        public Int32 Write(Byte[] buffer, int offset, int count)
+        public int Write(byte[] buffer, int offset, int count)
         {
             if (buffer == null)
                 throw new ArgumentNullException("buffer", "Не задан буфер данных для записи в порт");
             if (count < 1)
                 throw new ArgumentOutOfRangeException("count", count, "Длина записываемых данных слишком мала");
 
-            UInt32 totalWritten = 0, bytesWritten;
+            uint totalWritten = 0, bytesWritten;
             CheckOpening();
             do
             {
-                UInt32
-                    recentDataSize = (UInt32)count - totalWritten,
-                    bytesToWrite = recentDataSize > (UInt32)_operationBuffer.Length ? (UInt32)_operationBuffer.Length : recentDataSize;
+                uint
+                    recentDataSize = (uint)count - totalWritten,
+                    bytesToWrite = recentDataSize > (uint)_operationBuffer.Length ? (uint)_operationBuffer.Length : recentDataSize;
                 bytesWritten = 0;
 
                 // копируем часть данных из исходного буфера во временный
@@ -723,7 +723,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
             }
             while (bytesWritten > 0 && totalWritten < count);
             if (totalWritten > 0)
-                return (Int32)totalWritten;
+                return (int)totalWritten;
             else
             {
                 ThrowTimeoutException();
@@ -735,10 +735,10 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// Запись одного байта в порт
         /// </summary>
         /// <param name="byteToWrite">Байт для записи</param>
-        public void WriteByte(Int32 byteToWrite)
+        public void WriteByte(int byteToWrite)
         {
-            _smallBuffer[0] = (Byte)byteToWrite;
-            Int32 bytesWritten = Write(_smallBuffer, 0, 1);
+            _smallBuffer[0] = (byte)byteToWrite;
+            int bytesWritten = Write(_smallBuffer, 0, 1);
             if (bytesWritten == 0)
                 ThrowTimeoutException();
         }
@@ -780,7 +780,7 @@ namespace ERPService.SharedLibs.Helpers.SerialCommunications
         /// </summary>
         public void ClearError()
         {
-            UInt32 errors = 0;
+            uint errors = 0;
             WinApi.Win32Check(WinApi.ClearCommError(_handle, ref errors, IntPtr.Zero));
         }
 

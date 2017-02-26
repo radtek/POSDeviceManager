@@ -14,9 +14,9 @@ namespace DevmanConfig
             return clone;
         }
 
-        public override String[] GetAvailableEventSources()
+        public override string[] GetAvailableEventSources()
         {
-            return new String[] { "Диспетчер устройств", "Tracking handler" };
+            return new string[] { "Диспетчер устройств", "Tracking handler" };
         }
     }
 }

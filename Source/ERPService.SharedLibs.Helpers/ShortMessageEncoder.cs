@@ -10,15 +10,15 @@ namespace ERPService.SharedLibs.Helpers
     /// </summary>
     public sealed class EncodedMessage
     {
-        private Int32 _numberOfOctets;
-        private String _message;
+        private int _numberOfOctets;
+        private string _message;
 
         /// <summary>
         /// —оздает экземпл€р класса
         /// </summary>
         /// <param name="numberOfOctets">„исло октетов</param>
         /// <param name="message">«акодированное сообщение</param>
-        public EncodedMessage(Int32 numberOfOctets, String message)
+        public EncodedMessage(int numberOfOctets, string message)
         {
             _numberOfOctets = numberOfOctets;
             _message = message;
@@ -27,7 +27,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// „исло октетов
         /// </summary>
-        public Int32 NumberOfOctets
+        public int NumberOfOctets
         {
             get { return _numberOfOctets; }
         }
@@ -35,7 +35,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// «акодированное сообщение
         /// </summary>
-        public String Message
+        public string Message
         {
             get { return _message; }
         }
@@ -43,7 +43,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// —троковое представление объекта
         /// </summary>
-        public override String ToString()
+        public override string ToString()
         {
             return _message;
         }
@@ -58,9 +58,9 @@ namespace ERPService.SharedLibs.Helpers
 
         private PhoneNumber _smsServer;
         private PhoneNumber _recipient;
-        private String _messageText;
-        private Int32 _validityPeriod = 2;
-        private const Int32 _maxTextLength = 70;
+        private string _messageText;
+        private int _validityPeriod = 2;
+        private const int _maxTextLength = 70;
 
         #endregion
 
@@ -87,7 +87,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// “екст сообщени€
         /// </summary>
-        public String MessageText
+        public string MessageText
         {
             get { return _messageText; }
             set { _messageText = value; }
@@ -96,7 +96,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// ѕериод валидности сообщений
         /// </summary>
-        public Int32 ValidityPeriod
+        public int ValidityPeriod
         {
             get { return _validityPeriod; }
             set 
@@ -122,15 +122,15 @@ namespace ERPService.SharedLibs.Helpers
         {
             if (_recipient == null)
                 throw new InvalidOperationException("Ќе задан номер получател€ сообщений");
-            if (String.IsNullOrEmpty(_messageText))
+            if (string.IsNullOrEmpty(_messageText))
                 throw new InvalidOperationException("Ќе задан текст сообщени€");
 
             // разбиваем текст на сообщени€ с учетом макс. длины
-            List<String> rawMessages = ParseMessageText();
+            List<string> rawMessages = ParseMessageText();
             
             // здесь будут сохранены закодированные сообщени€
             EncodedMessage[] messages = new EncodedMessage[rawMessages.Count];
-            for (Int32 i = 0; i < rawMessages.Count; i++)
+            for (int i = 0; i < rawMessages.Count; i++)
             {
                 // кодируем очередное сообщение
                 messages[i] = Encode(rawMessages[i]);
@@ -142,14 +142,14 @@ namespace ERPService.SharedLibs.Helpers
 
         #region «акрытые методы
 
-        private List<String> ParseMessageText()
+        private List<string> ParseMessageText()
         {
             // разбиваем текст на лексеммы
             MatchCollection matches = Regex.Matches(_messageText, @"\S+\s*");
             if (matches.Count > 0)
             {
                 // формируем список сообщений с учетом макс. длины данных SMS
-                List<String> rawMessages = new List<String>();
+                List<string> rawMessages = new List<string>();
                 StringBuilder sb = new StringBuilder();
 
                 foreach (Match match in matches)
@@ -158,7 +158,7 @@ namespace ERPService.SharedLibs.Helpers
                         // слова длиннее макисмально допустимой длины сообщени€
                         // не обрабатываютс€
                         throw new InvalidOperationException(
-                            String.Format("—лишком длинное слово - \"{0}\"", match.Value));
+                            string.Format("—лишком длинное слово - \"{0}\"", match.Value));
 
                     // не превысит ли длина сообщени€ допустимую
                     if (sb.Length + match.Value.Length > _maxTextLength)
@@ -177,7 +177,7 @@ namespace ERPService.SharedLibs.Helpers
                 throw new InvalidOperationException("—ообщение составлено некорректно");
         }
 
-        private void SaveMessage(StringBuilder sb, List<String> rawMessages)
+        private void SaveMessage(StringBuilder sb, List<string> rawMessages)
         {
             if (sb.Length > 0)
             {
@@ -186,7 +186,7 @@ namespace ERPService.SharedLibs.Helpers
             }
         }
 
-        private EncodedMessage Encode(String sourceText)
+        private EncodedMessage Encode(string sourceText)
         {
             StringBuilder sbMain = new StringBuilder();
             StringBuilder sbMessage = new StringBuilder();
@@ -198,7 +198,7 @@ namespace ERPService.SharedLibs.Helpers
             else
             {
                 // задан €вно
-                String smsServerNo = _smsServer.ToString();
+                string smsServerNo = _smsServer.ToString();
                 // длина номера (число HEX-байт + 1)
                 sbMain.Append((smsServerNo.Length / 2 + 1).ToString("X2"));
                 // тип номера (международный)
@@ -228,7 +228,7 @@ namespace ERPService.SharedLibs.Helpers
             sbMessage.Append((166 + _validityPeriod).ToString("X2"));
 
             // кодируем текст сообщени€ в UCS2
-            String ucs2Text = EncodeUSC2String(sourceText);
+            string ucs2Text = EncodeUSC2String(sourceText);
 
             // длина текста
             sbMessage.Append((ucs2Text.Length / 2).ToString("X2"));
@@ -243,7 +243,7 @@ namespace ERPService.SharedLibs.Helpers
             return encMessage;
         }
 
-        private String EncodeUSC2String(String source)
+        private string EncodeUSC2String(string source)
         {
             StringBuilder sb = new StringBuilder();
             foreach (Char c in source)

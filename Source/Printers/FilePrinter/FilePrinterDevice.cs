@@ -75,7 +75,7 @@ namespace FilePrinter
         #region Реализация виртуальных функций
 
         protected override void OnOpenDocument(DocumentType docType,
-            String cashierName)
+            string cashierName)
         {
             OnPrintString("", FontStyle.Regular);
             OnPrintString("", FontStyle.Regular);
@@ -83,7 +83,7 @@ namespace FilePrinter
                 foreach (string s in DocumentHeader)
                     OnPrintString(s, FontStyle.Regular);
 
-            string headerString = String.Format("Кассир: {0}", cashierName).PadRight(PrinterInfo.TapeWidth.MainPrinter - 4);
+            string headerString = string.Format("Кассир: {0}", cashierName).PadRight(PrinterInfo.TapeWidth.MainPrinter - 4);
             OnPrintString(headerString + "#" + docNo.ToString("d3"), FontStyle.Regular);
             switch (docType)
             {
@@ -127,7 +127,7 @@ namespace FilePrinter
             if (paymentAmount > docAmount)
             {
                 string printLine = "Сдача:";
-                OnPrintString(printLine + String.Format("{0:f2}", (paymentAmount - docAmount) / 100.0).PadLeft(PrinterInfo.TapeWidth.MainPrinter - printLine.Length), FontStyle.Regular);
+                OnPrintString(printLine + string.Format("{0:f2}", (paymentAmount - docAmount) / 100.0).PadLeft(PrinterInfo.TapeWidth.MainPrinter - printLine.Length), FontStyle.Regular);
             }
 
             OnPrintString("", FontStyle.Regular);
@@ -148,7 +148,7 @@ namespace FilePrinter
             ErrorCode = new ServerErrorCode(this, GeneralError.Success);
         }
 
-        protected override void OnPrintString(String source, FontStyle style)
+        protected override void OnPrintString(string source, FontStyle style)
         {
             if (!System.IO.File.Exists(fileName))
                 System.IO.File.Create(fileName).Close();
@@ -157,7 +157,7 @@ namespace FilePrinter
             ErrorCode = new ServerErrorCode(this, GeneralError.Success);
         }
 
-        protected override void OnPrintBarcode(String barcode, AlignOptions align,
+        protected override void OnPrintBarcode(string barcode, AlignOptions align,
             bool readable)
         {
             OnPrintString(barcode.PadLeft((barcode.Length + PrinterInfo.TapeWidth.MainPrinter) / 2), FontStyle.Regular);
@@ -169,18 +169,18 @@ namespace FilePrinter
             ErrorCode = new ServerErrorCode(this, GeneralError.Success);
         }
 
-        protected override void OnRegistration(String commentary, UInt32 quantity, UInt32 amount,
-            Byte section)
+        protected override void OnRegistration(string commentary, uint quantity, uint amount,
+            byte section)
         {
             int regAmount = (int)(amount * quantity / 1000.0);
             docAmount += regAmount;
 
             string printLine = commentary;
-            OnPrintString(printLine + String.Format("{0:f2}", regAmount / 100.0).PadLeft(PrinterInfo.TapeWidth.MainPrinter - printLine.Length), FontStyle.Regular);
+            OnPrintString(printLine + string.Format("{0:f2}", regAmount / 100.0).PadLeft(PrinterInfo.TapeWidth.MainPrinter - printLine.Length), FontStyle.Regular);
             ErrorCode = new ServerErrorCode(this, GeneralError.Success);
         }
 
-        protected override void OnPayment(UInt32 amount, FiscalPaymentType paymentType)
+        protected override void OnPayment(uint amount, FiscalPaymentType paymentType)
         {
             string printLine = "";
             switch (paymentType)
@@ -196,11 +196,11 @@ namespace FilePrinter
                     break;
             }
             paymentAmount += (int)amount;
-            OnPrintString(printLine + String.Format("{0:f2}", amount / 100.0).PadLeft(PrinterInfo.TapeWidth.MainPrinter - printLine.Length), FontStyle.Regular);
+            OnPrintString(printLine + string.Format("{0:f2}", amount / 100.0).PadLeft(PrinterInfo.TapeWidth.MainPrinter - printLine.Length), FontStyle.Regular);
             ErrorCode = new ServerErrorCode(this, GeneralError.Success);
         }
 
-        protected override void OnCash(UInt32 amount)
+        protected override void OnCash(uint amount)
         {
             string printLine = "Сумма:";
             OnPrintString(printLine + Convert.ToString(amount / 100.0).PadLeft(PrinterInfo.TapeWidth.MainPrinter - printLine.Length), FontStyle.Regular);

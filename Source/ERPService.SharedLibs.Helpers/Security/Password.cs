@@ -12,8 +12,8 @@ namespace ERPService.SharedLibs.Helpers.Security
     {
         #region Поля
 
-        private Byte[] _salt;
-        private Byte[] _hash;
+        private byte[] _salt;
+        private byte[] _hash;
         private HashAlgorithm _algorithm;
 
         #endregion
@@ -35,7 +35,7 @@ namespace ERPService.SharedLibs.Helpers.Security
         /// <param name="salt">Синхропосылка</param>
         /// <param name="hash">Хэш пароля</param>
         /// <param name="hashAlgorithm">Алгоритм хэширования паролей</param>
-        public Password(String salt, String hash, HashAlgorithm hashAlgorithm)
+        public Password(string salt, string hash, HashAlgorithm hashAlgorithm)
             : this(hashAlgorithm)
         {
             _salt = Convert.FromBase64String(salt);
@@ -47,7 +47,7 @@ namespace ERPService.SharedLibs.Helpers.Security
         /// </summary>
         /// <param name="salt">Синхропосылка</param>
         /// <param name="hash">Хэш пароля</param>
-        public Password(String salt, String hash)
+        public Password(string salt, string hash)
             : this(salt, hash, new MD5CryptoServiceProvider())
         {
         }
@@ -58,11 +58,11 @@ namespace ERPService.SharedLibs.Helpers.Security
         /// <param name="salt">Синхропосылка</param>
         /// <param name="hash">Хэш пароля</param>
         /// <param name="hashAlgorithm">Алгоритм хэширования паролей</param>
-        public Password(Byte[] salt, Byte[] hash, HashAlgorithm hashAlgorithm)
+        public Password(byte[] salt, byte[] hash, HashAlgorithm hashAlgorithm)
             : this(hashAlgorithm)
         {
-            _salt = (Byte[])salt.Clone();
-            _hash = (Byte[])hash.Clone();
+            _salt = (byte[])salt.Clone();
+            _hash = (byte[])hash.Clone();
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace ERPService.SharedLibs.Helpers.Security
         /// </summary>
         /// <param name="salt">Синхропосылка</param>
         /// <param name="hash">Хэш пароля</param>
-        public Password(Byte[] salt, Byte[] hash)
+        public Password(byte[] salt, byte[] hash)
             : this(salt, hash, new MD5CryptoServiceProvider())
         {
         }
@@ -101,7 +101,7 @@ namespace ERPService.SharedLibs.Helpers.Security
         /// </summary>
         /// <param name="clearText">Пароль в явном виде</param>
         /// <param name="hashAlgorithm">Алгоритм хэширования паролей</param>
-        public Password(String clearText, HashAlgorithm hashAlgorithm)
+        public Password(string clearText, HashAlgorithm hashAlgorithm)
             : this(clearText.ToCharArray(), hashAlgorithm)
         {
         }
@@ -110,7 +110,7 @@ namespace ERPService.SharedLibs.Helpers.Security
         /// Создает экземпляр класса
         /// </summary>
         /// <param name="clearText">Пароль в явном виде</param>
-        public Password(String clearText)
+        public Password(string clearText)
             : this(clearText, new MD5CryptoServiceProvider())
         {
         }
@@ -135,17 +135,17 @@ namespace ERPService.SharedLibs.Helpers.Security
 
         #region Закрытые методы
 
-        private static Byte[] GenerateRandom(Int32 size)
+        private static byte[] GenerateRandom(int size)
         {
-            Byte[] random = new Byte[size];
+            byte[] random = new byte[size];
             RandomNumberGenerator.Create().GetBytes(random);
             return random;
         }
 
-        private Byte[] HashPassword(Char[] clearText)
+        private byte[] HashPassword(Char[] clearText)
         {
-            Byte[] hash;
-            Byte[] data = new Byte[_salt.Length + Encoding.UTF8.GetMaxByteCount(clearText.Length)];
+            byte[] hash;
+            byte[] data = new byte[_salt.Length + Encoding.UTF8.GetMaxByteCount(clearText.Length)];
 
             try
             {
@@ -153,7 +153,7 @@ namespace ERPService.SharedLibs.Helpers.Security
                 Array.Copy(_salt, 0, data, 0, _salt.Length);
 
                 // копируем пароль в рабочий массив, преобразуя его в UTF-8
-                Int32 byteCount = Encoding.UTF8.GetBytes(clearText, 0, clearText.Length, data, _salt.Length);
+                int byteCount = Encoding.UTF8.GetBytes(clearText, 0, clearText.Length, data, _salt.Length);
 
                 // хэшируем данные массива
                 hash = _algorithm.ComputeHash(data, 0, _salt.Length + byteCount);
@@ -175,7 +175,7 @@ namespace ERPService.SharedLibs.Helpers.Security
         /// <summary>
         /// Синхропосылка в Base64
         /// </summary>
-        public String Salt
+        public string Salt
         {
             get { return Convert.ToBase64String(_salt); }
         }
@@ -183,7 +183,7 @@ namespace ERPService.SharedLibs.Helpers.Security
         /// <summary>
         /// Хэш в Base64
         /// </summary>
-        public String Hash
+        public string Hash
         {
             get { return Convert.ToBase64String(_hash); }
         }
@@ -191,7 +191,7 @@ namespace ERPService.SharedLibs.Helpers.Security
         /// <summary>
         /// Синхропосылка
         /// </summary>
-        public Byte[] RawSalt
+        public byte[] RawSalt
         {
             get { return (byte[])_salt.Clone(); }
         }
@@ -199,7 +199,7 @@ namespace ERPService.SharedLibs.Helpers.Security
         /// <summary>
         /// Хэш 
         /// </summary>
-        public Byte[] RawHash
+        public byte[] RawHash
         {
             get { return (byte[])_hash.Clone(); }
         }
@@ -209,9 +209,9 @@ namespace ERPService.SharedLibs.Helpers.Security
         /// </summary>
         /// <param name="clearText">Пароль</param>
         /// <returns>true, если пароли совпадают, false - если нет</returns>
-        public Boolean Verify(Char[] clearText)
+        public bool Verify(Char[] clearText)
         {
-            Byte[] hash = HashPassword(clearText);
+            byte[] hash = HashPassword(clearText);
             if (hash.Length == _hash.Length)
             {
                 for (int i = 0; i < hash.Length; i++)
@@ -229,7 +229,7 @@ namespace ERPService.SharedLibs.Helpers.Security
         /// </summary>
         /// <param name="clearText">Пароль</param>
         /// <returns>true, если пароли совпадают, false - если нет</returns>
-        public Boolean Verify(String clearText)
+        public bool Verify(string clearText)
         {
             return Verify(clearText.ToCharArray());
         }

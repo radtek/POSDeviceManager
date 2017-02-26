@@ -18,7 +18,7 @@ namespace ERPService.SharedLibs.Remoting.Sinks
         // ссылка на следующего провайдера в цепи
         private IClientChannelSinkProvider _nextProvider;
         // им€ серверного хоста или его IP-адрес, видимые с клиента
-        private String _serverHostNameOrIp;
+        private string _serverHostNameOrIp;
 
         #endregion
 
@@ -37,9 +37,9 @@ namespace ERPService.SharedLibs.Remoting.Sinks
         /// —оздает экземпл€р провайдера
         /// </summary>
         /// <param name="serverHostNameOrIp">»м€ серверного хоста или его IP-адрес, видимые с клиента</param>
-        public IpFixClientChannelSinkProvider(String serverHostNameOrIp)
+        public IpFixClientChannelSinkProvider(string serverHostNameOrIp)
         {
-            if (String.IsNullOrEmpty(serverHostNameOrIp))
+            if (string.IsNullOrEmpty(serverHostNameOrIp))
                 throw new ArgumentNullException("serverHostNameOrIp");
 
             _serverHostNameOrIp = serverHostNameOrIp;
@@ -93,7 +93,7 @@ namespace ERPService.SharedLibs.Remoting.Sinks
         /// <summary>
         /// »м€ серверного хоста или его IP-адрес, видимые с клиента
         /// </summary>
-        public String ServerHostNameOrIp
+        public string ServerHostNameOrIp
         {
             get
             {
@@ -101,7 +101,7 @@ namespace ERPService.SharedLibs.Remoting.Sinks
             }
             set
             {
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                     throw new ArgumentNullException("value");
 
                 _serverHostNameOrIp = value;

@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 using System.Net.Sockets;
 using System.Runtime.Remoting;
+using System.Threading;
 using DevicesCommon;
 using DevicesCommon.Connectors;
 using DevicesCommon.Helpers;
@@ -46,7 +44,7 @@ namespace TsManager
             _client.Capture(_unitSettings.DeviceId, Timeout.Infinite);
             _device = (ITurnstileDevice)_client[_unitSettings.DeviceId];
             // подключение установлено
-            _eventLink.Post(TsGlobalConst.EventSource, String.Format(
+            _eventLink.Post(TsGlobalConst.EventSource, string.Format(
                 "[0] Подключение к диспетчеру устройств установлено", _unitSettings));
         }
 
@@ -87,7 +85,7 @@ namespace TsManager
                 _device = null;
 
                 // подключение закрыто
-                _eventLink.Post(TsGlobalConst.EventSource, String.Format(
+                _eventLink.Post(TsGlobalConst.EventSource, string.Format(
                     "[0] Подключение к диспетчеру устройств закрыто", _unitSettings));
             }
         }
@@ -98,8 +96,8 @@ namespace TsManager
         private void WorkWithTurnstile()
         {
             // запуск потока
-            _eventLink.Post(TsGlobalConst.EventSource, 
-                String.Format("[{0}] Запуск рабочего потока", _unitSettings));
+            _eventLink.Post(TsGlobalConst.EventSource,
+                string.Format("[{0}] Запуск рабочего потока", _unitSettings));
 
             // цикл опроса устройства идентификации турникета
             // проводится до тех пор, пока событие не перейдет в сигнальное состояние
@@ -111,43 +109,43 @@ namespace TsManager
                     CaptureDevice();
 
                     // запращиваем идентификационные данные с устройства
-                    String idData = _device.IdentificationData;
-                    if (String.IsNullOrEmpty(idData))
+                    string idData = _device.IdentificationData;
+                    if (string.IsNullOrEmpty(idData))
                         continue;
 
-                    String direction = _device.Direction == TurnstileDirection.Entry ?
+                    string direction = _device.Direction == TurnstileDirection.Entry ?
                         "Вход" : "Выход";
 
                     // проверяем возможность прохода в заданном направлении
                     _eventLink.Post(TsGlobalConst.EventSource,
-                        String.Format("[{0}] Получены идентификационные данные [{1}]", 
+                        string.Format("[{0}] Получены идентификационные данные [{1}]", 
                         _unitSettings, idData));
 
-                    String reason;
+                    string reason;
                     if (_amcsLogic.IsAccessGranted(_device.Direction, idData, out reason))
                     {
                         // доступ разрешен
-                        _eventLink.Post(TsGlobalConst.EventSource, String.Format(
+                        _eventLink.Post(TsGlobalConst.EventSource, string.Format(
                             "[{0}] Доступ разрешен, направление [{1}], идентификационные данные [{2}]",
                             _unitSettings, direction, idData));
                         // открываем турникет
-                        Boolean passOk = _device.Open();
+                        bool passOk = _device.Open();
                         if (passOk)
                         {
                             // посетитель прошел
-                            _eventLink.Post(TsGlobalConst.EventSource, String.Format(
+                            _eventLink.Post(TsGlobalConst.EventSource, string.Format(
                                 "[{0}] Турникет закрыт, проход выполнен", _unitSettings));
                             // уведомляем об этом СКУД
                             _amcsLogic.OnAccessOccured(_device.Direction, idData);
                         }
                         else
-                            _eventLink.Post(TsGlobalConst.EventSource, String.Format(
+                            _eventLink.Post(TsGlobalConst.EventSource, string.Format(
                                 "[{0}] Турникет закрыт, истекло время ожидания", _unitSettings));
                     }
                     else
                     {
                         // доступ запрещен
-                        _eventLink.Post(TsGlobalConst.EventSource, String.Format(
+                        _eventLink.Post(TsGlobalConst.EventSource, string.Format(
                             "[{0}] Доступ ЗАПРЕЩЕН, направление [{1}], идентификационные данные [{2}]. Причина: [{3}]",
                             _unitSettings, direction, idData, reason));
                         // закрываем турникет и сигнализируем посетителю
@@ -157,7 +155,7 @@ namespace TsManager
                 catch (Exception e)
                 {
                     // протоколируем информацию об исключении
-                    _eventLink.Post(TsGlobalConst.EventSource, String.Format(
+                    _eventLink.Post(TsGlobalConst.EventSource, string.Format(
                         "[{0}] Исключение в рабочем потоке", _unitSettings), e);
                     
                     // освобождаем устройство
@@ -168,8 +166,8 @@ namespace TsManager
             // освобождение устройства
             ReleaseDevice();
             // остановка потока
-            _eventLink.Post(TsGlobalConst.EventSource, 
-                String.Format("[{0}] Остановка рабочего потока", _unitSettings));
+            _eventLink.Post(TsGlobalConst.EventSource,
+                string.Format("[{0}] Остановка рабочего потока", _unitSettings));
         }
 
         #endregion

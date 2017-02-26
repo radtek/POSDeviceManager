@@ -114,7 +114,7 @@ namespace DevicesBase
         /// <summary>
         /// Порт по умолчанию
         /// </summary>
-        public override Int32 Port
+        public override int Port
         {
             get { return _props.ServicePort; }
         }
@@ -379,7 +379,7 @@ namespace DevicesBase
             }
         }
 
-        private Boolean GetParamValue(XmlElement root, string paramName, object defaultValue, out string value)
+        private bool GetParamValue(XmlElement root, string paramName, object defaultValue, out string value)
         {
             XmlElement param = root[paramName];
             value = param != null ? param.InnerText : string.Empty;
@@ -744,7 +744,7 @@ namespace DevicesBase
         /// <param name="sessionID">Идентификатор сессии</param>
         /// <param name="deviceID">Идентификатор устройства</param>
         /// <param name="waitTimeout">Таймаут ожидания захвата устройства, секунды</param>
-        public bool Capture(string sessionID, string deviceID, Int32 waitTimeout)
+        public bool Capture(string sessionID, string deviceID, int waitTimeout)
         {
             bool isCaptured;
             // засекаем время
@@ -902,7 +902,7 @@ namespace DevicesBase
         /// <summary>
         /// Режим отладки
         /// </summary>
-        public Boolean DebugInfo
+        public bool DebugInfo
         {
             get { return _props.DebugInfo; }
         }
@@ -962,7 +962,7 @@ namespace DevicesBase
         /// <param name="waitIfCaptured">Ожидать освобождения порта</param>
         /// <param name="waitTime">Время, в течение которого ожидать освобождение</param>
         public EasyCommunicationPort CapturePort(string deviceId, string portName,
-            Boolean waitIfCaptured, TimeSpan waitTime)
+            bool waitIfCaptured, TimeSpan waitTime)
         {
             CheckSerialPortName(portName);
             SerialPortsHelper helper = _serialPortsPool[portName];

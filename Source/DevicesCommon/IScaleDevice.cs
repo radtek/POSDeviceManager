@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using DevicesCommon.Helpers;
-
 namespace DevicesCommon
 {
     /// <summary>
@@ -14,12 +9,12 @@ namespace DevicesCommon
         /// Выгрузка данных в весы
         /// </summary>
         /// <param name="xmlData"></param>
-        void Upload(String xmlData);
+        void Upload(string xmlData);
 
         /// <summary>
         /// Текущие показания веса
         /// </summary>
-        Int32 Weight { get; }
+        int Weight { get; }
 
         /// <summary>
         /// Строка с параметрами подключения к весам
@@ -29,6 +24,6 @@ namespace DevicesCommon
         /// rs://port_name:baud
         /// </example>
         /// </summary>
-        String ConnectionString { get; set; }
+        string ConnectionString { get; set; }
     }
 }

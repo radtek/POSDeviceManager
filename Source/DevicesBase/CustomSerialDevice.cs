@@ -17,12 +17,12 @@ namespace DevicesBase
         ISerialDevice, IDisposable
 	{
         private string _portName;
-        private Int32 _baudRate;
-        private Boolean _portCaptured;
-        private Boolean _portOpened;
-        private Boolean _portActivated;
-        private Boolean _blockPortGetterReentrancy;
-        private Boolean _disposed;
+        private int _baudRate;
+        private bool _portCaptured;
+        private bool _portOpened;
+        private bool _portActivated;
+        private bool _blockPortGetterReentrancy;
+        private bool _disposed;
 
         #region Закрытые методы
 
@@ -106,7 +106,7 @@ namespace DevicesBase
         /// <summary>
         /// Возвращает признак работы по последовательному порту
         /// </summary>
-        protected virtual Boolean IsSerial
+        protected virtual bool IsSerial
         {
             get { return Port.IsSerial; }
         }
@@ -190,7 +190,7 @@ namespace DevicesBase
 		/// <summary>
 		/// Скорость передачи данных через порт
 		/// </summary>
-		public Int32 Baud
+		public int Baud
 		{
 			get { return _baudRate; }
 			set { _baudRate = value; }
@@ -211,7 +211,7 @@ namespace DevicesBase
         /// <remarks>
         /// Подключение устройств сделано ленивым. См. <see cref="CustomSerialDevice.Port"/>.
         /// </remarks>
-		public override Boolean Active
+		public override bool Active
 		{
             get 
             {

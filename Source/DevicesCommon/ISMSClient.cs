@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DevicesCommon
 {
@@ -16,13 +14,13 @@ namespace DevicesCommon
         /// <param name="messageText">Текст сообщения</param>
         /// <remarks>Номер телефона задается в международном формате: +123(456)789-01-23
         /// Текст сообщения может быть многострочным.</remarks>
-        void Send(String recipientNumber, String messageText);
+        void Send(string recipientNumber, string messageText);
 
         /// <summary>
         /// Инициализация параметров для подключения, использующихся для отправки SMS
         /// </summary>
         /// <param name="paramName">Имя параметра</param>
         /// <param name="paramValue">Значение параметра</param>
-        void SetConnectivityParam(String paramName, String paramValue);
+        void SetConnectivityParam(string paramName, string paramValue);
     }
 }

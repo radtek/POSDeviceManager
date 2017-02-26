@@ -61,7 +61,7 @@ namespace BiolinkLock
                     {
                         int quality = image.ExpressQuality();
                         if (quality < MinQualityThreashold)
-                            return String.Empty;
+                            return string.Empty;
 
                         using (var imageSet = new Biolink.Biometrics2.ImageSet())
                         {
@@ -77,7 +77,7 @@ namespace BiolinkLock
 
                     }
                 }
-                return String.Empty;
+                return string.Empty;
             }
         }
 

@@ -334,7 +334,7 @@ namespace Atol
 
         public void AddBCD(long value, int size)
         {
-            String sBCD = value.ToString(String.Format("d{0}", size * 2));
+            string sBCD = value.ToString(string.Format("d{0}", size * 2));
 
             int nPos = 0;
             while (size > 0)
@@ -451,9 +451,9 @@ namespace Atol
                            new Converter<byte, string>(delegate(byte b) { return b.ToString("X"); }));
             string[] rspDump = Array.ConvertAll(_rspBuffer,
                 new Converter<byte, string>(delegate(byte b) { return b.ToString("X"); }));
-            return String.Format("Байты команды ({0}):\n{1:X}\nБайты ответа ({2}):\n{3:X}",
-                _cmdLen, String.Join(" ", reqDump, 0, _cmdLen),
-                _rspLen, String.Join(" ", rspDump, 0, _rspLen));
+            return string.Format("Байты команды ({0}):\n{1:X}\nБайты ответа ({2}):\n{3:X}",
+                _cmdLen, string.Join(" ", reqDump, 0, _cmdLen),
+                _rspLen, string.Join(" ", rspDump, 0, _rspLen));
         }
 
         #endregion

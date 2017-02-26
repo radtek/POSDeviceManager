@@ -17,7 +17,7 @@ namespace TsManagerConfigurator
 
         public override string[] GetAvailableEventSources()
         {
-            return new String[] { TsGlobalConst.EventSource };
+            return new string[] { TsGlobalConst.EventSource };
         }
     }
 }

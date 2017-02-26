@@ -43,19 +43,19 @@ namespace ERPService.SharedLibs.Helpers
     {
         #region Константы
 
-        private const String _russianCountryCode = "7";
-        private const String _longDistancePrefix = "8";
-        private const String _internationalPrefix = "10";
-        private const String _phoneNoPattern = @"(?:\u002B?)(\d+)(?:\u0028)(\d{3})(?:\u0029)(\d{3})(?:\u002D?)(\d{2})(?:\u002D?)(\d{2})";
-        private const String _phoneNoIncorrectMsg = "Некорректный формат номера телефона";
+        private const string _russianCountryCode = "7";
+        private const string _longDistancePrefix = "8";
+        private const string _internationalPrefix = "10";
+        private const string _phoneNoPattern = @"(?:\u002B?)(\d+)(?:\u0028)(\d{3})(?:\u0029)(\d{3})(?:\u002D?)(\d{2})(?:\u002D?)(\d{2})";
+        private const string _phoneNoIncorrectMsg = "Некорректный формат номера телефона";
 
         #endregion
 
         #region Поля
 
-        private String _countryCode;
-        private String _areaCode;
-        private String[] _phoneNo;
+        private string _countryCode;
+        private string _areaCode;
+        private string[] _phoneNo;
 
         #endregion
 
@@ -65,20 +65,20 @@ namespace ERPService.SharedLibs.Helpers
         /// Создает экземпляр класса
         /// </summary>
         /// <param name="number">Номер телефона</param>
-        public PhoneNumber(String number)
+        public PhoneNumber(string number)
         {
             Match match = Regex.Match(number, _phoneNoPattern);
             if (match.Success)
             {
                 // код страны
-                if (String.Compare(match.Groups[1].Value, _longDistancePrefix) == 0)
+                if (string.Compare(match.Groups[1].Value, _longDistancePrefix) == 0)
                     _countryCode = _russianCountryCode;
                 else
                     _countryCode = match.Groups[1].Value;
                 // код региона/сети
                 _areaCode = match.Groups[2].Value;
                 // номер телефона
-                _phoneNo = new String[3] { match.Groups[3].Value, match.Groups[4].Value,
+                _phoneNo = new string[3] { match.Groups[3].Value, match.Groups[4].Value,
                     match.Groups[5].Value };
             }
             else
@@ -93,7 +93,7 @@ namespace ERPService.SharedLibs.Helpers
         /// Является ли строка номером телефона
         /// </summary>
         /// <param name="testString">Строка, требующая проверки</param>
-        public static Boolean IsPhoneNumber(String testString)
+        public static bool IsPhoneNumber(string testString)
         {
             return Regex.Match(testString, _phoneNoPattern).Success;
         }
@@ -101,7 +101,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Код страны
         /// </summary>
-        public String CountryCode
+        public string CountryCode
         {
             get { return _countryCode; }
         }
@@ -109,7 +109,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Код региона, сети (3 цифры)
         /// </summary>
-        public String AreaCode
+        public string AreaCode
         {
             get { return _areaCode; }
         }
@@ -117,12 +117,12 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Номер телефона (7 цифр без разделителей)
         /// </summary>
-        public String PhoneNo
+        public string PhoneNo
         {
             get 
             {
                 StringBuilder sb = new StringBuilder();
-                foreach (String s in _phoneNo)
+                foreach (string s in _phoneNo)
                     sb.Append(s);
                 return sb.ToString();
             }
@@ -132,7 +132,7 @@ namespace ERPService.SharedLibs.Helpers
         /// Строковое представление номера для использования в протколе 
         /// передачи SMS-сообщений
         /// </summary>
-        public override String ToString()
+        public override string ToString()
         {
             return ToString(PhoneNumberFormat.SMS);
         }
@@ -141,7 +141,7 @@ namespace ERPService.SharedLibs.Helpers
         /// Строковое представление номера
         /// </summary>
         /// <param name="numberFormat">Формат строкового представления номера</param>
-        public String ToString(PhoneNumberFormat numberFormat)
+        public string ToString(PhoneNumberFormat numberFormat)
         {
             StringBuilder sb = new StringBuilder();
             switch (numberFormat)
@@ -154,7 +154,7 @@ namespace ERPService.SharedLibs.Helpers
                 case PhoneNumberFormat.ReadableRussian:
                     sb.Append(_longDistancePrefix);
                     sb.Append('-');
-                    if (String.Compare(_countryCode, _russianCountryCode) != 0)
+                    if (string.Compare(_countryCode, _russianCountryCode) != 0)
                     {
                         sb.Append(_internationalPrefix);
                         sb.Append('-');
@@ -168,7 +168,7 @@ namespace ERPService.SharedLibs.Helpers
                 case PhoneNumberFormat.NonReadable:
                     sb.Append(_countryCode);
                     sb.Append(_areaCode);
-                    foreach (String s in _phoneNo)
+                    foreach (string s in _phoneNo)
                         sb.Append(s);
                     break;
                 default:
@@ -193,8 +193,8 @@ namespace ERPService.SharedLibs.Helpers
                 sb.Append('F');
 
             // в каждой паре меняем цифры местами
-            Int32 hexBytes = sb.Length / 2;
-            for (Int32 i = 0; i < hexBytes; i++)
+            int hexBytes = sb.Length / 2;
+            for (int i = 0; i < hexBytes; i++)
             {
                 Char swapChar = sb[i * 2];
                 sb[i * 2] = sb[i * 2 + 1];
@@ -202,7 +202,7 @@ namespace ERPService.SharedLibs.Helpers
             }
         }
 
-        private void BuildPhoneNo(StringBuilder sb, Boolean includeAreaCode)
+        private void BuildPhoneNo(StringBuilder sb, bool includeAreaCode)
         {
             if (includeAreaCode)
             {

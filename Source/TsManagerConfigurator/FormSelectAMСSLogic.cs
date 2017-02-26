@@ -15,7 +15,7 @@ namespace TsManagerConfigurator
             InitializeComponent();
         }
 
-        public Boolean Execute(String[] acmsNames)
+        public bool Execute(string[] acmsNames)
         {
             if (acmsNames == null || acmsNames.Length == 0)
             {
@@ -28,7 +28,7 @@ namespace TsManagerConfigurator
             try
             {
                 listBox1.Items.Clear();
-                foreach (String acmsName in acmsNames)
+                foreach (string acmsName in acmsNames)
                 {
                     listBox1.Items.Add(acmsName);
                 }
@@ -41,12 +41,12 @@ namespace TsManagerConfigurator
             }
         }
 
-        public String ACMSName
+        public string ACMSName
         {
             get 
             { 
-                return listBox1.SelectedItem == null ? 
-                    String.Empty : listBox1.SelectedItem.ToString(); 
+                return listBox1.SelectedItem == null ?
+                    string.Empty : listBox1.SelectedItem.ToString(); 
             }
         }
     }

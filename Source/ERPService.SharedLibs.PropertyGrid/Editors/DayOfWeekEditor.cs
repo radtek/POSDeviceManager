@@ -12,11 +12,11 @@ namespace ERPService.SharedLibs.PropertyGrid.Editors
         /// <summary>
         /// Возвращает список возможных значений свойства
         /// </summary>
-        public override String[] Values
+        public override string[] Values
         {
             get
             {
-                return new String[] {
+                return new string[] {
                     "Понедельник",
                     "Вторник",
                     "Среда",
@@ -31,16 +31,16 @@ namespace ERPService.SharedLibs.PropertyGrid.Editors
         /// Возвращает индекс выбранного значения
         /// </summary>
         /// <param name="value">Исходное значение свойства</param>
-        protected override Int32 ObjectToIndex(Object value)
+        protected override int ObjectToIndex(Object value)
         {
-            return (Int32)value - 1;
+            return (int)value - 1;
         }
 
         /// <summary>
         /// Конвертирует выбранное строковое значение в нужный тип
         /// </summary>
         /// <param name="selectedIndex">Идекс строки в списке</param>
-        protected override Object IndexToObject(Int32 selectedIndex)
+        protected override Object IndexToObject(int selectedIndex)
         {
             return selectedIndex + 1;
         }

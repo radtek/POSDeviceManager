@@ -30,7 +30,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <param name="throwIfNotExists">Бросать исключение, если файла не существует</param>
         /// <param name="extraTypes">Дополнительные типы данных</param>
         /// <returns>Десериализованный объект либо новый объект</returns>
-        public static T Deserialize<T>(String fileName, Boolean throwIfNotExists, Type[] extraTypes)
+        public static T Deserialize<T>(string fileName, bool throwIfNotExists, Type[] extraTypes)
             where T : new()
         {
             T result = DeserializeOrDefault<T>(fileName, throwIfNotExists, extraTypes);
@@ -46,7 +46,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <param name="fileName">Имя файла, содержащего сериализованный объект</param>
         /// <param name="throwIfNotExists">Бросать исключение, если файла не существует</param>
         /// <returns>Десериализованный объект либо новый объект</returns>
-        public static T Deserialize<T>(String fileName, Boolean throwIfNotExists)
+        public static T Deserialize<T>(string fileName, bool throwIfNotExists)
             where T : new()
         {
             return Deserialize<T>(fileName, throwIfNotExists, null);
@@ -58,7 +58,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <typeparam name="T">Десериализуемый тип</typeparam>
         /// <param name="fileName">Имя файла, содержащего сериализованный объект</param>
         /// <returns>Десериализованный объект либо новый объект</returns>
-        public static T Deserialize<T>(String fileName) where T : new()
+        public static T Deserialize<T>(string fileName) where T : new()
         {
             return Deserialize<T>(fileName, false, null);
         }
@@ -75,7 +75,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <param name="throwIfNotExists">Бросать исключение, если файла не существует</param>
         /// <param name="extraTypes">Дополнительные типы данных</param>
         /// <returns>Десериализованный объект либо значение по умолчанию</returns>
-        public static T DeserializeOrDefault<T>(String fileName, Boolean throwIfNotExists, Type[] extraTypes)
+        public static T DeserializeOrDefault<T>(string fileName, bool throwIfNotExists, Type[] extraTypes)
         {
             if (File.Exists(fileName))
             {
@@ -104,7 +104,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <param name="fileName">Имя файла, содержащего сериализованный объект</param>
         /// <param name="throwIfNotExists">Бросать исключение, если файла не существует</param>
         /// <returns>Десериализованный объект либо значение по умолчанию</returns>
-        public static T DeserializeOrDefault<T>(String fileName, Boolean throwIfNotExists)
+        public static T DeserializeOrDefault<T>(string fileName, bool throwIfNotExists)
         {
             return DeserializeOrDefault<T>(fileName, throwIfNotExists, null);
         }
@@ -115,7 +115,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <typeparam name="T">Десериализуемый тип</typeparam>
         /// <param name="fileName">Имя файла, содержащего сериализованный объект</param>
         /// <returns>Десериализованный объект либо значение по умолчанию</returns>
-        public static T DeserializeOrDefault<T>(String fileName)
+        public static T DeserializeOrDefault<T>(string fileName)
         {
             return DeserializeOrDefault<T>(fileName, false, null);
         }
@@ -131,9 +131,9 @@ namespace ERPService.SharedLibs.Helpers
         /// <param name="obj">Сериализуемый объект</param>
         /// <param name="fileName">Имя файла</param>
         /// <param name="extraTypes">Дополнительные типы данных</param>
-        public static void Serialize<T>(T obj, String fileName, Type[] extraTypes)
+        public static void Serialize<T>(T obj, string fileName, Type[] extraTypes)
         {
-            String directory = Path.GetDirectoryName(fileName);
+            string directory = Path.GetDirectoryName(fileName);
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
 
@@ -151,7 +151,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <typeparam name="T">Сериализуемый тип</typeparam>
         /// <param name="obj">Сериализуемый объект</param>
         /// <param name="fileName">Имя файла</param>
-        public static void Serialize<T>(T obj, String fileName)
+        public static void Serialize<T>(T obj, string fileName)
         {
             Serialize<T>(obj, fileName, null);
         }
@@ -166,9 +166,9 @@ namespace ERPService.SharedLibs.Helpers
         /// <typeparam name="T">Тип структуры</typeparam>
         /// <param name="anyStruct">Структура</param>
         /// <returns>Сериализованная структура в виде массива байт</returns>
-        public static Byte[] RawSerialize<T>(T anyStruct) where T : struct
+        public static byte[] RawSerialize<T>(T anyStruct) where T : struct
         {
-            Byte[] rawdata = new Byte[Marshal.SizeOf(anyStruct)];
+            byte[] rawdata = new byte[Marshal.SizeOf(anyStruct)];
             GCHandle handle = GCHandle.Alloc(rawdata, GCHandleType.Pinned);
             try
             {
@@ -187,7 +187,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <typeparam name="T">Тип структуры</typeparam>
         /// <param name="rawSerializedStruct">Массив байт, содержащий данные сериализованной структуры</param>
         /// <returns>Структура, десериализованная из массива байт</returns>
-        public static T RawDeserialize<T>(Byte[] rawSerializedStruct) where T : struct
+        public static T RawDeserialize<T>(byte[] rawSerializedStruct) where T : struct
         {
             GCHandle handle = GCHandle.Alloc(rawSerializedStruct, GCHandleType.Pinned);
             try

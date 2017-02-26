@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace DevicesCommon
 {
     /// <summary>
@@ -12,6 +8,6 @@ namespace DevicesCommon
         /// <summary>
         /// Адрес устройства
         /// </summary>
-        Int32 Address { get; set; }
+        int Address { get; set; }
     }
 }

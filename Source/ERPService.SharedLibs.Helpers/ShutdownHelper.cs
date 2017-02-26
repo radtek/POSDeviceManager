@@ -13,12 +13,12 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Low order bits
         /// </summary>
-        public UInt32 LowPart;
+        public uint LowPart;
 
         /// <summary>
         /// High order bits
         /// </summary>
-        public Int32 HighPart;
+        public int HighPart;
     }
 
     /// <summary>
@@ -36,7 +36,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Specifies attributes of the LUID
         /// </summary>
-        public UInt32 Attributes;
+        public uint Attributes;
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Specifies the number of entries in the Privileges array
         /// </summary>
-        public UInt32 PrivilegeCount;
+        public uint PrivilegeCount;
 
         /// <summary>
         /// Specifies an array of LUID_AND_ATTRIBUTES structures.
@@ -66,8 +66,8 @@ namespace ERPService.SharedLibs.Helpers
     {
         #region Наименования библиотек
 
-        private const String kernel32 = "kernel32.dll";
-        private const String advapi32 = "advapi32.dll";
+        private const string kernel32 = "kernel32.dll";
+        private const string advapi32 = "advapi32.dll";
 
         #endregion
 
@@ -76,22 +76,22 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Required to enable or disable the privileges in an access token
         /// </summary>
-        public const UInt32 TOKEN_ADJUST_PRIVILEGES = 0x0020;
+        public const uint TOKEN_ADJUST_PRIVILEGES = 0x0020;
 
         /// <summary>
         /// Required to query an access token
         /// </summary>
-        public const UInt32 TOKEN_QUERY = 0x0008;
+        public const uint TOKEN_QUERY = 0x0008;
 
         /// <summary>
         /// The function enables the privilege
         /// </summary>
-        public const UInt32 SE_PRIVILEGE_ENABLED = 0x00000002;
+        public const uint SE_PRIVILEGE_ENABLED = 0x00000002;
 
         /// <summary>
         /// Shutdown privilege
         /// </summary>
-        public const String SeShutdownPrivilege = "SeShutdownPrivilege";
+        public const string SeShutdownPrivilege = "SeShutdownPrivilege";
 
         #endregion
 
@@ -102,21 +102,21 @@ namespace ERPService.SharedLibs.Helpers
         /// </summary>
         /// <returns></returns>
         [DllImport(kernel32, SetLastError=false)]
-        public static extern Int32 GetCurrentProcess();
+        public static extern int GetCurrentProcess();
 
         /// <summary>
         /// Retrieves the calling thread's last-error code value
         /// </summary>
         /// <returns></returns>
         [DllImport(kernel32, SetLastError=false)]
-        public static extern UInt32 GetLastError();
+        public static extern uint GetLastError();
 
         /// <summary>
         /// Closes an open object handle
         /// </summary>
         /// <param name="hObject">Handle to an open object</param>
         [DllImport(kernel32, SetLastError = true)]
-        public static extern Boolean CloseHandle(Int32 hObject);
+        public static extern bool CloseHandle(int hObject);
 
         /// <summary>
         /// Opens the access token associated with a process
@@ -125,10 +125,10 @@ namespace ERPService.SharedLibs.Helpers
         /// <param name="DesiredAccess">Specifies an access mask that specifies the requested types of access to the access token</param>
         /// <param name="TokenHandle">Pointer to a handle that identifies the newly opened access token when the function returns</param>
         [DllImport(advapi32, SetLastError=true)]
-        public static extern Boolean OpenProcessToken(
-            Int32 ProcessHandle,
-            UInt32 DesiredAccess,
-            out Int32 TokenHandle);
+        public static extern bool OpenProcessToken(
+            int ProcessHandle,
+            uint DesiredAccess,
+            out int TokenHandle);
 
         /// <summary>
         /// retrieves the locally unique identifier (LUID) used on a specified system 
@@ -140,9 +140,9 @@ namespace ERPService.SharedLibs.Helpers
         /// <param name="lpLuid">Receives the LUID by which the privilege is known 
         /// on the system specified by the lpSystemName parameter</param>
         [DllImport(advapi32, SetLastError=true)]
-        public static extern Boolean LookupPrivilegeValue(
-          String lpSystemName,
-          String lpName,
+        public static extern bool LookupPrivilegeValue(
+          string lpSystemName,
+          string lpName,
           out LUID lpLuid);
 
         /// <summary>
@@ -160,11 +160,11 @@ namespace ERPService.SharedLibs.Helpers
         /// <param name="ReturnLength">Receives the required size, in bytes, of the buffer pointed 
         /// to by the PreviousState parameter</param>
         [DllImport(advapi32, SetLastError=true)]
-        public static extern Boolean AdjustTokenPrivileges(
-          Int32 TokenHandle,
-          Boolean DisableAllPrivileges,
+        public static extern bool AdjustTokenPrivileges(
+          int TokenHandle,
+          bool DisableAllPrivileges,
           ref TOKEN_PRIVILEGES NewState,
-          UInt32 BufferLength,
+          uint BufferLength,
           IntPtr PreviousState,
           IntPtr ReturnLength);
 
@@ -180,12 +180,12 @@ namespace ERPService.SharedLibs.Helpers
         /// <param name="bRebootAfterShutdown">If this parameter is TRUE, the computer is to 
         /// restart immediately after shutting down</param>
         [DllImport(advapi32, SetLastError = true)]
-        public static extern Boolean InitiateSystemShutdown(
-          String lpMachineName,
-          String lpMessage,
-          UInt32 dwTimeout,
-          Boolean bForceAppsClosed,
-          Boolean bRebootAfterShutdown);
+        public static extern bool InitiateSystemShutdown(
+          string lpMachineName,
+          string lpMessage,
+          uint dwTimeout,
+          bool bForceAppsClosed,
+          bool bRebootAfterShutdown);
 
         #endregion
     }
@@ -201,11 +201,11 @@ namespace ERPService.SharedLibs.Helpers
         /// Завершение работы
         /// </summary>
         /// <param name="reboot">Перезагрузка после завершения работы</param>
-        private static void InternalShutdown(Boolean reboot)
+        private static void InternalShutdown(bool reboot)
         {
             // получаем маркер текущего процесса
-            Int32 tokenHandle;
-            Boolean apiCr = WinApi.OpenProcessToken(
+            int tokenHandle;
+            bool apiCr = WinApi.OpenProcessToken(
                 WinApi.GetCurrentProcess(),
                 WinApi.TOKEN_ADJUST_PRIVILEGES | WinApi.TOKEN_QUERY,
                 out tokenHandle);
@@ -244,13 +244,13 @@ namespace ERPService.SharedLibs.Helpers
         /// <summary>
         /// Прверка результата вызова API-функции
         /// </summary>
-        private static void Win32Check(Boolean result)
+        private static void Win32Check(bool result)
         {
             if (!result)
             {
-                UInt32 error = WinApi.GetLastError();
+                uint error = WinApi.GetLastError();
                 if (error != 0)
-                    throw new Win32Exception((Int32)error);
+                    throw new Win32Exception((int)error);
             }
         }
 
