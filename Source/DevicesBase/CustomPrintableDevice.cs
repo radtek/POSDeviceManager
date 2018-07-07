@@ -255,9 +255,40 @@ namespace DevicesBase
         /// Идентифкатор ставки НДС.
         /// </param>
         /// <remarks>
-        /// Метод для поддержки 54-ФЗ.
+        /// Метод для поддержки 54-ФЗ и ФФД 1.0.
         /// </remarks>
         protected virtual void OnRegistration(string positionName, uint quantity, uint price, uint amount, byte section, byte vatRateId)
+        {
+        }
+
+        /// <summary>
+        /// Вызывается при регистрации позиции в кассовом документе.
+        /// </summary>
+        /// <param name="positionName">
+        /// Наименование позиции.
+        /// </param>
+        /// <param name="quantity">
+        /// Количество позиции, граммы.
+        /// </param>
+        /// <param name="price">
+        /// Цена позиции, копейки.
+        /// </param>
+        /// <param name="amount">
+        /// Сумма позиции, копейки.
+        /// </param>
+        /// <param name="section">
+        /// Секция для регистрации.
+        /// </param>
+        /// <param name="vatRateId">
+        /// Идентифкатор ставки НДС.
+        /// </param>
+        /// <param name="fiscalItemType">
+        /// Признак предмета расчета.
+        /// </param>
+        /// <remarks>
+        /// Метод для поддержки 54-ФЗ и ФФД 1.05.
+        /// </remarks>
+        protected virtual void OnRegistration(string positionName, uint quantity, uint price, uint amount, byte section, byte vatRateId, byte fiscalItemType)
         {
         }
 
@@ -1080,13 +1111,28 @@ namespace DevicesBase
 
                             newRegistrationsAmount += amount;
 
-                            OnRegistration(
-                                lineData,
-                                IntFromXml(lineEntry, "quantity", 1000),
-                                IntFromXml(lineEntry, "price", 0),
-                                amount,
-                                SectionFromXml(lineEntry.GetAttribute("section")),
-                                (byte)IntFromXml(lineEntry, "vatRateId", 1));
+                            if (string.IsNullOrEmpty(lineEntry.GetAttribute("fiscalItemType")))
+                            {
+                                // ФФД 1.0
+                                OnRegistration(
+                                    lineData,
+                                    IntFromXml(lineEntry, "quantity", 1000),
+                                    IntFromXml(lineEntry, "price", 0),
+                                    amount,
+                                    SectionFromXml(lineEntry.GetAttribute("section")),
+                                    (byte)IntFromXml(lineEntry, "vatRateId", 1));
+                            }
+                            else
+                            {
+                                OnRegistration(
+                                    lineData,
+                                    IntFromXml(lineEntry, "quantity", 1000),
+                                    IntFromXml(lineEntry, "price", 0),
+                                    amount,
+                                    SectionFromXml(lineEntry.GetAttribute("section")),
+                                    (byte)IntFromXml(lineEntry, "vatRateId", 1),
+                                    (byte)IntFromXml(lineEntry, "fiscalItemType", 1));
+                            }
                         }
                         else
                         {

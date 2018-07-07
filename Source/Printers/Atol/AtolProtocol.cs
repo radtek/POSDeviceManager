@@ -1157,6 +1157,62 @@ namespace Atol
             });
         }
 
+        protected override void OnRegistration(string positionName, uint quantity, uint price, uint amount, byte section, byte vatRateId, byte fiscalItemType)
+        {
+            if (!HasNonzeroRegistrations)
+            {
+                return;
+            }
+
+            ExecuteDriverCommand(() =>
+            {
+                _atolProtocol.CreateCommand(0xEB);
+
+                // флаги по умолчанию (выполнить операцию, контроль наличности)
+                _atolProtocol.AddByte(0);
+
+                // цена
+                _atolProtocol.AddBCD(price, 7);
+
+                // количество
+                _atolProtocol.AddBCD(quantity, 5);
+
+                // стоимость позиции
+                _atolProtocol.AddBCD(amount, 7);
+
+                // налог
+                _atolProtocol.AddByte(vatRateId);
+
+                // сумма налога (ККТ считает самостоятельно)
+                _atolProtocol.AddBCD(0, 7);
+
+                // секция
+                _atolProtocol.AddBCD(section, 1);
+
+                // признак предмета расчета
+                _atolProtocol.AddByte(fiscalItemType);
+
+                // признак способа расчета (всегда полный расчет)
+                _atolProtocol.AddByte(4);
+
+                // знак скидки (не используется)
+                _atolProtocol.AddByte(0);
+
+                // информация о скидке (не используется)
+                _atolProtocol.AddBCD(0, 7);
+
+                // здесь либо ошибка в спецификации, либо в прошивке;
+                // если не пропустить эти два байта, то первые два символа в наименовании позиции обрезаются
+                _atolProtocol.AddByte(0);
+                _atolProtocol.AddByte(0);
+
+                // наименование позиции
+                _atolProtocol.AddString(positionName, 128);
+
+                _atolProtocol.Execute();
+            });
+        }
+
         protected override void OnTrimDocumentAmount(uint registrationsAmount)
         {
             // посчитаем разницу между суммой регистраций и суммой документа по данным ФР
@@ -1357,10 +1413,10 @@ namespace Atol
         {
             get
             {
-                bool bPrinting = false;
-                PaperOutStatus poStatus = PaperOutStatus.OutPassive;
-                bool bDrawerOpened = false;
-                bool bDocOpened = false;
+                var printing = false;
+                var paperOutStatus = PaperOutStatus.OutPassive;
+                var drawerOpened = false;
+                var docOpened = false;
 
                 ExecuteDriverCommand(delegate()
                 {
@@ -1368,20 +1424,32 @@ namespace Atol
                     _atolProtocol.ExecuteCommand(0x45);
 
                     if ((_atolProtocol.Response[3] & 0x01) == 0)
-                        poStatus = PaperOutStatus.Present;
+                        paperOutStatus = PaperOutStatus.Present;
                     else
-                        poStatus = PaperOutStatus.OutActive;
+                        paperOutStatus = PaperOutStatus.OutPassive;
 
                     // запрос состояния
                     _atolProtocol.ExecuteCommand(0x3F);
 
-                    bDrawerOpened = (_atolProtocol.Response[10] & 4) == 4;
-                    bPrinting = (_atolProtocol.Response[18] >> 4) != 0;
+                    drawerOpened = (_atolProtocol.Response[10] & 4) == 4;
+
+                    // датчик бумаги может сигнализировать о том, что бумага есть, но крышка может быть открыта, или плохо закрыта;
+                    // это приведет к тому, что любая команда печати вернет ошибку 103 (отсутствие бумаги), а логика печати
+                    // отсутствие бумаги не обнаружит;
+                    // поэтому в обязательном порядке проверяем датчик крышки - если она открыта, считаем, что бумаги нет;
+                    // если она закрыта, ориентируемся на то значение OutOfPaper, которое было установлено ранее
+                    if ((_atolProtocol.Response[10] & 32) == 32)
+                    {
+                        paperOutStatus = PaperOutStatus.OutPassive;
+                    }
+
+                    printing = (_atolProtocol.Response[18] >> 4) != 0;
 
                     if ((_atolProtocol.Response[18] & 1) == 1)
-                        bDocOpened = _atolProtocol.Response[23] != 0;
+                        docOpened = _atolProtocol.Response[23] != 0;
                 });
-                return new PrinterStatusFlags(bPrinting, poStatus, bDocOpened, bDrawerOpened);
+
+                return new PrinterStatusFlags(printing, paperOutStatus, docOpened, drawerOpened);
             }
         }
 
