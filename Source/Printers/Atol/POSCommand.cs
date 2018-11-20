@@ -1,9 +1,11 @@
 using System;
+using System.Runtime.Serialization;
 using System.Text;
 using ERPService.SharedLibs.Helpers.SerialCommunications;
 
 namespace Atol
 {
+    [Serializable]
     internal class DeviceErrorException : Exception
     {
         private short _errorCode;
@@ -16,6 +18,11 @@ namespace Atol
         public DeviceErrorException(short errorCode)
         {
             _errorCode = errorCode;
+        }
+
+        protected DeviceErrorException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
     }
 

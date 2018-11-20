@@ -175,13 +175,16 @@ namespace DevicesBase
         /// <param name="cashierName">
         /// Имя кассира, открывающего документ.
         /// </param>
+        /// <param name="cashierInn">
+        /// ИНН кассира, открывающего документ.
+        /// </param>
         /// <param name="customerPhoneOrEmail">
         /// Номер телефона или e-mail покупателя.
         /// </param>
         /// <remarks>
         /// Метод для поддержки 54-ФЗ.
         /// </remarks>
-        protected virtual void OnOpenDocument(DocumentType docType, string cashierName, string customerPhoneOrEmail)
+        protected virtual void OnOpenDocument(DocumentType docType, string cashierName, string cashierInn, string customerPhoneOrEmail)
         {
         }
 
@@ -1405,12 +1408,13 @@ namespace DevicesBase
 
                 // открываем документ
                 var cashier = docEntry.GetAttribute("cashier");
+                var cashierInn = docEntry.GetAttribute("cashierInn");
                 var customerPhoneOrEmail = docEntry.GetAttribute("customerPhoneOrEMail");
 
                 if (!string.IsNullOrEmpty(customerPhoneOrEmail) && (docType == DocumentType.Sale || docType == DocumentType.Refund))
                 {
                     // продажа или возврат по 54-ФЗ
-                    OnOpenDocument(docType, cashier, customerPhoneOrEmail);
+                    OnOpenDocument(docType, cashier, cashierInn, customerPhoneOrEmail);
                 }
                 else
                 {
