@@ -60,8 +60,7 @@ namespace Stroke
             return new PrinterStatusFlags(bPrinting, poStatus, _openedDoc, bDrawerOpened);
         }
 
-        protected override void OnOpenDocument(DocumentType docType,
-            string cashierName)
+        protected override void OnOpenDocument(DocumentType docType, string cashierName, string cashierInn, string customerPhoneOrEmail)
         {
             _bufSize = 0;
             // инициализация принтера

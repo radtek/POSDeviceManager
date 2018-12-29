@@ -73,8 +73,7 @@ namespace FilePrinter
 
         #region Реализация виртуальных функций
 
-        protected override void OnOpenDocument(DocumentType docType,
-            string cashierName)
+        protected override void OnOpenDocument(DocumentType docType, string cashierName, string cashierInn, string customerPhoneOrEmail)
         {
             OnPrintString("", FontStyle.Regular);
             OnPrintString("", FontStyle.Regular);

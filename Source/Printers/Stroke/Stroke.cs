@@ -712,8 +712,7 @@ namespace Stroke
             });
         }
 
-        protected override void OnOpenDocument(DocumentType docType,
-            string cashierName)
+        protected override void OnOpenDocument(DocumentType docType, string cashierName, string cashierInn, string customerPhoneOrEmail)
         {
             FiscalStatusFlags fsFlags = Status;
             _needPrintTopMargin = false;

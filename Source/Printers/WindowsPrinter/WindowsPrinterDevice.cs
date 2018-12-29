@@ -105,9 +105,8 @@ namespace WindowsPrinter
             _printBuffer.Add(new LineInfo() { Image = image, Align = align });
         }
 
-        protected override void OnOpenDocument(DocumentType docType, string cashierName)
+        protected override void OnOpenDocument(DocumentType docType, string cashierName, string cashierInn, string customerPhoneOrEmail)
         {
-            base.OnOpenDocument(docType, cashierName);
             _printBuffer.Clear();
         }
 

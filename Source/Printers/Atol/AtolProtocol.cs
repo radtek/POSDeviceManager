@@ -842,6 +842,11 @@ namespace Atol
 
         private void SetCustomerPhoneOrEmail(string customerPhoneOrEmail)
         {
+            if (string.IsNullOrEmpty(customerPhoneOrEmail))
+            {
+                return;
+            }
+
             ExecuteDriverCommand(() =>
             {
                 _atolProtocol.CreateCommand(0xE8);
@@ -954,8 +959,6 @@ namespace Atol
                SetFooter();
            });
         }
-
-        protected override void OnOpenDocument(DocumentType docType, string cashierName) => OpenDocument(docType, cashierName, null);
 
         protected override void OnOpenDocument(DocumentType docType, string cashierName, string cashierInn, string customerPhoneOrEmail)
         {

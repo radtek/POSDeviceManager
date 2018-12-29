@@ -162,19 +162,6 @@ namespace DevicesBase
         /// <param name="cashierName">
         /// Имя кассира, открывающего документ.
         /// </param>
-        protected virtual void OnOpenDocument(DocumentType docType, string cashierName)
-        {
-        }
-
-        /// <summary>
-        /// Вызывается при открытии документа.
-        /// </summary>
-        /// <param name="docType">
-        /// Тип документа.
-        /// </param>
-        /// <param name="cashierName">
-        /// Имя кассира, открывающего документ.
-        /// </param>
         /// <param name="cashierInn">
         /// ИНН кассира, открывающего документ.
         /// </param>
@@ -1411,16 +1398,7 @@ namespace DevicesBase
                 var cashierInn = docEntry.GetAttribute("cashierInn");
                 var customerPhoneOrEmail = docEntry.GetAttribute("customerPhoneOrEMail");
 
-                if (!string.IsNullOrEmpty(customerPhoneOrEmail) && (docType == DocumentType.Sale || docType == DocumentType.Refund))
-                {
-                    // продажа или возврат по 54-ФЗ
-                    OnOpenDocument(docType, cashier, cashierInn, customerPhoneOrEmail);
-                }
-                else
-                {
-                    // все прочие документы
-                    OnOpenDocument(docType, cashier);
-                }
+                OnOpenDocument(docType, cashier, cashierInn, customerPhoneOrEmail);
 
                 if (ErrorCode.Failed)
                     // если открытие документа выполнено с ошибкой, прерываем печать 
