@@ -162,18 +162,8 @@ namespace DevicesBase
         /// <param name="cashierName">
         /// Имя кассира, открывающего документ.
         /// </param>
-        protected virtual void OnOpenDocument(DocumentType docType, string cashierName)
-        {
-        }
-
-        /// <summary>
-        /// Вызывается при открытии документа.
-        /// </summary>
-        /// <param name="docType">
-        /// Тип документа.
-        /// </param>
-        /// <param name="cashierName">
-        /// Имя кассира, открывающего документ.
+        /// <param name="cashierInn">
+        /// ИНН кассира, открывающего документ.
         /// </param>
         /// <param name="customerPhoneOrEmail">
         /// Номер телефона или e-mail покупателя.
@@ -181,7 +171,7 @@ namespace DevicesBase
         /// <remarks>
         /// Метод для поддержки 54-ФЗ.
         /// </remarks>
-        protected virtual void OnOpenDocument(DocumentType docType, string cashierName, string customerPhoneOrEmail)
+        protected virtual void OnOpenDocument(DocumentType docType, string cashierName, string cashierInn, string customerPhoneOrEmail)
         {
         }
 
@@ -255,9 +245,40 @@ namespace DevicesBase
         /// Идентифкатор ставки НДС.
         /// </param>
         /// <remarks>
-        /// Метод для поддержки 54-ФЗ.
+        /// Метод для поддержки 54-ФЗ и ФФД 1.0.
         /// </remarks>
         protected virtual void OnRegistration(string positionName, uint quantity, uint price, uint amount, byte section, byte vatRateId)
+        {
+        }
+
+        /// <summary>
+        /// Вызывается при регистрации позиции в кассовом документе.
+        /// </summary>
+        /// <param name="positionName">
+        /// Наименование позиции.
+        /// </param>
+        /// <param name="quantity">
+        /// Количество позиции, граммы.
+        /// </param>
+        /// <param name="price">
+        /// Цена позиции, копейки.
+        /// </param>
+        /// <param name="amount">
+        /// Сумма позиции, копейки.
+        /// </param>
+        /// <param name="section">
+        /// Секция для регистрации.
+        /// </param>
+        /// <param name="vatRateId">
+        /// Идентифкатор ставки НДС.
+        /// </param>
+        /// <param name="fiscalItemType">
+        /// Признак предмета расчета.
+        /// </param>
+        /// <remarks>
+        /// Метод для поддержки 54-ФЗ и ФФД 1.05.
+        /// </remarks>
+        protected virtual void OnRegistration(string positionName, uint quantity, uint price, uint amount, byte section, byte vatRateId, byte fiscalItemType)
         {
         }
 
@@ -1080,13 +1101,28 @@ namespace DevicesBase
 
                             newRegistrationsAmount += amount;
 
-                            OnRegistration(
-                                lineData,
-                                IntFromXml(lineEntry, "quantity", 1000),
-                                IntFromXml(lineEntry, "price", 0),
-                                amount,
-                                SectionFromXml(lineEntry.GetAttribute("section")),
-                                (byte)IntFromXml(lineEntry, "vatRateId", 1));
+                            if (string.IsNullOrEmpty(lineEntry.GetAttribute("fiscalItemType")))
+                            {
+                                // ФФД 1.0
+                                OnRegistration(
+                                    lineData,
+                                    IntFromXml(lineEntry, "quantity", 1000),
+                                    IntFromXml(lineEntry, "price", 0),
+                                    amount,
+                                    SectionFromXml(lineEntry.GetAttribute("section")),
+                                    (byte)IntFromXml(lineEntry, "vatRateId", 1));
+                            }
+                            else
+                            {
+                                OnRegistration(
+                                    lineData,
+                                    IntFromXml(lineEntry, "quantity", 1000),
+                                    IntFromXml(lineEntry, "price", 0),
+                                    amount,
+                                    SectionFromXml(lineEntry.GetAttribute("section")),
+                                    (byte)IntFromXml(lineEntry, "vatRateId", 1),
+                                    (byte)IntFromXml(lineEntry, "fiscalItemType", 1));
+                            }
                         }
                         else
                         {
@@ -1359,18 +1395,10 @@ namespace DevicesBase
 
                 // открываем документ
                 var cashier = docEntry.GetAttribute("cashier");
+                var cashierInn = docEntry.GetAttribute("cashierInn");
                 var customerPhoneOrEmail = docEntry.GetAttribute("customerPhoneOrEMail");
 
-                if (!string.IsNullOrEmpty(customerPhoneOrEmail) && (docType == DocumentType.Sale || docType == DocumentType.Refund))
-                {
-                    // продажа или возврат по 54-ФЗ
-                    OnOpenDocument(docType, cashier, customerPhoneOrEmail);
-                }
-                else
-                {
-                    // все прочие документы
-                    OnOpenDocument(docType, cashier);
-                }
+                OnOpenDocument(docType, cashier, cashierInn, customerPhoneOrEmail);
 
                 if (ErrorCode.Failed)
                     // если открытие документа выполнено с ошибкой, прерываем печать 

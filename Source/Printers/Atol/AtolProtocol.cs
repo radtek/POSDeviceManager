@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing.Imaging;
+using System.Linq;
 using DevicesBase;
 using DevicesBase.Helpers;
 using DevicesCommon;
@@ -24,6 +25,7 @@ namespace Atol
         FPrint5200K = 35,
         FPrint55K   = 47,
         FPrint22K   = 52,
+        FPrint22PTK = 63,
         Unknown     = 255
     }
 
@@ -328,6 +330,13 @@ namespace Atol
                     devParams.BarcodeWidth = 2;
                     devParams.IsCutterSupported = true;
                     break;
+                case AtolModel.FPrint22PTK:
+                    devParams.MaxStringLen = 64;
+                    devParams.StringLen = 48;
+                    devParams.TapeWidth = 390;
+                    devParams.BarcodeWidth = 2;
+                    devParams.IsCutterSupported = true;
+                    break;
                 default:
                     devParams.MaxStringLen = 48;
                     devParams.StringLen = 40;
@@ -377,24 +386,58 @@ namespace Atol
             _deviceModel = (AtolModel)_atolProtocol.Response[4];
         }
 
+        private void SetTableField(byte table, ushort row, byte field, Action setFieldData)
+        {
+            // команда "Программирование таблицы"
+            _atolProtocol.CreateCommand(0x50);
+
+            // таблица
+            _atolProtocol.AddByte(table);
+
+            // ряд (сначала старший байт, потом младший)
+            var rowBytes = BitConverter.GetBytes(row);
+
+            _atolProtocol.AddByte(rowBytes[1]);
+            _atolProtocol.AddByte(rowBytes[0]);
+
+            // поле
+            _atolProtocol.AddByte(field);
+
+            // значение поля
+            setFieldData();
+
+            // выполняем команду
+            _atolProtocol.Execute();
+        }
+
+        private void SetTableField(byte table, ushort row, byte field, string fieldValue, int? maxLength = null)
+        {
+            if (maxLength == null)
+            {
+                maxLength = GetDeviceParams().MaxStringLen;
+            }
+
+            SetTableField(table, row, field, () => _atolProtocol.AddString(fieldValue, maxLength.Value));
+        }
+
+        private void CleanupStoredImages()
+        {
+            _atolProtocol.CreateCommand(0x8A);
+            _atolProtocol.AddByte(0);
+            _atolProtocol.Execute();
+        }
+
         // установка подвала документа
         private void SetFooter()
         {
             _atolProtocol.SwitchToMode(4, MODE_PASSWD);
-            int nRow = 1;
+
+            // запись строк подвала
             if (PrintFooter && DocumentFooter != null)
             {
-                foreach (string s in DocumentFooter)
+                foreach (var item in DocumentFooter.Select((line, row) => new { line, row }).Take(5))
                 {
-                    _atolProtocol.CreateCommand(0x50);
-                    _atolProtocol.AddByte(6);
-                    _atolProtocol.AddBCD(nRow++, 2);
-                    _atolProtocol.AddByte(1);
-                    _atolProtocol.AddString(s, GetDeviceParams().MaxStringLen);
-
-                    _atolProtocol.Execute();
-                    if (nRow > 5)
-                        break;
+                    SetTableField(6, (ushort)(1 + item.row), 1, item.line);
                 }
             }
 
@@ -404,27 +447,28 @@ namespace Atol
                 if (!PrintGraphicHeader || GraphicHeader == null)
                 {
                     // очистка массива картинок
-                    _atolProtocol.CreateCommand(0x8A);
-                    _atolProtocol.AddByte(0);
-                    _atolProtocol.Execute();
+                    CleanupStoredImages();
                 }
 
-                // передача строк картинки
-                int imageNo = LoadImage(GraphicFooter);
+                // загрузка картинки в память ФР
+                var imageIndex = LoadImage(GraphicFooter);
 
                 // запись строки клише с картинкой
-                _atolProtocol.CreateCommand(0x50);
-                _atolProtocol.AddByte(6);
-                _atolProtocol.AddBCD(1, 2);
-                _atolProtocol.AddByte(1);
-                var line = new byte[GetDeviceParams().MaxStringLen];
-                line[0] = 0x0A;
-                line[1] = (byte)imageNo;
-                line[2] = 0x00; // смещение
-                line[3] = (byte)((GetDeviceParams().TapeWidth - GraphicFooter.Width) / 2); // смещение
+                SetTableField(6, 1, 1, () =>
+                {
+                    var line = new byte[GetDeviceParams().MaxStringLen];
 
-                _atolProtocol.AddBytes(line);
-                _atolProtocol.Execute();
+                    line[0] = 0x0A;
+
+                    // номер картинки, загруженной в память
+                    line[1] = (byte)imageIndex;
+
+                    // смещение
+                    line[2] = 0x00;
+                    line[3] = (byte)((GetDeviceParams().TapeWidth - GraphicFooter.Width) / 2);
+
+                    _atolProtocol.AddBytes(line);
+                });
             }
         }
 
@@ -432,81 +476,58 @@ namespace Atol
         private void SetHeader()
         {
             _atolProtocol.SwitchToMode(4, MODE_PASSWD);
-            int nRow = 6;
 
-            // установка строк клише
+            // запись строк клише
             if (PrintHeader && DocumentHeader != null)
             {
-                foreach (string s in DocumentHeader)
+                foreach (var item in DocumentHeader.Select((line, row) => new { line, row }).Take(8))
                 {
-                    _atolProtocol.CreateCommand(0x50);
-                    _atolProtocol.AddByte(6);
-                    _atolProtocol.AddBCD(nRow++, 2);
-                    _atolProtocol.AddByte(1);
-                    _atolProtocol.AddString(s, GetDeviceParams().MaxStringLen);
-                    _atolProtocol.Execute();
-                    if (nRow > 8)
-                        break;
+                    SetTableField(6, (ushort)(6 + item.row), 1, item.line);
                 }
             }
 
             // загрузка графического клише
             if (PrintGraphicHeader && GraphicHeader != null)
             {
-                // установка волшебного флага в таблице для возможности загрузки графики
+                // установка волшебного флага в таблице для возможности загрузки графики;
                 // таблица 2, ряд 1, поле 21, значение 30h
-                _atolProtocol.CreateCommand(0x50);
-                _atolProtocol.AddByte(2);
-                _atolProtocol.AddBCD(1, 2);
-                _atolProtocol.AddByte(21);
-                _atolProtocol.AddBCD(48, 1);
-                _atolProtocol.Execute();
+                SetTableField(2, 1, 21, () => _atolProtocol.AddBCD(48, 1));
 
                 // очистка массива картинок
-                _atolProtocol.CreateCommand(0x8A);
-                _atolProtocol.AddByte(0);
-                _atolProtocol.Execute();
+                CleanupStoredImages();
 
-                int imageNo = LoadImage(GraphicHeader);
+                // загрузка картинки в память ФР
+                var imageIndex = LoadImage(GraphicHeader);
 
                 // запись строки клише с картинкой
-                _atolProtocol.CreateCommand(0x50);
-                _atolProtocol.AddByte(6);
-                _atolProtocol.AddBCD(8, 2);
-                _atolProtocol.AddByte(1);
-                var line = new byte[GetDeviceParams().MaxStringLen];
-                line[0] = 0x0A;
-                line[1] = (byte)imageNo;
-                line[2] = 0x00; // смещение
-                line[3] = (byte)((GetDeviceParams().TapeWidth - GraphicHeader.Width) / 2); // смещение
+                SetTableField(6, 8, 1, () =>
+                {
+                    var line = new byte[GetDeviceParams().MaxStringLen];
 
-                _atolProtocol.AddBytes(line);
-                _atolProtocol.Execute();
+                    line[0] = 0x0A;
+
+                    // номер картинки, загруженной в память
+                    line[1] = (byte)imageIndex;
+
+                    // смещение
+                    line[2] = 0x00;
+                    line[3] = (byte)((GetDeviceParams().TapeWidth - GraphicHeader.Width) / 2);
+
+                    _atolProtocol.AddBytes(line);
+                });
             }
-
         }
 
         private void SetTapeWidth()
         {
-            // установка кол-ва символов в строке
             _atolProtocol.SwitchToMode(4, MODE_PASSWD);
-            _atolProtocol.CreateCommand(0x50);
-            _atolProtocol.AddByte(2);       // таблица
-            _atolProtocol.AddBCD(1, 2);// ряд
-            _atolProtocol.AddByte(55);       // поле
-            _atolProtocol.AddBCD(GetDeviceParams().StringLen, 1);
-            _atolProtocol.Execute();
+
+            // установка кол-ва символов в строке
+            SetTableField(2, 1, 55, () => _atolProtocol.AddBCD(GetDeviceParams().StringLen, 1));
 
             // установка сжатого по горизонтали шрифта
-            _atolProtocol.SwitchToMode(4, MODE_PASSWD);
-            _atolProtocol.CreateCommand(0x50);
-            _atolProtocol.AddByte(2);       // таблица
-            _atolProtocol.AddBCD(1, 2);// ряд
-            _atolProtocol.AddByte(56);       // поле
-            _atolProtocol.AddBCD(2, 1);
-            _atolProtocol.Execute();
+            SetTableField(2, 1, 56, () => _atolProtocol.AddBCD(2, 1));
         }
-
 
         // печать отчетов
         private void PrintReport(DocumentType docType)
@@ -821,6 +842,11 @@ namespace Atol
 
         private void SetCustomerPhoneOrEmail(string customerPhoneOrEmail)
         {
+            if (string.IsNullOrEmpty(customerPhoneOrEmail))
+            {
+                return;
+            }
+
             ExecuteDriverCommand(() =>
             {
                 _atolProtocol.CreateCommand(0xE8);
@@ -855,30 +881,31 @@ namespace Atol
             });
         }
 
-        #endregion
-
-        #region Виртуальные методы
-
-        protected override void OnAfterActivate()
+        private void SetCashierField(byte field, string fieldValue, int? maxLength = null)
         {
-            Port.ReadTimeout = READ_TIMEOUT;
-            Port.WriteTimeout = WRITE_TIMEOUT;
+            if (string.IsNullOrEmpty(fieldValue))
+            {
+                return;
+            }
 
-            ExecuteDriverCommand(delegate()
-           {
-               // определяем модель устройства
-               SetDeviceType();
-               // установка длины строки (только для Феликс-3СК)
-               if (_deviceModel == AtolModel.Felix3SK)
-                   SetTapeWidth();
-               SetHeader();
-               SetFooter();
-           });
+            SetTableField(3, 30, field, fieldValue, maxLength);
         }
 
-        protected override void OnOpenDocument(DocumentType docType, string cashierName)
+        private void SetCashierFields(string cashierName, string cashierInn)
         {
-            ExecuteDriverCommand(delegate()
+            _atolProtocol.SwitchToMode(4, MODE_PASSWD);
+
+            SetCashierField(2, cashierName);
+            SetCashierField(3, cashierInn, 12);
+        }
+
+        private void OpenDocument(DocumentType docType, string cashierName, string cashierInn)
+        {
+            // программируем имя и ИНН кассира
+            SetCashierFields(cashierName, cashierInn);
+
+            // открываем документ
+            ExecuteDriverCommand(() =>
             {
                 if (PrinterStatus.OpenedDocument)
                     CancelDocument();
@@ -912,10 +939,31 @@ namespace Atol
             });
         }
 
-        protected override void OnOpenDocument(DocumentType docType, string cashierName, string customerPhoneOrEmail)
+        #endregion
+
+        #region Виртуальные методы
+
+        protected override void OnAfterActivate()
+        {
+            Port.ReadTimeout = READ_TIMEOUT;
+            Port.WriteTimeout = WRITE_TIMEOUT;
+
+            ExecuteDriverCommand(delegate()
+           {
+               // определяем модель устройства
+               SetDeviceType();
+               // установка длины строки (только для Феликс-3СК)
+               if (_deviceModel == AtolModel.Felix3SK)
+                   SetTapeWidth();
+               SetHeader();
+               SetFooter();
+           });
+        }
+
+        protected override void OnOpenDocument(DocumentType docType, string cashierName, string cashierInn, string customerPhoneOrEmail)
         {
             // открываем документ
-            OnOpenDocument(docType, cashierName);
+            OpenDocument(docType, cashierName, cashierInn);
 
             // теперь записываем реквизит "Адрес покупателя"
             SetCustomerPhoneOrEmail(customerPhoneOrEmail);
@@ -1157,6 +1205,62 @@ namespace Atol
             });
         }
 
+        protected override void OnRegistration(string positionName, uint quantity, uint price, uint amount, byte section, byte vatRateId, byte fiscalItemType)
+        {
+            if (!HasNonzeroRegistrations)
+            {
+                return;
+            }
+
+            ExecuteDriverCommand(() =>
+            {
+                _atolProtocol.CreateCommand(0xEB);
+
+                // флаги по умолчанию (выполнить операцию, контроль наличности)
+                _atolProtocol.AddByte(0);
+
+                // цена
+                _atolProtocol.AddBCD(price, 7);
+
+                // количество
+                _atolProtocol.AddBCD(quantity, 5);
+
+                // стоимость позиции
+                _atolProtocol.AddBCD(amount, 7);
+
+                // налог
+                _atolProtocol.AddByte(vatRateId);
+
+                // сумма налога (ККТ считает самостоятельно)
+                _atolProtocol.AddBCD(0, 7);
+
+                // секция
+                _atolProtocol.AddBCD(section, 1);
+
+                // признак предмета расчета
+                _atolProtocol.AddByte(fiscalItemType);
+
+                // признак способа расчета (всегда полный расчет)
+                _atolProtocol.AddByte(4);
+
+                // знак скидки (не используется)
+                _atolProtocol.AddByte(0);
+
+                // информация о скидке (не используется)
+                _atolProtocol.AddBCD(0, 7);
+
+                // здесь либо ошибка в спецификации, либо в прошивке;
+                // если не пропустить эти два байта, то первые два символа в наименовании позиции обрезаются
+                _atolProtocol.AddByte(0);
+                _atolProtocol.AddByte(0);
+
+                // наименование позиции
+                _atolProtocol.AddString(positionName, 128);
+
+                _atolProtocol.Execute();
+            });
+        }
+
         protected override void OnTrimDocumentAmount(uint registrationsAmount)
         {
             // посчитаем разницу между суммой регистраций и суммой документа по данным ФР
@@ -1357,10 +1461,10 @@ namespace Atol
         {
             get
             {
-                bool bPrinting = false;
-                PaperOutStatus poStatus = PaperOutStatus.OutPassive;
-                bool bDrawerOpened = false;
-                bool bDocOpened = false;
+                var printing = false;
+                var paperOutStatus = PaperOutStatus.OutPassive;
+                var drawerOpened = false;
+                var docOpened = false;
 
                 ExecuteDriverCommand(delegate()
                 {
@@ -1368,20 +1472,32 @@ namespace Atol
                     _atolProtocol.ExecuteCommand(0x45);
 
                     if ((_atolProtocol.Response[3] & 0x01) == 0)
-                        poStatus = PaperOutStatus.Present;
+                        paperOutStatus = PaperOutStatus.Present;
                     else
-                        poStatus = PaperOutStatus.OutActive;
+                        paperOutStatus = PaperOutStatus.OutPassive;
 
                     // запрос состояния
                     _atolProtocol.ExecuteCommand(0x3F);
 
-                    bDrawerOpened = (_atolProtocol.Response[10] & 4) == 4;
-                    bPrinting = (_atolProtocol.Response[18] >> 4) != 0;
+                    drawerOpened = (_atolProtocol.Response[10] & 4) == 4;
+
+                    // датчик бумаги может сигнализировать о том, что бумага есть, но крышка может быть открыта, или плохо закрыта;
+                    // это приведет к тому, что любая команда печати вернет ошибку 103 (отсутствие бумаги), а логика печати
+                    // отсутствие бумаги не обнаружит;
+                    // поэтому в обязательном порядке проверяем датчик крышки - если она открыта, считаем, что бумаги нет;
+                    // если она закрыта, ориентируемся на то значение OutOfPaper, которое было установлено ранее
+                    if ((_atolProtocol.Response[10] & 32) == 32)
+                    {
+                        paperOutStatus = PaperOutStatus.OutPassive;
+                    }
+
+                    printing = (_atolProtocol.Response[18] >> 4) != 0;
 
                     if ((_atolProtocol.Response[18] & 1) == 1)
-                        bDocOpened = _atolProtocol.Response[23] != 0;
+                        docOpened = _atolProtocol.Response[23] != 0;
                 });
-                return new PrinterStatusFlags(bPrinting, poStatus, bDocOpened, bDrawerOpened);
+
+                return new PrinterStatusFlags(printing, paperOutStatus, docOpened, drawerOpened);
             }
         }
 

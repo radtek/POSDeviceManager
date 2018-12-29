@@ -334,8 +334,7 @@ namespace EpsonPrn
             return new PrinterStatusFlags(bPrinting, poStatus, bOpenedDoc, bDrawerOpened);
         }
 
-        protected override void OnOpenDocument(DocumentType docType,
-            string cashierName)
+        protected override void OnOpenDocument(DocumentType docType, string cashierName, string cashierInn, string customerPhoneOrEmail)
         {
             ExecuteDriverCommand(delegate()
             {

@@ -529,8 +529,7 @@ namespace SparkTK
             });
         }
 
-        protected override void OnOpenDocument(DocumentType docType,
-            string cashierName)
+        protected override void OnOpenDocument(DocumentType docType, string cashierName, string cashierInn, string customerPhoneOrEmail)
         {
             _deviceProtocol.ClearDebugInfo();
             _deviceProtocol.WriteDebugLine(string.Format("OnOpenDocument({0}, {1})", docType, cashierName));
